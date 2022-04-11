@@ -94,7 +94,7 @@ class task_widget_new(QGroupBox):
         self.layout_actions.addWidget(self.emit_btn)
 
     def on_emit(self):
-        self.signal.emit(self.file)
+        self.signal.emit()
 
 
 

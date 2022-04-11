@@ -110,7 +110,7 @@ class main_window(QMainWindow):
     signal_task_index = pyqtSignal(int)
 
     signal_open_project = pyqtSignal(str)
-    signal_reopen_project = pyqtSignal(h5py._hl.files.File)
+    signal_reopen_project = pyqtSignal()
 
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
@@ -335,46 +335,42 @@ class main_window(QMainWindow):
         #self.file_path = project_path
         self.file = h5py.File(project_path, 'r+')
         self.help_clear_layouts()
-        self.task_parse_routine(hdf=self.file)#, path=project_path)
-        self.description_parse_routine(hdf=self.file)
-        self.btn_add_task_create(hdf=self.file)
+        self.task_parse_routine()#, path=project_path)
+        self.description_parse_routine()
+        self.btn_add_task_create()
         #self.view.deleteLater()
         #print(self.view)
 
         #self.parse_tasks(project_path)
         #self.show_view_tab(project_path)
-    @pyqtSlot(h5py._hl.files.File)
-    def reopen_project_routine(self, file):
-        #print("reopen")
+    @pyqtSlot()
+    def reopen_project_routine(self):
         self.help_clear_layouts()
-        self.task_parse_routine(file)
-        self.descriptrion_reparse_routine(file)
-        #self.btn_add_task_update(file)
+        self.task_parse_routine()
+        self.descriptrion_reparse_routine()
 
     def project_create_routine(self):
         dialog = segflex_new_project.new_project_dialog_new(signal=self.signal_parse_projects)
         dialog.exec_()
 
-    def description_parse_routine(self, hdf):
+    def description_parse_routine(self):
+        hdf = self.file
         utils.clear_layout(self.btn_group_tasks_layout)
         self.description = project_description_new()
         self.description.update_description(hdf)
         self.btn_group_tasks_layout.addWidget(self.description)
 
-    def descriptrion_reparse_routine(self, hdf):
+    def descriptrion_reparse_routine(self):
+        hdf = self.file
         self.description.update_description(hdf)
-        #pass
-        #self.btn_group_tasks_layout.setEnabled(False)
-        #print(self.btn_group_tasks_layout.isEnabled())
-        #self.btn_group_tasks_layout
 
-    def btn_add_task_create(self, hdf):
+    def btn_add_task_create(self):
         self.btn_add_task = QPushButton("Добавить задачу")
         self.btn_add_task.clicked.connect(self.on_add_new_task_new)
         self.btn_group_tasks_layout.addWidget(self.btn_add_task)
 
 
-    def on_add_new_task_new(self, hdf):
+    def on_add_new_task_new(self):
         task_to_add = QFileDialog.getOpenFileName()[0]
         hdf = self.file
         if task_to_add:
@@ -384,20 +380,16 @@ class main_window(QMainWindow):
             hdf[str(task_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
             hdf[str(task_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
             hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
-            self.signal_reopen_project.emit(hdf)
+            self.signal_reopen_project.emit()
 
-
-
-    def task_parse_routine(self, hdf):#, path):
-        #print("parse routine")
-        
+    def task_parse_routine(self):
+        hdf = self.file
         number_of_images = len(hdf.keys())
         for number in range(number_of_images):
             status = hdf[str(number)].attrs[classifier.HDF_TASK_STATUS]
             if status == classifier.HDF_TASK_STATUS_0 or status == classifier.HDF_TASK_STATUS_1:
                 task_widget = task_base.task_widget_new(project_file=hdf, identifier=number, mode=classifier.TASK_WIDGET_MODE_0, signal=self.signal_reopen_project)
                 self.tab_tasks_left_layout.addWidget(task_widget)
-                #print("creating left")
             if status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")
                 #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
