@@ -53,7 +53,7 @@ class project_as_widget(QGroupBox):
 
 
         image = QLabel(self)
-        pixmap = QtGui.QPixmap("image.jpg")
+        pixmap = QtGui.QPixmap("img0.jpg")
         image.setPixmap(pixmap)
         image.setFixedSize(100, 100)
 
