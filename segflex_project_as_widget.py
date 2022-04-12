@@ -27,7 +27,7 @@ class project_widget_new(QGroupBox):
     def init_ui(self):
         self.set_layouts()
         self.adjust_size()
-        self.init_contents()
+        self.init_content()
         self.fill_layouts()
         self.connect_ui()
 
@@ -46,7 +46,7 @@ class project_widget_new(QGroupBox):
     def adjust_size(self):
         self.setMaximumHeight(120)
 
-    def init_contents(self):
+    def init_content(self):
         self.btn_open = QPushButton("Открыть проект")
         self.info = QLabel(self.name)
 

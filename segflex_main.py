@@ -104,11 +104,55 @@ class project_description_new(QWidget):
         self.item_description.setText(classifier.HDF_FILE_DESCRIPTION + self.file_description)
         self.item_task_count.setText(classifier.HDF_FILE_TASK_COUNT + str(int(self.file_task_count)))
 
+class higher_control(QGroupBox):
+    def __init__(self, signal, parent=None):
+        super().__init__()
+        self.signal = signal
+        self.init_ui()
+
+    def init_ui(self):
+        self.init_content()
+        self.set_layouts()
+        self.fill_layouts()
+        self.connect_ui()
+
+    def set_layouts(self):
+        self.layout = QVBoxLayout()
+        #self.layout_content = QVBoxLayout()
+
+        #self.layout.addLayout(self.layout_content)
+
+        self.setLayout(self.layout)
+        #self.group.setLayout(self.layout_content)
+
+    def fill_layouts(self):
+        self.layout.addWidget(self.btn_new)
+        self.layout.addWidget(self.btn_add)
+        self.layout.addWidget(self.btn_based)
+        pass
+
+
+    def init_content(self):
+        #self.group = QGroupBox()
+        self.btn_new = QPushButton("Создать новый файл проекта")
+        self.btn_add = QPushButton("Добавить проект из ...")
+        self.btn_based = QPushButton("Создать проект на основе существующего")
+
+    def connect_ui(self):
+        self.btn_new.clicked.connect(self.on_new)
+        pass
+
+    def on_new(self):
+        self.dialog = segflex_new_project.new_project_dialog_new(signal=self.signal)
+        self.dialog.exec_()
+
+
+
 class main_window(QMainWindow):
     signal_parse_tasks = pyqtSignal(str)
-    signal_parse_projects = pyqtSignal()
     signal_task_index = pyqtSignal(int)
 
+    signal_parse_projects = pyqtSignal()
     signal_open_project = pyqtSignal(str)
     signal_reopen_project = pyqtSignal()
 
@@ -145,10 +189,10 @@ class main_window(QMainWindow):
         self.tab_tasks_left_layout = QVBoxLayout()
         self.tab_tasks_right_layout = QVBoxLayout()
         self.tab_view_layout = QGridLayout()
-        self.btn_group_open_layout = QVBoxLayout() #self.projects_control_layout = QVBoxLayout()
+        #self.btn_group_open_layout = QVBoxLayout() #self.projects_control_layout = QVBoxLayout()
         self.btn_group_tasks_layout = QVBoxLayout() #self.tasks_control_layout = QVBoxLayout()
         self.view_project_control_layout = QVBoxLayout() #self.view_control_layout = QVBoxLayout()
-        self.projects_control_layout = QVBoxLayout()
+        #self.projects_control_layout = QVBoxLayout()
         self.tasks_control_layout = QVBoxLayout()
         self.view_control_layout = QVBoxLayout()
 
@@ -162,7 +206,8 @@ class main_window(QMainWindow):
         self.tab_projects_group.setLayout(self.tab_projects_layout)
         self.tab_tasks_left_group.setLayout(self.tab_tasks_left_layout)
         self.tab_tasks_right_group.setLayout(self.tab_tasks_right_layout)
-        self.btns_group_open.setLayout(self.btn_group_open_layout)
+        #self.btns_group_open.setLayout(self.btn_group_open_layout)
+        #self.higher_control.setLayout(self.projects_control_layout)
         self.btns_group_tasks.setLayout(self.btn_group_tasks_layout)
         self.tab_view.setLayout(self.tab_view_layout)
 
@@ -172,15 +217,17 @@ class main_window(QMainWindow):
         self.tab.addTab(self.tab_view, "Просмотр")
 
         self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
-        self.main_layout.addWidget(self.btns_group_open, 0, 1)
+        #self.main_layout.addWidget(self.btns_group_open, 0, 1)
+        self.main_layout.addWidget(self.higher_control, 0, 1)
         self.main_layout.addWidget(self.btns_group_tasks, 0, 1)
         self.btns_group_tasks.setVisible(False)
         
 
     def place_widgets(self):
-        self.btn_group_open_layout.addWidget(self.btn_project_new)
-        self.btn_group_open_layout.addWidget(self.btn_project_add)
-        self.btn_group_open_layout.addWidget(self.btn_project_based)
+        pass
+        #self.btn_group_open_layout.addWidget(self.btn_project_new)
+        #self.btn_group_open_layout.addWidget(self.btn_project_add)
+        #self.btn_group_open_layout.addWidget(self.btn_project_based)
 
         #self.btn_group_tasks_layout.addWidget(self.btn_description)
         #self.btn_group_tasks_layout.addWidget(self.btn_add_image)
@@ -191,7 +238,7 @@ class main_window(QMainWindow):
         self.signal_open_project.connect(self.open_project_routine)
         self.signal_reopen_project.connect(self.reopen_project_routine)
         #self.btn_project_new.clicked.connect(self.on_create_new_project_clicked)
-        self.btn_project_new.clicked.connect(self.project_create_routine)
+        #self.btn_project_new.clicked.connect(self.project_create_routine)
         self.tab.currentChanged.connect(self.show_tab)
         self.btn_add_image.clicked.connect(self.on_add_new_task)
     
@@ -234,10 +281,11 @@ class main_window(QMainWindow):
         #self.tab_view_widget.setWidget(self.tab_view_group)
 
     def init_controls_projects(self):
-        self.btns_group_open = QGroupBox()
-        self.btn_project_new = QPushButton("Создать новый файл проекта")
-        self.btn_project_add = QPushButton("Добавить проект из ...")
-        self.btn_project_based = QPushButton("Создать проект на основе существующего")
+        self.higher_control = higher_control(signal=self.signal_parse_projects)
+        #self.btns_group_open = QGroupBox()
+        #self.btn_project_new = QPushButton("Создать новый файл проекта")
+        #self.btn_project_add = QPushButton("Добавить проект из ...")
+        #self.btn_project_based = QPushButton("Создать проект на основе существующего")
 
     def init_controls_tasks(self):
         self.btns_group_tasks = QGroupBox("Атрибуты проекта")
@@ -248,16 +296,16 @@ class main_window(QMainWindow):
         self.btn_test = QPushButton("show")
 
     def show_controls_tasks(self, description):
-        self.btns_group_open.setVisible(False)
+        #self.btns_group_open.setVisible(False)
         self.btns_group_tasks.setVisible(True)
 
     def show_controls_tasks_2(self):
-        self.btns_group_open.setVisible(False)
+        #self.btns_group_open.setVisible(False)
         self.btns_group_tasks.setVisible(True)
 
     def show_controls_projects(self):
         self.btns_group_tasks.setVisible(False)
-        self.btns_group_open.setVisible(True)
+        #self.btns_group_open.setVisible(True)
 
     def on_create_new_project_clicked(self):
         self.dialog = segflex_new_project.new_project_dialog(signal=self.signal_parse_projects)
@@ -320,7 +368,7 @@ class main_window(QMainWindow):
         self.view = seg_label.view_project(parent=self.tab_view, file_link=hdf, signal=self.signal_task_index)
         control = seg_label.view_project_control(signal=self.signal_task_index)
         self.view_project_control_layout.addWidget(control)
-        self.btns_group_open.setVisible(False)
+        #self.btns_group_open.setVisible(False)
         self.main_layout.addWidget(control, 0, 1)
 
     @pyqtSlot(str)
