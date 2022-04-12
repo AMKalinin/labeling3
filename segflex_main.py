@@ -118,6 +118,63 @@ class higher_control(QGroupBox):
         self.dialog = segflex_new_project.new_project_dialog_new(signal=self.signal)
         self.dialog.exec_()
 
+class my_tab(QTabWidget):
+    def __init__(self, parent=None):
+        super().__init__()
+        self.init_ui()
+
+
+    def init_ui(self):
+        self.init_tabs()
+        self.init_layouts()
+        self.set_layouts()
+        self.place_tabs()
+
+    def init_layouts(self):
+        self.projects_layout = QVBoxLayout()
+        self.tasksleft_layout = QVBoxLayout()
+        self.tasksright_layout = QVBoxLayout()
+        self.view_layout = QGridLayout()
+
+
+    def init_tabs(self):
+        self.projects_area = QScrollArea(self)
+        self.tasksleft_area = QScrollArea(self)
+        self.tasksright_area = QScrollArea(self)
+        self.view = QWidget(self) 
+
+        self.projects_area.setWidgetResizable(True)
+        self.tasksleft_area.setWidgetResizable(True)
+        self.tasksright_area.setWidgetResizable(True)
+
+        self.split = QSplitter()
+        self.split.addWidget(self.tasksleft_area)
+        self.split.addWidget(self.tasksright_area)
+
+        self.projects_group = QGroupBox(self.projects_area)
+        self.tasksleft_group = QGroupBox(self.tasksleft_area)
+        self.tasksright_group = QGroupBox(self.tasksright_area)
+        #self.view = QWidget(self.tab_view)
+
+        self.projects_group.setTitle("Проекты")
+        self.tasksleft_group.setTitle("Разметка")
+        self.tasksright_group.setTitle("Контроль и редактирование")
+
+        self.projects_area.setWidget(self.projects_group)
+        self.tasksleft_area.setWidget(self.tasksleft_group)
+        self.tasksright_area.setWidget(self.tasksright_group)
+
+    def set_layouts(self):
+        self.projects_group.setLayout(self.projects_layout)
+        self.tasksleft_group.setLayout(self.tasksleft_layout)
+        self.tasksright_group.setLayout(self.tasksright_layout)
+        self.view.setLayout(self.view_layout)
+
+    def place_tabs(self):
+        self.addTab(self.projects_area, "Проекты")
+        self.addTab(self.split, "Задачи")
+        self.addTab(self.view, "Просмотр")
+
 
 
 class main_window(QMainWindow):
@@ -181,14 +238,16 @@ class main_window(QMainWindow):
         self.tab.addTab(self.tab_split, "Задачи")
         self.tab.addTab(self.tab_view, "Просмотр")
 
-        self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
+        #self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
+        self.test = my_tab()
+        self.main_layout.addWidget(self.test, 0, 0, 4, 1)
         self.main_layout.addWidget(self.higher_control, 0, 1)
         self.main_layout.addWidget(self.description, 0, 1)
         self.main_layout.addWidget(self.navigation, 0, 1)
         self.show_higher_control()
 
     def connect_ui(self):
-        self.signal_parse_tasks.connect(self.parse_tasks)
+        #self.signal_parse_tasks.connect(self.parse_tasks)
         self.signal_parse_projects.connect(self.parse_projects_folder)
         self.signal_open_project.connect(self.open_project_routine)
         self.signal_reopen_project.connect(self.reopen_project_routine)
@@ -271,7 +330,7 @@ class main_window(QMainWindow):
                     #project_widget = project.project_as_widget(name=project_name, classes=project_classes, path=project_full_name, signal= self.signal_parse_tasks, signal_open=self.signal_open_project)
                     project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name, name=project_name)
                     self.tab_projects_layout.addWidget(project_widget)
-
+    """
     def parse_tasks(self, project_path):
         self.clear_table_layout(layout=self.tab_tasks_left_layout)
         self.clear_table_layout(layout=self.tab_tasks_right_layout)
@@ -292,7 +351,9 @@ class main_window(QMainWindow):
                 if status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
                     task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
                     self.tab_tasks_right_layout.addWidget(task_widget)
-    
+    """
+
+    """
     def show_view_tab(self, project_path):
         hdf = h5py.File(project_path, 'r')
         self.view = seg_label.view_project(parent=self.tab_view, file_link=hdf, signal=self.signal_task_index)
@@ -300,6 +361,7 @@ class main_window(QMainWindow):
         self.view_project_control_layout.addWidget(control)
         #self.btns_group_open.setVisible(False)
         self.main_layout.addWidget(control, 0, 1)
+    """
     
     def view_parse_routine(self):
         print("view parse, file = ", self.file)
