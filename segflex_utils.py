@@ -22,8 +22,9 @@ from PyQt5.QtCore import pyqtSignal, QObject
 def pixmap_at_index(file_link, index):
 
     hdf = file_link
-    group_srcs = hdf[classifier.HDF_GROUP_SRCS_NAME]
-    dataset = group_srcs[str(index)]
+    #group_srcs = hdf[classifier.HDF_GROUP_SRCS_NAME]
+    print(str(index))
+    dataset = hdf[str(index)]
     image_as_numpy = dataset[()]
     height, width, channel = image_as_numpy.shape
     bytesPerLine = 3 * width

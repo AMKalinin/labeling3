@@ -55,6 +55,8 @@ class project_description_new(QGroupBox):
         layout.addWidget(self.items_menu)
         layout.addWidget(self.btn_add)
         self.setLayout(layout)
+        if self.file:
+            self.update_description()
     
     def on_add(self):
         task_to_add = QFileDialog.getOpenFileName()[0]
@@ -69,7 +71,8 @@ class project_description_new(QGroupBox):
             self.signal.emit()
 
 
-    def update_description(self, hdf):
+    def update_description(self):
+        hdf = self.file
         self.file_name = hdf.attrs[classifier.HDF_FILE_NAME]
         self.file_classes = hdf.attrs[classifier.HDF_FILE_CLASSES]
         self.file_time_c = hdf.attrs[classifier.HDF_FILE_TIME_C]
@@ -164,6 +167,7 @@ class main_window(QMainWindow):
         self.init_table()
         self.higher_control = higher_control(signal=self.signal_parse_projects)
         self.description = project_description_new()
+        self.navigation = seg_label.view_project_control()
 
     def set_layouts(self):
         self.main_frame.setLayout(self.main_layout)
@@ -180,6 +184,7 @@ class main_window(QMainWindow):
         self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
         self.main_layout.addWidget(self.higher_control, 0, 1)
         self.main_layout.addWidget(self.description, 0, 1)
+        self.main_layout.addWidget(self.navigation, 0, 1)
         self.show_higher_control()
 
     def connect_ui(self):
@@ -193,17 +198,27 @@ class main_window(QMainWindow):
     def show_tab(self):
         if self.tab.currentWidget() == self.tab_split:
             self.show_description()
-        if self.tab.currentWidget() == self.tab_projects_area:
+        elif self.tab.currentWidget() == self.tab_projects_area:
             self.show_higher_control()
+        elif self.tab.currentWidget() == self.tab_view:
+            self.show_navigation()
 
     def show_description(self):
         self.higher_control.setVisible(False)
+        self.navigation.setVisible(False)
         self.description.setVisible(True)
 
     def show_higher_control(self):
         self.higher_control.setVisible(True)
+        self.navigation.setVisible(False)
         self.description.setVisible(False)
 
+    def show_navigation(self):
+        print("navigation tab")
+        self.higher_control.setVisible(False)
+        
+        self.description.setVisible(False)
+        self.navigation.setVisible(True)
 
     def init_table(self):
         self.tab = QTabWidget()
@@ -285,6 +300,11 @@ class main_window(QMainWindow):
         self.view_project_control_layout.addWidget(control)
         #self.btns_group_open.setVisible(False)
         self.main_layout.addWidget(control, 0, 1)
+    
+    def view_parse_routine(self):
+        print("view parse, file = ", self.file)
+        self.view = seg_label.view_project(parent=self.tab_view, file_link=self.file, signal=self.signal_task_index)
+
 
     @pyqtSlot(str)
     def open_project_routine(self, project_path):
@@ -301,6 +321,8 @@ class main_window(QMainWindow):
         self.help_clear_layouts()
         self.task_parse_routine()#, path=project_path)
         self.description_parse_routine()
+        self.view_parse_routine()
+
         #self.btn_add_task_create()
         #self.view.deleteLater()
         #print(self.view)
@@ -318,16 +340,20 @@ class main_window(QMainWindow):
         dialog.exec_()
 
     def description_parse_routine(self):
-        hdf = self.file
+        #hdf = self.file
         #utils.clear_layout(self.tasks_control_layout)
-        self.description = project_description_new(project_file=hdf, signal=self.signal_reopen_project)
-        self.description.update_description(hdf)
+        #self.description.deleteLater()
+        self.description = project_description_new(project_file=self.file, signal=self.signal_reopen_project)
+        #self.description.update_description(hdf)
         self.main_layout.addWidget(self.description, 0, 1)
         #self.tasks_control_layout.addWidget(self.description)
 
     def descriptrion_reparse_routine(self):
-        hdf = self.file
-        self.description.update_description(hdf)
+        #hdf = self.file
+        #self.description.update_description(hdf)
+        #self.description.deleteLater()
+        self.description = project_description_new(project_file=self.file, signal=self.signal_reopen_project)
+        self.main_layout.addWidget(self.description, 0, 1)
 
     def task_parse_routine(self):
         hdf = self.file

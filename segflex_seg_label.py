@@ -141,6 +141,8 @@ class view_project(QGraphicsView):
     
     @pyqtSlot(int)
     def pixmap_change(self, index):
+        print("slot got index = ", index)
+        print("file obj = ", self.hdf_file)
         self.scene.removeItem(self.background)
         image_as_pixmap = utils.pixmap_at_index(self.hdf_file, index)
         self.background = self.scene.addPixmap(image_as_pixmap)
