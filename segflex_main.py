@@ -159,7 +159,7 @@ class main_window(QMainWindow):
         self.init_widgets()
         self.set_layouts()
         self.place_blocks()
-        self.place_widgets()
+        #self.place_widgets()
         self.connect_ui()
         self.parse_projects_folder()
         #self.show_view_tab(project_path="/home/iakhmetev/Документы/8.3_version_2_data_labeling/__projects/123.hdf5")
@@ -189,8 +189,10 @@ class main_window(QMainWindow):
 
     def init_widgets(self):
         self.init_table()
-        self.init_controls_projects()
-        self.init_description()
+        self.higher_control = higher_control(signal=self.signal_parse_projects)
+        self.description = project_description_new()
+        #self.init_controls_projects()
+        #self.init_description()
         #self.init_controls_tasks()
 
     def set_layouts(self):
@@ -286,15 +288,15 @@ class main_window(QMainWindow):
         self.tab_tasks_right_area.setWidget(self.tab_tasks_right_group)
         #self.tab_view_widget.setWidget(self.tab_view_group)
 
-    def init_controls_projects(self):
-        self.higher_control = higher_control(signal=self.signal_parse_projects)
+    #def init_controls_projects(self):
+    #    self.higher_control = higher_control(signal=self.signal_parse_projects)
         #self.btns_group_open = QGroupBox()
         #self.btn_project_new = QPushButton("Создать новый файл проекта")
         #self.btn_project_add = QPushButton("Добавить проект из ...")
         #self.btn_project_based = QPushButton("Создать проект на основе существующего")
     
-    def init_description(self):
-        self.description = project_description_new()
+    #def init_description(self):
+    #    self.description = project_description_new()
 
     def init_controls_tasks(self):
         self.btns_group_tasks = QGroupBox("Атрибуты проекта")
