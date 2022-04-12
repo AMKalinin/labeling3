@@ -290,7 +290,8 @@ class main_window(QMainWindow):
                 with h5py.File(project_full_name, 'r') as hdf:
                     project_name = hdf.attrs[classifier.HDF_FILE_NAME]
                     project_classes = hdf.attrs[classifier.HDF_FILE_CLASSES]
-                    project_widget = project.project_as_widget(name=project_name, classes=project_classes, path=project_full_name, signal= self.signal_parse_tasks, signal_open=self.signal_open_project)
+                    #project_widget = project.project_as_widget(name=project_name, classes=project_classes, path=project_full_name, signal= self.signal_parse_tasks, signal_open=self.signal_open_project)
+                    project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name, name=project_name)
                     self.tab_projects_layout.addWidget(project_widget)
 
     def parse_tasks(self, project_path):

@@ -15,6 +15,56 @@ import segflex_classifier as classifier
 import cv2
 
 
+class project_widget_new(QGroupBox):
+    def __init__(self, signal, path, name, parent=None):
+        super().__init__()
+        self.signal = signal
+        self.path = path
+        self.name = name
+        self.init_ui()
+
+
+    def init_ui(self):
+        self.set_layouts()
+        self.adjust_size()
+        self.init_contents()
+        self.fill_layouts()
+        self.connect_ui()
+
+    def set_layouts(self):
+        self.layout = QHBoxLayout()
+        self.layout_preview = QVBoxLayout()
+        self.layout_info = QVBoxLayout()
+        self.layout_actions = QVBoxLayout()
+
+        self.layout.addLayout(self.layout_preview)
+        self.layout.addLayout(self.layout_info)
+        self.layout.addLayout(self.layout_actions)
+
+        self.setLayout(self.layout)
+
+    def adjust_size(self):
+        self.setMaximumHeight(120)
+
+    def init_contents(self):
+        self.btn_open = QPushButton("Открыть проект")
+        self.info = QLabel(self.name)
+
+    def fill_layouts(self):
+        self.layout_actions.addWidget(self.btn_open)
+        self.layout_info.addWidget(self.info)
+    
+    def connect_ui(self):
+        self.btn_open.clicked.connect(self.on_open)
+
+    def on_open(self):
+        self.signal.emit(self.path)
+
+        
+
+
+        
+
 
 class project_as_widget(QGroupBox):
     Signal_OneParameter = pyqtSignal(str)
