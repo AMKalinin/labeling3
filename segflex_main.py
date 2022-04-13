@@ -119,8 +119,9 @@ class higher_control(QGroupBox):
         self.dialog.exec_()
 
 class my_tab(QTabWidget):
-    def __init__(self, parent=None):
+    def __init__(self, signal, parent=None):
         super().__init__()
+        self.signal = signal
         self.init_ui()
 
 
@@ -174,6 +175,21 @@ class my_tab(QTabWidget):
         self.addTab(self.projects, "Проекты")
         self.addTab(self.split, "Задачи")
         self.addTab(self.view, "Просмотр")
+
+
+    def parse_projects(self):
+        utils.clear_layout(layout=self.projects_layout)
+        #self.tab.setCurrentWidget(self.tab_projects_area)
+        projects_list = os.listdir(classifier.PROJECTS_FOLDER_FULL_NAME)
+        for project_short_name in projects_list:
+            #if project_short_name.find(classifier.HDF_POSTFIX) != -1:
+            project_full_name = classifier.PROJECTS_FOLDER_FULL_NAME + '/' + project_short_name
+            with h5py.File(project_full_name, 'r') as hdf:
+                #project_name = hdf.attrs[classifier.HDF_FILE_NAME]
+                #project_classes = hdf.attrs[classifier.HDF_FILE_CLASSES]
+                #project_widget = project.project_as_widget(name=project_name, classes=project_classes, path=project_full_name, signal= self.signal_parse_tasks, signal_open=self.signal_open_project)
+                project_widget = project.project_widget_new(signal=self.signal, path=project_full_name)#, name=project_name)
+                self.projects_layout.addWidget(project_widget)
 
 
 
@@ -239,7 +255,8 @@ class main_window(QMainWindow):
         self.tab.addTab(self.tab_view, "Просмотр")
 
         #self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
-        self.tab_new = my_tab()
+        self.tab_new = my_tab(signal=self.signal_open_project)
+        self.tab_new.parse_projects()
         self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)
         self.main_layout.addWidget(self.higher_control, 0, 1)
         self.main_layout.addWidget(self.description, 0, 1)
@@ -335,7 +352,8 @@ class main_window(QMainWindow):
                     project_name = hdf.attrs[classifier.HDF_FILE_NAME]
                     project_classes = hdf.attrs[classifier.HDF_FILE_CLASSES]
                     #project_widget = project.project_as_widget(name=project_name, classes=project_classes, path=project_full_name, signal= self.signal_parse_tasks, signal_open=self.signal_open_project)
-                    project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name, name=project_name)
+                    #project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name, name=project_name)
+                    project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name)#, name=project_name)
                     self.tab_projects_layout.addWidget(project_widget)
     """
     def parse_tasks(self, project_path):

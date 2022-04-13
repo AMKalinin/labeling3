@@ -16,11 +16,11 @@ import cv2
 
 
 class project_widget_new(QGroupBox):
-    def __init__(self, signal, path, name, parent=None):
+    def __init__(self, signal, path, parent=None):
         super().__init__()
         self.signal = signal
         self.path = path
-        self.name = name
+        #self.name = name
         self.init_ui()
 
 
@@ -48,7 +48,7 @@ class project_widget_new(QGroupBox):
 
     def init_content(self):
         self.btn_open = QPushButton("Открыть проект")
-        self.info = QLabel(self.name)
+        self.info = QLabel(self.path)
 
     def fill_layouts(self):
         self.layout_actions.addWidget(self.btn_open)
