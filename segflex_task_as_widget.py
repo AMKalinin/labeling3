@@ -12,7 +12,7 @@ import segflex_classifier as classifier
 import h5py
 
 class task_widget_new(QGroupBox):
-    def __init__(self, project_file, identifier, mode, signal):
+    def __init__(self, project_file, identifier, mode, signal=None):
         super().__init__()
         self.file = project_file
         self.identifier = identifier
@@ -94,7 +94,8 @@ class task_widget_new(QGroupBox):
         self.layout_actions.addWidget(self.emit_btn)
 
     def on_emit(self):
-        self.signal.emit()
+        if self.signal:
+            self.signal.emit()
 
 
 

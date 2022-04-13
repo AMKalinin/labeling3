@@ -183,6 +183,20 @@ class my_tab(QTabWidget):
                 project_widget = project.project_widget_new(signal=self.signal, path=project_full_name)
                 self.projects_layout.addWidget(project_widget)
 
+    def parse_tasks(self, hdf):
+        utils.clear_layout(layout=self.tasksleft_layout)
+        utils.clear_layout(layout=self.tasksright_layout)
+        tasks_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
+        for task_id in range(tasks_count):
+            task_status = hdf[str(task_id)].attrs[classifier.HDF_TASK_STATUS]
+            if task_status == classifier.HDF_TASK_STATUS_0 or status == classifier.HDF_TASK_STATUS_1:
+                task_widget = task_base.task_widget_new(project_file=hdf, identifier=task_id, mode=classifier.TASK_WIDGET_MODE_0)#, signal=self.signal_reopen_project)
+                self.tasksleft_layout.addWidget(task_widget)
+            elif task_status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
+                print("creating right")
+                #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
+                #self.tab_tasks_right_layout.addWidget(task_widget)
+
 
 class main_window(QMainWindow):
     signal_parse_tasks = pyqtSignal(str)
@@ -385,6 +399,7 @@ class main_window(QMainWindow):
 
     @pyqtSlot(str)
     def open_project_routine(self, project_path):
+        print("hello from main")
         #print(project_path)
         #print("open")
         if self.file:
@@ -395,8 +410,10 @@ class main_window(QMainWindow):
                 #print(self.file.closed)
         #self.file_path = project_path
         self.file = h5py.File(project_path, 'r+')
-        self.help_clear_layouts()
-        self.task_parse_routine()#, path=project_path)
+        #self.help_clear_layouts()
+        self.tab_new.parse_tasks(self.file)
+        #self.task_parse_routine()#, path=project_path)
+        self.description.
         self.description_parse_routine()
         self.view_parse_routine()
 
