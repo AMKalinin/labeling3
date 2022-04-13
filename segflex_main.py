@@ -25,65 +25,68 @@ import cv2
 class project_description_new(QGroupBox):
     def __init__(self, project_file=None, signal=None, project_path=None):
         super().__init__()
-        self.project_path = project_path
-        self.file = project_file
-        self.signal = signal
-        self.file_name = 'не задано'
-        self.file_classes = 'не задано'
-        self.file_time_c = 'не задано'
-        self.file_time_u = 'не задано'
-        self.file_description = 'не задано'
-        self.file_task_count = 'не задано'
-        self.item_name = QListWidgetItem(classifier.HDF_FILE_NAME + self.file_name)
-        self.item_classes = QListWidgetItem(classifier.HDF_FILE_CLASSES + self.file_classes)
-        self.item_time_c = QListWidgetItem(classifier.HDF_FILE_TIME_C + self.file_time_c)
-        self.item_time_u = QListWidgetItem(classifier.HDF_FILE_TIME_U + self.file_time_u)
-        self.item_description = QListWidgetItem(classifier.HDF_FILE_DESCRIPTION + self.file_description)
-        self.item_task_count = QListWidgetItem(classifier.HDF_FILE_TASK_COUNT + self.file_task_count)
-        self.items_menu = QListWidget()
-        self.items_menu.addItem(self.item_name)
-        self.items_menu.addItem(self.item_classes)
-        self.items_menu.addItem(self.item_time_c)
-        self.items_menu.addItem(self.item_time_u)
-        self.items_menu.addItem(self.item_description)
-        self.items_menu.addItem(self.item_task_count)
+        self.init_ui()
+
+    def init_ui(self):
+        self.init_content()
+        self.init_menu()
+        self.adjust_window()
+
+    def init_content(self):
+        self.name = ' проект не открыт'
+        self.classes = ' проект не открыт'
+        self.time_c = ' проект не открыт'
+        self.time_u = ' проект не открыт'
+        self.description = ' проект не открыт'
+        self.task_count = ' проект не открыт'
 
         self.btn_add = QPushButton("Добавить задачу")
-        self.btn_add.clicked.connect(self.on_add)
 
-        layout = QVBoxLayout()
-        layout.addWidget(self.items_menu)
-        layout.addWidget(self.btn_add)
-        self.setLayout(layout)
-        if self.file:
-            self.update_description()
-    
-    def on_add(self):
-        task_to_add = QFileDialog.getOpenFileName()[0]
-        hdf = self.file
-        if task_to_add:
-            task_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
-            task_as_numpy = cv2.imread(task_to_add)
-            hdf.create_dataset(str(task_count), data=task_as_numpy)
-            hdf[str(task_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
-            hdf[str(task_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
-            hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
-            self.signal.emit()
+    def init_menu(self):
+        self.menu = QListWidget()
 
+        self.name = QListWidgetItem(classifier.HDF_FILE_NAME + self.name)
+        self.classes = QListWidgetItem(classifier.HDF_FILE_CLASSES + self.classes)
+        self.time_c = QListWidgetItem(classifier.HDF_FILE_TIME_C + self.time_c)
+        self.time_u = QListWidgetItem(classifier.HDF_FILE_TIME_U + self.time_u)
+        self.description = QListWidgetItem(classifier.HDF_FILE_DESCRIPTION + self.description)
+        self.task_count = QListWidgetItem(classifier.HDF_FILE_TASK_COUNT + self.task_count)
 
-    def update_description(self):
-        hdf = self.file
+        self.menu.addItem(self.name)
+        self.menu.addItem(self.classes)
+        self.menu.addItem(self.time_c)
+        self.menu.addItem(self.time_u)
+        self.menu.addItem(self.description)
+        self.menu.addItem(self.task_count)
+
+    def adjust_window(self):
+        self.layout = QVBoxLayout()
+
+        self.layout.addWidget(self.menu)
+        self.layout.addWidget(self.btn_add)
+
+        self.setLayout(self.layout)
+
+    def parse_description(self, hdf):
+        self.name.setText(classifier.HDF_FILE_NAME + hdf.attrs[classifier.HDF_FILE_NAME])
+        self.description.setText(classifier.HDF_FILE_DESCRIPTION + hdf.attrs[classifier.HDF_FILE_DESCRIPTION])
+        self.task_count.setText(classifier.HDF_FILE_TASK_COUNT +  str(hdf.attrs[classifier.HDF_FILE_TASK_COUNT])) #str?
+        """
         self.file_name = hdf.attrs[classifier.HDF_FILE_NAME]
         self.file_classes = hdf.attrs[classifier.HDF_FILE_CLASSES]
         self.file_time_c = hdf.attrs[classifier.HDF_FILE_TIME_C]
         self.file_time_u = hdf.attrs[classifier.HDF_FILE_TIME_U]
         self.file_description = hdf.attrs[classifier.HDF_FILE_DESCRIPTION]
         self.file_task_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
+        """
+
+        """
         self.item_name.setText(classifier.HDF_FILE_NAME + self.file_name)
         #self.item_classes.setText(classifier.HDF_FILE_CLASSES + self.file_classes)
         #self.item_time_u.setText(classifier.HDF_FILE_TIME_U + self.file_time_u)
         self.item_description.setText(classifier.HDF_FILE_DESCRIPTION + self.file_description)
         self.item_task_count.setText(classifier.HDF_FILE_TASK_COUNT + str(int(self.file_task_count)))
+        """
 
 class higher_control(QGroupBox):
     def __init__(self, signal, parent=None):
@@ -196,7 +199,18 @@ class my_tab(QTabWidget):
                 print("creating right")
                 #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
                 #self.tab_tasks_right_layout.addWidget(task_widget)
-
+    """
+    def add_task(self, hdf):
+        task = QFileDialog.getOpenFileName()[0]
+        if task:
+            tasks_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
+            task_numpy = cv2.imread(task)
+            hdf.create_dataset(str(tasks_count), data=task_numpy)
+            hdf[str(tasks_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
+            hdf[str(tasks_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
+            hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
+            self.signal.emit()
+    """
 
 class main_window(QMainWindow):
     signal_parse_tasks = pyqtSignal(str)
@@ -274,6 +288,7 @@ class main_window(QMainWindow):
         self.signal_reopen_project.connect(self.reopen_project_routine)
         #self.tab.currentChanged.connect(self.show_tab)
         self.tab_new.currentChanged.connect(self.show_tab_new)
+        self.description.btn_add.clicked.connect(self.add_task)
         #self.btn_add_image.clicked.connect(self.on_add_new_task)
     
     def show_tab(self):
@@ -412,9 +427,10 @@ class main_window(QMainWindow):
         self.file = h5py.File(project_path, 'r+')
         #self.help_clear_layouts()
         self.tab_new.parse_tasks(self.file)
+        self.description.parse_description(self.file)
         #self.task_parse_routine()#, path=project_path)
-        self.description.
-        self.description_parse_routine()
+        #self.description.
+        #self.description_parse_routine()
         self.view_parse_routine()
 
         #self.btn_add_task_create()
@@ -478,4 +494,18 @@ class main_window(QMainWindow):
         utils.clear_layout(self.tab_tasks_right_layout)
         #utils.clear_layout(self.tasks_control_layout)
         utils.clear_layout(self.view_control_layout)
+
+    def add_task(self):
+        print(self.file)
+        if self.file:
+    
+            hdf = self.file
+            task = QFileDialog.getOpenFileName()[0]
+            if task:
+                tasks_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
+                task_numpy = cv2.imread(task)
+                hdf.create_dataset(str(tasks_count), data=task_numpy)
+                hdf[str(tasks_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
+                hdf[str(tasks_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
+                hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
 
