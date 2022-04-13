@@ -138,31 +138,31 @@ class my_tab(QTabWidget):
 
 
     def init_tabs(self):
-        self.projects_area = QScrollArea(self)
-        self.tasksleft_area = QScrollArea(self)
-        self.tasksright_area = QScrollArea(self)
+        self.projects = QScrollArea(self)
+        self.tasksleft = QScrollArea(self)
+        self.tasksright = QScrollArea(self)
         self.view = QWidget(self) 
 
-        self.projects_area.setWidgetResizable(True)
-        self.tasksleft_area.setWidgetResizable(True)
-        self.tasksright_area.setWidgetResizable(True)
+        self.projects.setWidgetResizable(True)
+        self.tasksleft.setWidgetResizable(True)
+        self.tasksright.setWidgetResizable(True)
 
         self.split = QSplitter()
-        self.split.addWidget(self.tasksleft_area)
-        self.split.addWidget(self.tasksright_area)
+        self.split.addWidget(self.tasksleft)
+        self.split.addWidget(self.tasksright)
 
-        self.projects_group = QGroupBox(self.projects_area)
-        self.tasksleft_group = QGroupBox(self.tasksleft_area)
-        self.tasksright_group = QGroupBox(self.tasksright_area)
+        self.projects_group = QGroupBox(self.projects)
+        self.tasksleft_group = QGroupBox(self.tasksleft)
+        self.tasksright_group = QGroupBox(self.tasksright)
         #self.view = QWidget(self.tab_view)
 
         self.projects_group.setTitle("Проекты")
         self.tasksleft_group.setTitle("Разметка")
         self.tasksright_group.setTitle("Контроль и редактирование")
 
-        self.projects_area.setWidget(self.projects_group)
-        self.tasksleft_area.setWidget(self.tasksleft_group)
-        self.tasksright_area.setWidget(self.tasksright_group)
+        self.projects.setWidget(self.projects_group)
+        self.tasksleft.setWidget(self.tasksleft_group)
+        self.tasksright.setWidget(self.tasksright_group)
 
     def set_layouts(self):
         self.projects_group.setLayout(self.projects_layout)
@@ -171,7 +171,7 @@ class my_tab(QTabWidget):
         self.view.setLayout(self.view_layout)
 
     def place_tabs(self):
-        self.addTab(self.projects_area, "Проекты")
+        self.addTab(self.projects, "Проекты")
         self.addTab(self.split, "Задачи")
         self.addTab(self.view, "Просмотр")
 
@@ -239,8 +239,8 @@ class main_window(QMainWindow):
         self.tab.addTab(self.tab_view, "Просмотр")
 
         #self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
-        self.test = my_tab()
-        self.main_layout.addWidget(self.test, 0, 0, 4, 1)
+        self.tab_new = my_tab()
+        self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)
         self.main_layout.addWidget(self.higher_control, 0, 1)
         self.main_layout.addWidget(self.description, 0, 1)
         self.main_layout.addWidget(self.navigation, 0, 1)
@@ -251,7 +251,8 @@ class main_window(QMainWindow):
         self.signal_parse_projects.connect(self.parse_projects_folder)
         self.signal_open_project.connect(self.open_project_routine)
         self.signal_reopen_project.connect(self.reopen_project_routine)
-        self.tab.currentChanged.connect(self.show_tab)
+        #self.tab.currentChanged.connect(self.show_tab)
+        self.tab_new.currentChanged.connect(self.show_tab_new)
         #self.btn_add_image.clicked.connect(self.on_add_new_task)
     
     def show_tab(self):
@@ -260,6 +261,14 @@ class main_window(QMainWindow):
         elif self.tab.currentWidget() == self.tab_projects_area:
             self.show_higher_control()
         elif self.tab.currentWidget() == self.tab_view:
+            self.show_navigation()
+    
+    def show_tab_new(self):
+        if self.tab_new.currentWidget() == self.tab_new.split:
+            self.show_description()
+        elif self.tab_new.currentWidget() == self.tab_new.projects:
+            self.show_higher_control()
+        elif self.tab_new.currentWidget() == self.tab_new.view:
             self.show_navigation()
 
     def show_description(self):
@@ -273,9 +282,7 @@ class main_window(QMainWindow):
         self.description.setVisible(False)
 
     def show_navigation(self):
-        print("navigation tab")
         self.higher_control.setVisible(False)
-        
         self.description.setVisible(False)
         self.navigation.setVisible(True)
 
