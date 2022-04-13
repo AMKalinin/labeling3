@@ -199,18 +199,6 @@ class my_tab(QTabWidget):
                 print("creating right")
                 #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
                 #self.tab_tasks_right_layout.addWidget(task_widget)
-    """
-    def add_task(self, hdf):
-        task = QFileDialog.getOpenFileName()[0]
-        if task:
-            tasks_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
-            task_numpy = cv2.imread(task)
-            hdf.create_dataset(str(tasks_count), data=task_numpy)
-            hdf[str(tasks_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
-            hdf[str(tasks_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
-            hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
-            self.signal.emit()
-    """
 
 class main_window(QMainWindow):
     signal_parse_tasks = pyqtSignal(str)
@@ -439,6 +427,10 @@ class main_window(QMainWindow):
 
         #self.parse_tasks(project_path)
         #self.show_view_tab(project_path)
+    def adjust_opened_project(self):
+        self.tab_new.parse_tasks(self.file)
+        self.description.parse_description(self.file)
+
     @pyqtSlot()
     def reopen_project_routine(self):
         self.help_clear_layouts()
@@ -496,9 +488,7 @@ class main_window(QMainWindow):
         utils.clear_layout(self.view_control_layout)
 
     def add_task(self):
-        print(self.file)
         if self.file:
-    
             hdf = self.file
             task = QFileDialog.getOpenFileName()[0]
             if task:
@@ -508,4 +498,5 @@ class main_window(QMainWindow):
                 hdf[str(tasks_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
                 hdf[str(tasks_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
                 hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
+                self.adjust_opened_project()
 
