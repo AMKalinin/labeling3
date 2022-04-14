@@ -125,8 +125,13 @@ class my_tab(QTabWidget):
     def __init__(self, signal, parent=None):
         super().__init__()
         self.signal = signal
+        self.index = 0
+        self.view_w = None
+
         self.init_ui()
         self.parse_projects()
+        #self.parse_view()
+        self.init_view()
 
     def init_ui(self):
         self.init_tabs()
@@ -200,6 +205,51 @@ class my_tab(QTabWidget):
                 #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
                 #self.tab_tasks_right_layout.addWidget(task_widget)
 
+    def parse_view(self, hdf):
+        self.view_w = seg_label.view_project(parent=self.view, file_link=hdf)    
+        """
+        if self.view_w == None:
+            self.view_w = seg_label.view_project(parent=self.view, index=self.index, file_link=hdf)
+        else:
+            self.hdf = hdf
+            self.view_w.pixmap_change(self.hdf,self.index)
+        #pass
+        """
+    def init_view(self):
+        self.view_w = seg_label.view_project(parent=self.view, file_link=None)
+    
+    def change_view(self, index):
+        self.view_w.change_pixmap(index)
+
+class view_control(QGroupBox):
+    def __init__(self):#, signal):
+        super().__init__()
+        #self.signal = signal
+        self.init_ui()
+        #self.connect_ui()
+
+    def init_ui(self):
+        self.btn_previous = QPushButton("<<")
+        self.btn_next = QPushButton(">>")
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.btn_previous)
+        self.layout.addWidget(self.btn_next)
+
+        self.setLayout(self.layout)
+    """
+    def connect_ui(self):
+        self.btn_previous.clicked.connect(self.on_left)
+        self.btn_next.clicked.connect(self.on_right)
+    
+    def on_left(self):
+        self.signal.emit(-1)
+
+    def on_right(self):
+        self.signal.emit(1)
+    """
+
+
 class main_window(QMainWindow):
     signal_parse_tasks = pyqtSignal(str)
     signal_task_index = pyqtSignal(int)
@@ -207,6 +257,7 @@ class main_window(QMainWindow):
     signal_parse_projects = pyqtSignal()
     signal_open_project = pyqtSignal(str)
     signal_reopen_project = pyqtSignal()
+    #signal_change_view = pyqtSignal(int)
 
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
@@ -247,7 +298,8 @@ class main_window(QMainWindow):
         self.init_table()
         self.higher_control = higher_control(signal=self.signal_parse_projects)
         self.description = project_description_new()
-        self.navigation = seg_label.view_project_control()
+        #self.navigation = seg_label.view_project_control()
+        self.navigation = view_control()#(signal = self.signal_change_view)
 
     def set_layouts(self):
         self.main_frame.setLayout(self.main_layout)
@@ -277,6 +329,8 @@ class main_window(QMainWindow):
         #self.tab.currentChanged.connect(self.show_tab)
         self.tab_new.currentChanged.connect(self.show_tab_new)
         self.description.btn_add.clicked.connect(self.add_task)
+        self.navigation.btn_previous.clicked.connect(self.previous_view)
+        self.navigation.btn_next.clicked.connect(self.next_view)
         #self.btn_add_image.clicked.connect(self.on_add_new_task)
     
     def show_tab(self):
@@ -397,7 +451,7 @@ class main_window(QMainWindow):
     
     def view_parse_routine(self):
         print("view parse, file = ", self.file)
-        self.view = seg_label.view_project(parent=self.tab_view, file_link=self.file, signal=self.signal_task_index)
+        self.view = seg_label.view_project(parent=self.tab_view, index=0,file_link=self.file, signal=self.signal_task_index)
 
 
     @pyqtSlot(str)
@@ -416,10 +470,11 @@ class main_window(QMainWindow):
         #self.help_clear_layouts()
         self.tab_new.parse_tasks(self.file)
         self.description.parse_description(self.file)
+        self.tab_new.parse_view(hdf=self.file)
         #self.task_parse_routine()#, path=project_path)
         #self.description.
         #self.description_parse_routine()
-        self.view_parse_routine()
+        #self.view_parse_routine()
 
         #self.btn_add_task_create()
         #self.view.deleteLater()
@@ -499,4 +554,16 @@ class main_window(QMainWindow):
                 hdf[str(tasks_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
                 hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
                 self.adjust_opened_project()
+
+    def previous_view(self):
+        print("prev view")
+        #self.tab_new.parse_view(hdf=self.file, index=-1)
+        self.tab_new.change_view(index=-1)
+
+    def next_view(self):
+        print("next view")
+        #self.tab_new.parse_view(hdf=self.file, index=1)
+        self.tab_new.change_view(index=+1)
+
+
 

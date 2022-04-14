@@ -18,12 +18,16 @@ import re
 from ast import literal_eval as make_tuple
 from PyQt5.QtCore import pyqtSignal, QObject
 
+def pixmap_default():
+    return QPixmap("img_default.jpg")
+
 
 def pixmap_at_index(file_link, index):
 
     hdf = file_link
+    myindex = str(index)
     #group_srcs = hdf[classifier.HDF_GROUP_SRCS_NAME]
-    print(str(index))
+    print(myindex)
     dataset = hdf[str(index)]
     image_as_numpy = dataset[()]
     height, width, channel = image_as_numpy.shape

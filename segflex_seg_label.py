@@ -118,33 +118,50 @@ class view_project_control(QGroupBox):
 
 
 class view_project(QGraphicsView):
-    def __init__(self, parent, file_link=None, signal=None):
+    def __init__(self, parent, file_link=None):
         super().__init__(parent = parent)
-        self.signal = signal
-        self.hdf_file = file_link
 
-        image_as_pixmap = utils.pixmap_at_index(self.hdf_file, 0)
+        self.index = 0
+        self.hdf = file_link
         self.setGeometry(QtCore.QRect(10, 40, 601, 411))
         self.scene = QGraphicsScene()
-        self.background = self.scene.addPixmap(image_as_pixmap)
         self.setScene(self.scene)
-        self.signal.connect(self.pixmap_change)
+        
+
+        if file_link == None:
+            image_as_pixmap = utils.pixmap_default()
+            self.background = self.scene.addPixmap(image_as_pixmap)
+            
+        else:
+            #print("index in seg_label", index)
+            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            self.background = self.scene.addPixmap(image_as_pixmap)
+            self.change_pixmap(0)
+            #image_as_pixmap = utils.pixmap_at_index(self.hdf_file, index)
+            #tasks_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
+
+        #self.setGeometry(QtCore.QRect(10, 40, 601, 411))
+        #self.scene = QGraphicsScene()
+        #self.background = self.scene.addPixmap(image_as_pixmap)
+        #self.setScene(self.scene)
 
 
-    def mousePressEvent(self, event):
-        print(event.pos())
-        print(self.mapToScene(event.pos()))
+    #def mousePressEvent(self, event):
+    #    print(event.pos())
+    #    print(self.mapToScene(event.pos()))
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_F1:
-            self.scale(1.3, 1.3)
+    #def keyPressEvent(self, event):
+    #    if event.key() == Qt.Key_F1:
+    #        self.scale(1.3, 1.3)
     
-    @pyqtSlot(int)
-    def pixmap_change(self, index):
-        print("slot got index = ", index)
-        print("file obj = ", self.hdf_file)
+    #@pyqtSlot(int)
+    def change_pixmap(self,index):
+        self.index += index
+        #print("slot got index = ", index)
+        #print("file obj = ", self.hdf_file)
+        #self.hdf = hdf
         self.scene.removeItem(self.background)
-        image_as_pixmap = utils.pixmap_at_index(self.hdf_file, index)
+        image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
         self.background = self.scene.addPixmap(image_as_pixmap)
         
 
