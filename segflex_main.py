@@ -251,12 +251,12 @@ class view_control(QGroupBox):
 
 
 class main_window(QMainWindow):
-    signal_parse_tasks = pyqtSignal(str)
-    signal_task_index = pyqtSignal(int)
+    #signal_parse_tasks = pyqtSignal(str)
+    #signal_task_index = pyqtSignal(int)
 
     signal_parse_projects = pyqtSignal()
     signal_open_project = pyqtSignal(str)
-    signal_reopen_project = pyqtSignal()
+    #signal_reopen_project = pyqtSignal()
     #signal_change_view = pyqtSignal(int)
 
     def __init__(self, parent=None):
@@ -272,7 +272,7 @@ class main_window(QMainWindow):
         self.set_layouts()
         self.place_blocks()
         self.connect_ui()
-        self.parse_projects_folder()
+        #self.parse_projects_folder()
         #self.show_view_tab(project_path="/home/iakhmetev/Документы/8.3_version_2_data_labeling/__projects/123.hdf5")
 
     def adjust_window(self):
@@ -287,15 +287,16 @@ class main_window(QMainWindow):
 
     def init_layouts(self):
         self.main_layout = QGridLayout()
-        self.tab_projects_layout = QVBoxLayout()
-        self.tab_tasks_left_layout = QVBoxLayout()
-        self.tab_tasks_right_layout = QVBoxLayout()
-        self.tab_view_layout = QGridLayout()
-        self.view_project_control_layout = QVBoxLayout() #self.view_control_layout = QVBoxLayout()
-        self.view_control_layout = QVBoxLayout()
+        #self.tab_projects_layout = QVBoxLayout()
+        #self.tab_tasks_left_layout = QVBoxLayout()
+        #self.tab_tasks_right_layout = QVBoxLayout()
+        #self.tab_view_layout = QGridLayout()
+        #self.view_project_control_layout = QVBoxLayout() #self.view_control_layout = QVBoxLayout()
+        #self.view_control_layout = QVBoxLayout()
 
     def init_widgets(self):
-        self.init_table()
+        #self.init_table()
+        self.tab_new = my_tab(signal=self.signal_open_project)
         self.higher_control = higher_control(signal=self.signal_parse_projects)
         self.description = project_description_new()
         #self.navigation = seg_label.view_project_control()
@@ -303,18 +304,18 @@ class main_window(QMainWindow):
 
     def set_layouts(self):
         self.main_frame.setLayout(self.main_layout)
-        self.tab_projects_group.setLayout(self.tab_projects_layout)
-        self.tab_tasks_left_group.setLayout(self.tab_tasks_left_layout)
-        self.tab_tasks_right_group.setLayout(self.tab_tasks_right_layout)
-        self.tab_view.setLayout(self.tab_view_layout)
+        #self.tab_projects_group.setLayout(self.tab_projects_layout)
+        #self.tab_tasks_left_group.setLayout(self.tab_tasks_left_layout)
+        #self.tab_tasks_right_group.setLayout(self.tab_tasks_right_layout)
+        #self.tab_view.setLayout(self.tab_view_layout)
 
     def place_blocks(self):
-        self.tab.addTab(self.tab_projects_area, "Проекты")
-        self.tab.addTab(self.tab_split, "Задачи")
-        self.tab.addTab(self.tab_view, "Просмотр")
+        #self.tab.addTab(self.tab_projects_area, "Проекты")
+        #self.tab.addTab(self.tab_split, "Задачи")
+        #self.tab.addTab(self.tab_view, "Просмотр")
 
         #self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
-        self.tab_new = my_tab(signal=self.signal_open_project)
+        #self.tab_new = my_tab(signal=self.signal_open_project)
         self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)
         self.main_layout.addWidget(self.higher_control, 0, 1)
         self.main_layout.addWidget(self.description, 0, 1)
@@ -323,9 +324,10 @@ class main_window(QMainWindow):
 
     def connect_ui(self):
         #self.signal_parse_tasks.connect(self.parse_tasks)
-        self.signal_parse_projects.connect(self.parse_projects_folder)
+        #self.signal_parse_projects.connect(self.parse_projects_folder)
+        self.signal_parse_projects.connect(self.tab_new.parse_projects)
         self.signal_open_project.connect(self.open_project_routine)
-        self.signal_reopen_project.connect(self.reopen_project_routine)
+        #self.signal_reopen_project.connect(self.reopen_project_routine)
         #self.tab.currentChanged.connect(self.show_tab)
         self.tab_new.currentChanged.connect(self.show_tab_new)
         self.description.btn_add.clicked.connect(self.add_task)
@@ -364,6 +366,7 @@ class main_window(QMainWindow):
         self.description.setVisible(False)
         self.navigation.setVisible(True)
 
+    """
     def init_table(self):
         self.tab = QTabWidget()
         self.tab_projects_area = QScrollArea(self)
@@ -399,8 +402,9 @@ class main_window(QMainWindow):
     def on_create_new_project_clicked(self):
         self.dialog = segflex_new_project.new_project_dialog(signal=self.signal_parse_projects)
         self.dialog.exec_()
+    """
 
-
+    """
     def parse_projects_folder(self):
         #self.show_controls_projects()
         self.clear_table_layout(layout=self.tab_projects_layout)
@@ -416,6 +420,7 @@ class main_window(QMainWindow):
                     #project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name, name=project_name)
                     project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name)#, name=project_name)
                     self.tab_projects_layout.addWidget(project_widget)
+    """
     """
     def parse_tasks(self, project_path):
         self.clear_table_layout(layout=self.tab_tasks_left_layout)
@@ -448,11 +453,11 @@ class main_window(QMainWindow):
         #self.btns_group_open.setVisible(False)
         self.main_layout.addWidget(control, 0, 1)
     """
-    
+    """
     def view_parse_routine(self):
         print("view parse, file = ", self.file)
         self.view = seg_label.view_project(parent=self.tab_view, index=0,file_link=self.file, signal=self.signal_task_index)
-
+    """
 
     @pyqtSlot(str)
     def open_project_routine(self, project_path):
@@ -485,17 +490,21 @@ class main_window(QMainWindow):
     def adjust_opened_project(self):
         self.tab_new.parse_tasks(self.file)
         self.description.parse_description(self.file)
+        self.tab_new.parse_view(self.file)
 
+    """
     @pyqtSlot()
     def reopen_project_routine(self):
         self.help_clear_layouts()
         self.task_parse_routine()
         self.descriptrion_reparse_routine()
+    """
 
     def project_create_routine(self):
         dialog = segflex_new_project.new_project_dialog_new(signal=self.signal_parse_projects)
         dialog.exec_()
-
+        #self.tab_new.parse_projects()
+    """
     def description_parse_routine(self):
         #hdf = self.file
         #utils.clear_layout(self.tasks_control_layout)
@@ -524,24 +533,26 @@ class main_window(QMainWindow):
                 print("creating right")
                 #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
                 #self.tab_tasks_right_layout.addWidget(task_widget)
+    """
 
-
+    """
     def clear_table_layout(self, layout):
         for i in reversed(range(layout.count())): 
             layout.itemAt(i).widget().setParent(None)
             #layout.itemAt(i).widget().deleteLater()
-
+    """
 
     def check_create_projects_folder(self):
         if not os.path.exists(classifier.PROJECTS_FOLDER_FULL_NAME):
             os.mkdir(classifier.PROJECTS_FOLDER_FULL_NAME)
 
+    """
     def help_clear_layouts(self):
         utils.clear_layout(self.tab_tasks_left_layout)
         utils.clear_layout(self.tab_tasks_right_layout)
         #utils.clear_layout(self.tasks_control_layout)
-        utils.clear_layout(self.view_control_layout)
-
+        #utils.clear_layout(self.view_control_layout)
+    """
     def add_task(self):
         if self.file:
             hdf = self.file
