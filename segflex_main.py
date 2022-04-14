@@ -130,7 +130,6 @@ class my_tab(QTabWidget):
 
         self.init_ui()
         self.parse_projects()
-        #self.parse_view()
         self.init_view()
 
     def init_ui(self):
@@ -207,14 +206,7 @@ class my_tab(QTabWidget):
 
     def parse_view(self, hdf):
         self.view_w = seg_label.view_project(parent=self.view, file_link=hdf)    
-        """
-        if self.view_w == None:
-            self.view_w = seg_label.view_project(parent=self.view, index=self.index, file_link=hdf)
-        else:
-            self.hdf = hdf
-            self.view_w.pixmap_change(self.hdf,self.index)
-        #pass
-        """
+
     def init_view(self):
         self.view_w = seg_label.view_project(parent=self.view, file_link=None)
     
@@ -222,11 +214,9 @@ class my_tab(QTabWidget):
         self.view_w.change_pixmap(index)
 
 class view_control(QGroupBox):
-    def __init__(self):#, signal):
+    def __init__(self):
         super().__init__()
-        #self.signal = signal
         self.init_ui()
-        #self.connect_ui()
 
     def init_ui(self):
         self.btn_previous = QPushButton("<<")
@@ -237,28 +227,10 @@ class view_control(QGroupBox):
         self.layout.addWidget(self.btn_next)
 
         self.setLayout(self.layout)
-    """
-    def connect_ui(self):
-        self.btn_previous.clicked.connect(self.on_left)
-        self.btn_next.clicked.connect(self.on_right)
-    
-    def on_left(self):
-        self.signal.emit(-1)
-
-    def on_right(self):
-        self.signal.emit(1)
-    """
-
 
 class main_window(QMainWindow):
-    #signal_parse_tasks = pyqtSignal(str)
-    #signal_task_index = pyqtSignal(int)
-
     signal_parse_projects = pyqtSignal()
     signal_open_project = pyqtSignal(str)
-    #signal_reopen_project = pyqtSignal()
-    #signal_change_view = pyqtSignal(int)
-
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
         self.file = None
@@ -267,55 +239,29 @@ class main_window(QMainWindow):
     def init_ui(self):
         self.adjust_window()
         self.check_create_projects_folder()
-        self.init_layouts()
         self.init_widgets()
-        self.set_layouts()
         self.place_blocks()
         self.connect_ui()
-        #self.parse_projects_folder()
-        #self.show_view_tab(project_path="/home/iakhmetev/Документы/8.3_version_2_data_labeling/__projects/123.hdf5")
 
     def adjust_window(self):
         self.main_frame = QFrame()
         self.setCentralWidget(self.main_frame)
         self.setWindowTitle("Segmentation app. 0.9")
         self.resize(1024, 600)
+        self.main_layout = QGridLayout()
+        self.main_frame.setLayout(self.main_layout)
 
     def check_create_projects_folder(self):
         if not os.path.exists(classifier.PROJECTS_FOLDER_FULL_NAME):
             os.mkdir(classifier.PROJECTS_FOLDER_FULL_NAME)
 
-    def init_layouts(self):
-        self.main_layout = QGridLayout()
-        #self.tab_projects_layout = QVBoxLayout()
-        #self.tab_tasks_left_layout = QVBoxLayout()
-        #self.tab_tasks_right_layout = QVBoxLayout()
-        #self.tab_view_layout = QGridLayout()
-        #self.view_project_control_layout = QVBoxLayout() #self.view_control_layout = QVBoxLayout()
-        #self.view_control_layout = QVBoxLayout()
-
     def init_widgets(self):
-        #self.init_table()
         self.tab_new = my_tab(signal=self.signal_open_project)
         self.higher_control = higher_control(signal=self.signal_parse_projects)
         self.description = project_description_new()
-        #self.navigation = seg_label.view_project_control()
-        self.navigation = view_control()#(signal = self.signal_change_view)
-
-    def set_layouts(self):
-        self.main_frame.setLayout(self.main_layout)
-        #self.tab_projects_group.setLayout(self.tab_projects_layout)
-        #self.tab_tasks_left_group.setLayout(self.tab_tasks_left_layout)
-        #self.tab_tasks_right_group.setLayout(self.tab_tasks_right_layout)
-        #self.tab_view.setLayout(self.tab_view_layout)
+        self.navigation = view_control()
 
     def place_blocks(self):
-        #self.tab.addTab(self.tab_projects_area, "Проекты")
-        #self.tab.addTab(self.tab_split, "Задачи")
-        #self.tab.addTab(self.tab_view, "Просмотр")
-
-        #self.main_layout.addWidget(self.tab, 0, 0, 4, 1)
-        #self.tab_new = my_tab(signal=self.signal_open_project)
         self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)
         self.main_layout.addWidget(self.higher_control, 0, 1)
         self.main_layout.addWidget(self.description, 0, 1)
@@ -323,17 +269,12 @@ class main_window(QMainWindow):
         self.show_higher_control()
 
     def connect_ui(self):
-        #self.signal_parse_tasks.connect(self.parse_tasks)
-        #self.signal_parse_projects.connect(self.parse_projects_folder)
         self.signal_parse_projects.connect(self.tab_new.parse_projects)
         self.signal_open_project.connect(self.open_project_routine)
-        #self.signal_reopen_project.connect(self.reopen_project_routine)
-        #self.tab.currentChanged.connect(self.show_tab)
         self.tab_new.currentChanged.connect(self.show_tab_new)
         self.description.btn_add.clicked.connect(self.add_task)
         self.navigation.btn_previous.clicked.connect(self.previous_view)
         self.navigation.btn_next.clicked.connect(self.next_view)
-        #self.btn_add_image.clicked.connect(self.on_add_new_task)
     
     def show_tab(self):
         if self.tab.currentWidget() == self.tab_split:
@@ -366,193 +307,28 @@ class main_window(QMainWindow):
         self.description.setVisible(False)
         self.navigation.setVisible(True)
 
-    """
-    def init_table(self):
-        self.tab = QTabWidget()
-        self.tab_projects_area = QScrollArea(self)
-        self.tab_tasks_left_area = QScrollArea(self)
-        self.tab_tasks_right_area = QScrollArea(self)
-        self.tab_view = QWidget(self) #seg.seg_window(path="/home/iakhmetev/Документы/8.3_version_2_data_labeling/__projects/123.hdf5") #QWidget(self)
-
-
-        self.tab_projects_area.setWidgetResizable(True)
-        self.tab_tasks_left_area.setWidgetResizable(True)
-        self.tab_tasks_right_area.setWidgetResizable(True)
-
-        self.tab_split = QSplitter()
-        self.tab_split.addWidget(self.tab_tasks_left_area)
-        self.tab_split.addWidget(self.tab_tasks_right_area)
-
-        self.tab_projects_group = QGroupBox(self.tab_projects_area)
-        self.tab_tasks_left_group = QGroupBox(self.tab_tasks_left_area)
-        self.tab_tasks_right_group = QGroupBox(self.tab_tasks_right_area)
-        self.view = QWidget(self.tab_view)
-        #self.tab_view_group = QGroupBox(self.tab_view_widget)
-
-        self.tab_projects_group.setTitle("Проекты")
-        self.tab_tasks_left_group.setTitle("Разметка")
-        self.tab_tasks_right_group.setTitle("Контроль и редактирование")
-        #self.tab_view_group.setTitle("Просмотр задач и маски")
-
-        self.tab_projects_area.setWidget(self.tab_projects_group)
-        self.tab_tasks_left_area.setWidget(self.tab_tasks_left_group)
-        self.tab_tasks_right_area.setWidget(self.tab_tasks_right_group)
-        #self.tab_view_widget.setWidget(self.tab_view_group)
-
-    def on_create_new_project_clicked(self):
-        self.dialog = segflex_new_project.new_project_dialog(signal=self.signal_parse_projects)
-        self.dialog.exec_()
-    """
-
-    """
-    def parse_projects_folder(self):
-        #self.show_controls_projects()
-        self.clear_table_layout(layout=self.tab_projects_layout)
-        self.tab.setCurrentWidget(self.tab_projects_area)
-        projects_list = os.listdir(classifier.PROJECTS_FOLDER_FULL_NAME)
-        for project_short_name in projects_list:
-            if project_short_name.find(classifier.HDF_POSTFIX) != -1:
-                project_full_name = classifier.PROJECTS_FOLDER_FULL_NAME + '/' + project_short_name
-                with h5py.File(project_full_name, 'r') as hdf:
-                    project_name = hdf.attrs[classifier.HDF_FILE_NAME]
-                    project_classes = hdf.attrs[classifier.HDF_FILE_CLASSES]
-                    #project_widget = project.project_as_widget(name=project_name, classes=project_classes, path=project_full_name, signal= self.signal_parse_tasks, signal_open=self.signal_open_project)
-                    #project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name, name=project_name)
-                    project_widget = project.project_widget_new(signal=self.signal_open_project, path=project_full_name)#, name=project_name)
-                    self.tab_projects_layout.addWidget(project_widget)
-    """
-    """
-    def parse_tasks(self, project_path):
-        self.clear_table_layout(layout=self.tab_tasks_left_layout)
-        self.clear_table_layout(layout=self.tab_tasks_right_layout)
-        #self.tab.setCurrentWidget(self.tab_split)
-        self.btn_description.update_description(project_path)
-        self.project_path = project_path
-        with h5py.File(project_path, 'r') as hdf: #ATTRS???
-            self.show_controls_tasks(hdf.attrs[classifier.HDF_FILE_DESCRIPTION])
-            group_srcs = hdf[classifier.HDF_GROUP_SRCS_NAME]
-            print(type(group_srcs))
-            number_of_images = len(group_srcs.keys())
-            for number in range(number_of_images):
-                status = group_srcs[str(number)].attrs[classifier.HDF_TASK_STATUS]
-                print(type(status))
-                if status == classifier.HDF_TASK_STATUS_0 or status == classifier.HDF_TASK_STATUS_1:
-                    task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_0, signal=self.signal_parse_tasks)
-                    self.tab_tasks_left_layout.addWidget(task_widget)
-                if status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
-                    task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
-                    self.tab_tasks_right_layout.addWidget(task_widget)
-    """
-
-    """
-    def show_view_tab(self, project_path):
-        hdf = h5py.File(project_path, 'r')
-        self.view = seg_label.view_project(parent=self.tab_view, file_link=hdf, signal=self.signal_task_index)
-        control = seg_label.view_project_control(signal=self.signal_task_index)
-        self.view_project_control_layout.addWidget(control)
-        #self.btns_group_open.setVisible(False)
-        self.main_layout.addWidget(control, 0, 1)
-    """
-    """
-    def view_parse_routine(self):
-        print("view parse, file = ", self.file)
-        self.view = seg_label.view_project(parent=self.tab_view, index=0,file_link=self.file, signal=self.signal_task_index)
-    """
-
     @pyqtSlot(str)
     def open_project_routine(self, project_path):
-        print("hello from main")
-        #print(project_path)
-        #print("open")
         if self.file:
             self.file.close()
-            #print(self.file)
-            #if not self.file.closed:
-                #self.file.close()
-                #print(self.file.closed)
-        #self.file_path = project_path
         self.file = h5py.File(project_path, 'r+')
-        #self.help_clear_layouts()
         self.tab_new.parse_tasks(self.file)
         self.description.parse_description(self.file)
-        self.tab_new.parse_view(hdf=self.file)
-        #self.task_parse_routine()#, path=project_path)
-        #self.description.
-        #self.description_parse_routine()
-        #self.view_parse_routine()
+        self.tab_new.parse_view(self.file)
 
-        #self.btn_add_task_create()
-        #self.view.deleteLater()
-        #print(self.view)
-
-        #self.parse_tasks(project_path)
-        #self.show_view_tab(project_path)
     def adjust_opened_project(self):
         self.tab_new.parse_tasks(self.file)
         self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
 
-    """
-    @pyqtSlot()
-    def reopen_project_routine(self):
-        self.help_clear_layouts()
-        self.task_parse_routine()
-        self.descriptrion_reparse_routine()
-    """
-
     def project_create_routine(self):
         dialog = segflex_new_project.new_project_dialog_new(signal=self.signal_parse_projects)
         dialog.exec_()
-        #self.tab_new.parse_projects()
-    """
-    def description_parse_routine(self):
-        #hdf = self.file
-        #utils.clear_layout(self.tasks_control_layout)
-        #self.description.deleteLater()
-        self.description = project_description_new(project_file=self.file, signal=self.signal_reopen_project)
-        #self.description.update_description(hdf)
-        self.main_layout.addWidget(self.description, 0, 1)
-        #self.tasks_control_layout.addWidget(self.description)
-
-    def descriptrion_reparse_routine(self):
-        #hdf = self.file
-        #self.description.update_description(hdf)
-        #self.description.deleteLater()
-        self.description = project_description_new(project_file=self.file, signal=self.signal_reopen_project)
-        self.main_layout.addWidget(self.description, 0, 1)
-
-    def task_parse_routine(self):
-        hdf = self.file
-        number_of_images = len(hdf.keys())
-        for number in range(number_of_images):
-            status = hdf[str(number)].attrs[classifier.HDF_TASK_STATUS]
-            if status == classifier.HDF_TASK_STATUS_0 or status == classifier.HDF_TASK_STATUS_1:
-                task_widget = task_base.task_widget_new(project_file=hdf, identifier=number, mode=classifier.TASK_WIDGET_MODE_0, signal=self.signal_reopen_project)
-                self.tab_tasks_left_layout.addWidget(task_widget)
-            if status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
-                print("creating right")
-                #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
-                #self.tab_tasks_right_layout.addWidget(task_widget)
-    """
-
-    """
-    def clear_table_layout(self, layout):
-        for i in reversed(range(layout.count())): 
-            layout.itemAt(i).widget().setParent(None)
-            #layout.itemAt(i).widget().deleteLater()
-    """
 
     def check_create_projects_folder(self):
         if not os.path.exists(classifier.PROJECTS_FOLDER_FULL_NAME):
             os.mkdir(classifier.PROJECTS_FOLDER_FULL_NAME)
 
-    """
-    def help_clear_layouts(self):
-        utils.clear_layout(self.tab_tasks_left_layout)
-        utils.clear_layout(self.tab_tasks_right_layout)
-        #utils.clear_layout(self.tasks_control_layout)
-        #utils.clear_layout(self.view_control_layout)
-    """
     def add_task(self):
         if self.file:
             hdf = self.file
@@ -567,14 +343,7 @@ class main_window(QMainWindow):
                 self.adjust_opened_project()
 
     def previous_view(self):
-        print("prev view")
-        #self.tab_new.parse_view(hdf=self.file, index=-1)
         self.tab_new.change_view(index=-1)
 
     def next_view(self):
-        print("next view")
-        #self.tab_new.parse_view(hdf=self.file, index=1)
         self.tab_new.change_view(index=+1)
-
-
-
