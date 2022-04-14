@@ -40,3 +40,7 @@ def pixmap_at_index(file_link, index):
 def clear_layout(layout):
     for i in reversed(range(layout.count())): 
         layout.itemAt(i).widget().deleteLater()
+        
+def check_create_projects_folder():
+    if not os.path.exists(classifier.PROJECTS_FOLDER_FULL_NAME):
+        os.mkdir(classifier.PROJECTS_FOLDER_FULL_NAME)

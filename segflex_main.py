@@ -238,6 +238,7 @@ class main_window(QMainWindow):
         
     def init_ui(self):
         self.adjust_window()
+        utils.check_create_projects_folder()
         self.check_create_projects_folder()
         self.init_widgets()
         self.place_blocks()
@@ -324,10 +325,6 @@ class main_window(QMainWindow):
     def project_create_routine(self):
         dialog = segflex_new_project.new_project_dialog_new(signal=self.signal_parse_projects)
         dialog.exec_()
-
-    def check_create_projects_folder(self):
-        if not os.path.exists(classifier.PROJECTS_FOLDER_FULL_NAME):
-            os.mkdir(classifier.PROJECTS_FOLDER_FULL_NAME)
 
     def add_task(self):
         if self.file:
