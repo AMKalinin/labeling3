@@ -10,7 +10,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 
 import segflex_new_project
 import segflex_project_as_widget as project
-import segflex_task_as_widget as task_base
+import task_widgets
 import segflex_seg_window as seg
 import view_widgets
 import os
@@ -197,7 +197,7 @@ class my_tab(QTabWidget):
         for task_id in range(tasks_count):
             task_status = hdf[str(task_id)].attrs[classifier.HDF_TASK_STATUS]
             if task_status == classifier.HDF_TASK_STATUS_0 or status == classifier.HDF_TASK_STATUS_1:
-                task_widget = task_base.task_widget_new(project_file=hdf, identifier=task_id, mode=classifier.TASK_WIDGET_MODE_0)#, signal=self.signal_reopen_project)
+                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=task_id, mode=classifier.TASK_WIDGET_MODE_0)#, signal=self.signal_reopen_project)
                 self.tasksleft_layout.addWidget(task_widget)
             elif task_status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")
