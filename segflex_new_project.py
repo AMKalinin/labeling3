@@ -6,7 +6,6 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
 
 import segflex_classes_choose
 from PyQt5.QtCore import pyqtSignal
-import segflex_main
 import segflex_classifier as classifier
 import os
 
