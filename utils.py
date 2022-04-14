@@ -26,8 +26,6 @@ def pixmap_at_index(file_link, index):
 
     hdf = file_link
     myindex = str(index)
-    #group_srcs = hdf[classifier.HDF_GROUP_SRCS_NAME]
-    print(myindex)
     dataset = hdf[str(index)]
     image_as_numpy = dataset[()]
     height, width, channel = image_as_numpy.shape

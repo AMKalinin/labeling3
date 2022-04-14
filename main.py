@@ -12,7 +12,7 @@ import segflex_new_project
 import segflex_project_as_widget as project
 import segflex_task_as_widget as task_base
 import segflex_seg_window as seg
-import segflex_seg_label as seg_label
+import view_widgets
 import os
 import json
 import segflex_classifier as classifier
@@ -205,10 +205,10 @@ class my_tab(QTabWidget):
                 #self.tab_tasks_right_layout.addWidget(task_widget)
 
     def parse_view(self, hdf):
-        self.view_w = seg_label.view_project(parent=self.view, file_link=hdf)    
+        self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf)    
 
     def init_view(self):
-        self.view_w = seg_label.view_project(parent=self.view, file_link=None)
+        self.view_w = view_widgets.view_project(parent=self.view, file_link=None)
     
     def change_view(self, index):
         self.view_w.change_pixmap(index)

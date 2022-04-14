@@ -13,7 +13,7 @@ import h5py
 import numpy as np
 import cv2
 import segflex_classifier as classifier
-import segflex_seg_label as seg_label
+import view_widgets
 import segflex_draw_window as draw
 import re
 from ast import literal_eval as make_tuple
@@ -289,7 +289,7 @@ class seg_window(QDialog):
 
     def open_image(self, identifier): 
         self.clear_window_layout(self.image_layout)
-        self.display = seg_label.Label()
+        self.display = view_widgets.Label()
         self.display.setFixedSize(600,600)
         with h5py.File(self.project_path, 'r') as hdf:
             self.identifier_max = len(list(hdf[classifier.HDF_GROUP_SRCS_NAME].keys())) - 1 #starting with 0
