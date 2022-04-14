@@ -8,14 +8,14 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene)
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-import segflex_new_project
-import segflex_project_as_widget as project
+import new_project
+import project_widgets
 import task_widgets
 import segflex_seg_window as seg
 import view_widgets
 import os
 import json
-import segflex_classifier as classifier
+import classifier
 import utils
 import h5py
 import time
@@ -118,7 +118,7 @@ class higher_control(QGroupBox):
         self.btn_new.clicked.connect(self.on_new)
 
     def on_new(self):
-        self.dialog = segflex_new_project.new_project_dialog_new(signal=self.signal)
+        self.dialog = new_project.new_project_dialog_new(signal=self.signal)
         self.dialog.exec_()
 
 class my_tab(QTabWidget):
@@ -187,7 +187,7 @@ class my_tab(QTabWidget):
         for project_short_name in projects_list:
             project_full_name = classifier.PROJECTS_FOLDER_FULL_NAME + '/' + project_short_name
             with h5py.File(project_full_name, 'r') as hdf:
-                project_widget = project.project_widget_new(signal=self.signal, path=project_full_name)
+                project_widget = project_widgets.project_widget_new(signal=self.signal, path=project_full_name)
                 self.projects_layout.addWidget(project_widget)
 
     def parse_tasks(self, hdf):
@@ -323,7 +323,7 @@ class main_window(QMainWindow):
         self.tab_new.parse_view(self.file)
 
     def project_create_routine(self):
-        dialog = segflex_new_project.new_project_dialog_new(signal=self.signal_parse_projects)
+        dialog = new_project.new_project_dialog_new(signal=self.signal_parse_projects)
         dialog.exec_()
 
     def add_task(self):

@@ -12,7 +12,7 @@ import os
 import h5py
 import numpy as np
 import cv2
-import segflex_classifier as classifier
+import classifier
 import view_widgets
 import segflex_draw_window as draw
 import re

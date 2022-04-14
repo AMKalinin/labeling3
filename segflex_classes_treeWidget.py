@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QTreeWidgetItem, QTreeWidget
 from PyQt5.QtCore import Qt, QMimeData
 from PyQt5.QtGui import QDrag
 
-import segflex_classifier as classifier
+import classifier
 
 
 class allTree(QTreeWidget):

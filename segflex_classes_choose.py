@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QWidget, QLabel, QDia
     QFileDialog)
 from PyQt5.QtCore import pyqtSignal, QObject, Qt
 
-import segflex_classifier as classifier
+import classifier
 import time
 import os
 import h5py

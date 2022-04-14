@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import *
 import segflex_seg_window as seg_window
 import re
 import h5py
-import segflex_classifier as classifier
+import classifier
 import cv2
 
 class project_widget_new(QGroupBox):
