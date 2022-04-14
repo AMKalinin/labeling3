@@ -233,12 +233,12 @@ class main_window(QMainWindow):
     signal_open_project = pyqtSignal(str)
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
+        utils.check_create_projects_folder()
         self.file = None
         self.init_ui()
         
     def init_ui(self):
         self.adjust_window()
-        utils.check_create_projects_folder()
         self.check_create_projects_folder()
         self.init_widgets()
         self.place_blocks()
