@@ -16,7 +16,7 @@ import segflex_seg_label as seg_label
 import os
 import json
 import segflex_classifier as classifier
-import segflex_utils as utils
+import utils
 import h5py
 import time
 import re

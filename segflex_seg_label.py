@@ -17,7 +17,7 @@ import segflex_draw_window as draw
 import re
 from ast import literal_eval as make_tuple
 from PyQt5.QtCore import pyqtSignal, QObject
-import segflex_utils as utils
+import utils
 import time
 
 class view_project(QGraphicsView):
