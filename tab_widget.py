@@ -109,11 +109,11 @@ class my_tab(QTabWidget):
 
     def parse_view(self, hdf):
         #self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf) 
-        self.view_w = view_widgets.view_view(parent=self.view, file_link=hdf, signal3=self.signal2) 
+        self.view_w = view_widgets.view_view(parent=self.view, file_link=hdf, signal=self.signal2) 
 
     def init_view(self):
         #self.view_w = view_widgets.view_project(parent=self.view, file_link=None)
-        self.view_w = view_widgets.view_view(parent=self.view, file_link=None, signal3=self.signal2)
+        self.view_w = view_widgets.view_view(parent=self.view, file_link=None, signal=self.signal2)
     
     def change_view(self, index):
         self.view_w.change_pixmap(index)
