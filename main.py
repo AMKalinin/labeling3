@@ -27,6 +27,7 @@ import tab_widget
 class main_window(QMainWindow):
     signal_parse_projects = pyqtSignal()
     signal_open_project = pyqtSignal(str)
+    signal_show_mask = pyqtSignal()
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
         self.file = None
@@ -34,7 +35,6 @@ class main_window(QMainWindow):
         
     def init_ui(self):
         self.adjust_window()
-        self.check_create_projects_folder()
         self.init_widgets()
         self.place_blocks()
         self.connect_ui()
@@ -47,15 +47,12 @@ class main_window(QMainWindow):
         self.main_layout = QGridLayout()
         self.main_frame.setLayout(self.main_layout)
 
-    def check_create_projects_folder(self):
-        if not os.path.exists(classifier.PROJECTS_FOLDER_FULL_NAME):
-            os.mkdir(classifier.PROJECTS_FOLDER_FULL_NAME)
 
     def init_widgets(self):
-        self.tab_new = tab_widget.my_tab(signal=self.signal_open_project)
+        self.tab_new = tab_widget.my_tab(signal=self.signal_open_project, signal2=self.signal_show_mask)
         self.higher_control = control_widgets.higher_control(signal=self.signal_parse_projects)
         self.description = control_widgets.project_description_new()
-        self.navigation = control_widgets.view_control()
+        self.navigation = control_widgets.view_control(self.signal_show_mask)
 
     def place_blocks(self):
         self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)

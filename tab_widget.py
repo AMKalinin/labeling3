@@ -24,9 +24,10 @@ import cv2
 
 
 class my_tab(QTabWidget):
-    def __init__(self, signal, parent=None):
+    def __init__(self, signal, signal2=None, parent=None):
         super().__init__()
         self.signal = signal
+        self.signal2=signal2
         self.index = 0
         self.view_w = None
 
@@ -107,10 +108,12 @@ class my_tab(QTabWidget):
                 #self.tab_tasks_right_layout.addWidget(task_widget)
 
     def parse_view(self, hdf):
-        self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf)    
+        #self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf) 
+        self.view_w = view_widgets.view_view(parent=self.view, file_link=hdf, signal3=self.signal2) 
 
     def init_view(self):
-        self.view_w = view_widgets.view_project(parent=self.view, file_link=None)
+        #self.view_w = view_widgets.view_project(parent=self.view, file_link=None)
+        self.view_w = view_widgets.view_view(parent=self.view, file_link=None, signal3=self.signal2)
     
     def change_view(self, index):
         self.view_w.change_pixmap(index)

@@ -124,16 +124,23 @@ class higher_control(QGroupBox):
 
 
 class view_control(QGroupBox):
-    def __init__(self):
+    def __init__(self, signal):
         super().__init__()
+        self.signal = signal
         self.init_ui()
 
     def init_ui(self):
         self.btn_previous = QPushButton("<<")
         self.btn_next = QPushButton(">>")
+        self.btn_showall = QPushButton("show all")
+        self.btn_showall.clicked.connect(self.on_showall)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.btn_previous)
         self.layout.addWidget(self.btn_next)
+        self.layout.addWidget(self.btn_showall)
 
         self.setLayout(self.layout)
+    
+    def on_showall(self):
+        self.signal.emit()

@@ -91,11 +91,21 @@ class task_widget_new(QGroupBox):
     def fill_actions(self):
         self.emit_btn = QPushButton("emit")
         self.emit_btn.clicked.connect(self.on_emit)
+
+        self.edit_btn = QPushButton("edit")
+        self.edit_btn.clicked.connect(self.on_edit)
+
         self.layout_actions.addWidget(self.emit_btn)
+        self.layout_actions.addWidget(self.edit_btn)
 
     def on_emit(self):
-        if self.signal:
-            self.signal.emit()
+        pass
+        #if self.signal:
+        #    self.signal.emit()
+
+    def on_edit(self):
+        pass
+        #print("edit")
 
 
 
