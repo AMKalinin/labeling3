@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QScrollArea, QToolButton, QSizePolicy, QComboBox, QToolBar, 
                             QStatusBar, QGraphicsView, QGraphicsScene)
 
-from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon
+from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon, QPolygonF
 from PyQt5 import QtWidgets, QtGui, QtCore
 import os
 import h5py
@@ -44,21 +44,82 @@ class base_view(QGraphicsView):
     @pyqtSlot()
     def show_all(self):
         if self.hdf:
+            
             for name, value in self.hdf[str(self.index)].attrs.items():
                 print(name, value)
+            
+                if value[0]== str(4):
+                #try:
+                    #print(name, value)
+                    print("####################################")
+                    #print(utils.attrs_get_class(value))
+                    a_class = utils.attrs_get_class(value)
+                    a_type = utils.attrs_get_type(value)
+                    a_points = utils.attrs_get_points(value)
+                    rgb_r = int(a_class[0]) * 20 
+                    rgb_g = int(a_class[1]) * 20 
+                    rgb_b = int(a_class[2]) * 20 
+                    #print("pen=", rgb_r, rgb_g, rgb_b)
+                    #print(a_type == 'Polygon')
+
+                    color = QColor(rgb_r,rgb_g,rgb_b, 150)
+                    #color = QColor(100,100,100,100)
+                    print(color.alphaF())
+                    #print("1")
+                    #brush = QBrush(color, Qt.Dense2Pattern)
+                    #print("2")
+                    #pen = QPen(brush)
+                    pen = QPen()
+                    #print("3")
+                    brush = QBrush(color, Qt.SolidPattern)
+                    
+                    if a_type == 'Polygon':
+                        print("---------")
+                        polygon = QPolygonF()
+                        #tmp_str1 = image_srcs.attrs[str(index)]
+                        print(a_points)
+                        tmp_str2 = re.sub(r' ', '', a_points)
+                        print(tmp_str2)
+                        tmp_list = re.findall(r'\([0-9]+,[0-9]+\)', tmp_str2)
+                        print("list", tmp_list)
+                        tuple_list = []
+                        
+                        for pair in tmp_list:
+                            tuple_list.append(make_tuple(pair))
+                        for int_pair in tuple_list:
+                            print(int_pair[0], int_pair[1])
+                            polygon.append(QPoint(int_pair[0], int_pair[1]))
+                        #print(polygon)
+                        self.scene.addPolygon(polygon, pen, brush)#pen, brush)
+                        print("+++++++")
+                        #print(self.scene.items())
+
+                    #print(utils.attrs_get_type(value))
+                    #print(utils.attrs_get_points(value))
+                #except: 
+                #    pass
+            
+            #self.hdf[str(0)].attrs[str(0)] = "460;Polygon;[(0,0),(1,1)]"
+            #self.hdf[str(0)].attrs[str(1)] = "461;Ellipse;[(0,0),(1,1)]"
+            #self.hdf[str(0)].attrs[str(2)] = "462;Rect;[(0,0),(1,1)]"
+            #self.hdf[str(0)].attrs[str(5)] = "464;Polygon;[(100,0),(200,0), (200,100), (100, 100)]"
+            #self.hdf[str(0)].attrs[str(7)] = "364;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
+                
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Plus:
             self.zoom_in()
         elif event.key() == Qt.Key_Minus:
             self.zoom_out()
+
+    def mousePressEvent(self, event):
+        print(event.pos())
         
     def zoom_in(self):
         self.scale(1.5, 1.5)
     
     def zoom_out(self):
         self.scale(0.5, 0.5)
-
 
     def hide_all(self):
         print(self.scene.items())

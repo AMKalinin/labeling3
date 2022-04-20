@@ -21,6 +21,15 @@ from PyQt5.QtCore import pyqtSignal, QObject
 def pixmap_default():
     return QPixmap("img_default.jpg")
 
+def attrs_get_class(attrs):
+    return attrs.split(';')[0]
+
+def attrs_get_type(attrs):
+    return attrs.split(';')[1]
+
+def attrs_get_points(attrs):
+    return attrs.split(';')[2]
+
 
 def pixmap_at_index(file_link, index):
 
