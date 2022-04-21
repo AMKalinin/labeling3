@@ -108,6 +108,7 @@ class main_window(QMainWindow):
         self.tab_new.parse_tasks(self.file)
         self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
+        self.navigation.adjust_pallete(self.file)
 
     def adjust_opened_project(self):
         self.tab_new.parse_tasks(self.file)

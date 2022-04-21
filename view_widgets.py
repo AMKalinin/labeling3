@@ -49,7 +49,6 @@ class base_view(QGraphicsView):
         rty = 0
         brx = 10
         bry = 10
-        print(list(classifier.classes))
         for i in range(100):
             color = QColor(Qt.GlobalColor(i))
             pen = QPen()

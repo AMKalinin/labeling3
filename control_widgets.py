@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import pyqtSignal, QObject, pyqtSlot
+from PyQt5.QtCore import Qt, pyqtSignal, QObject, pyqtSlot
 from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, QFrame, QGridLayout,
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
@@ -127,6 +127,7 @@ class view_control(QGroupBox):
     def __init__(self, signal):
         super().__init__()
         self.signal = signal
+        self.create_pallete()
         self.init_ui()
 
     def init_ui(self):
@@ -139,8 +140,37 @@ class view_control(QGroupBox):
         self.layout.addWidget(self.btn_previous)
         self.layout.addWidget(self.btn_next)
         self.layout.addWidget(self.btn_showall)
+        self.layout.addWidget(self.list)
 
         self.setLayout(self.layout)
     
     def on_showall(self):
         self.signal.emit()
+
+    def create_pallete(self):
+        color_index = 2
+        self.list = QListWidget()
+        for cclass in classifier.classes:
+            pixmap = QPixmap(50,50)
+            color = QColor(Qt.GlobalColor(color_index))
+            pixmap.fill(color)
+            self.list.addItem(QListWidgetItem(QIcon(pixmap), cclass.value))
+            color_index += 1
+            if color_index == 19:
+                color_index = 2
+
+    def adjust_pallete(self, hdf):
+        color_index = 2
+        self.layout.removeWidget(self.list)
+        self.list.deleteLater()
+        self.list = QListWidget()
+        for cclass in hdf.attrs[classifier.HDF_FILE_CLASSES]:
+            pixmap = QPixmap(50,50)
+            color = QColor(Qt.GlobalColor(color_index))
+            pixmap.fill(color)
+            self.list.addItem(QListWidgetItem(QIcon(pixmap), cclass))
+            color_index += 1
+            if color_index == 19:
+                color_index = 2
+
+        self.layout.addWidget(self.list)
