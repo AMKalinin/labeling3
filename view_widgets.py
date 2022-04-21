@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import Qt, QPoint, QRectF, pyqtSlot#, QVector
+from PyQt5.QtCore import Qt, QPoint, QPointF, QRectF, pyqtSlot#, QVector
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, QFrame, QGridLayout,
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
@@ -43,6 +43,27 @@ class base_view(QGraphicsView):
 
     @pyqtSlot()
     def show_all(self):
+        ltx = 0
+        lty = 0
+        rtx = 10
+        rty = 0
+        brx = 10
+        bry = 10
+        print(list(classifier.classes))
+        for i in range(100):
+            color = QColor(Qt.GlobalColor(i))
+            pen = QPen()
+            brush = QBrush(color, Qt.SolidPattern)
+            polygon = QPolygonF(QRectF(QPointF(ltx, lty), QPointF(brx, bry)))
+            self.scene.addPolygon(polygon, pen, brush)
+            ltx += 10
+            brx += 10
+
+
+
+    """
+    @pyqtSlot()
+    def show_all(self):
         if self.hdf:
             
             for name, value in self.hdf[str(self.index)].attrs.items():
@@ -61,8 +82,9 @@ class base_view(QGraphicsView):
                     rgb_b = int(a_class[2]) * 20 
                     #print("pen=", rgb_r, rgb_g, rgb_b)
                     #print(a_type == 'Polygon')
-
-                    color = QColor(rgb_r,rgb_g,rgb_b, 150)
+                    print("color = ", type(Qt.GlobalColor))
+                    color = QColor(Qt.GlobalColor(29))
+                    #color = QColor(rgb_r,rgb_g,rgb_b, 150)
                     #color = QColor(100,100,100,100)
                     print(color.alphaF())
                     #print("1")
@@ -104,7 +126,7 @@ class base_view(QGraphicsView):
             #self.hdf[str(0)].attrs[str(2)] = "462;Rect;[(0,0),(1,1)]"
             #self.hdf[str(0)].attrs[str(5)] = "464;Polygon;[(100,0),(200,0), (200,100), (100, 100)]"
             #self.hdf[str(0)].attrs[str(7)] = "364;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
-                
+    """            
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Plus:
