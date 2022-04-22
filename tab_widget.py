@@ -108,7 +108,8 @@ class my_tab(QTabWidget):
                 #self.tab_tasks_right_layout.addWidget(task_widget)
 
     def parse_view(self, hdf):
-        #self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf) 
+        #self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf)
+        self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
         self.view_w = view_widgets.view_view(parent=self.view, file_link=hdf, signal=self.signal2) 
 
     def init_view(self):
