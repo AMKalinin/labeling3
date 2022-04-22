@@ -135,17 +135,23 @@ class view_control(QGroupBox):
         self.btn_next = QPushButton(">>")
         self.btn_showall = QPushButton("show all")
         self.btn_showall.clicked.connect(self.on_showall)
+        self.btn_hideall = QPushButton("hide all")
+        self.btn_hideall.clicked.connect(self.on_hideall)
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.btn_previous)
         self.layout.addWidget(self.btn_next)
         self.layout.addWidget(self.btn_showall)
+        self.layout.addWidget(self.btn_hideall)
         self.layout.addWidget(self.list)
 
         self.setLayout(self.layout)
     
     def on_showall(self):
-        self.signal.emit()
+        self.signal.emit(1)
+
+    def on_hideall(self):
+        self.signal.emit(-1)
 
     def create_pallete(self):
         color_index = 2

@@ -27,7 +27,7 @@ import tab_widget
 class main_window(QMainWindow):
     signal_parse_projects = pyqtSignal()
     signal_open_project = pyqtSignal(str)
-    signal_show_mask = pyqtSignal()
+    signal_show_mask = pyqtSignal(int)
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
         self.file = None

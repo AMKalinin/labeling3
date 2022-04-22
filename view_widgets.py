@@ -29,6 +29,7 @@ class base_view(QGraphicsView):
         self.signal = signal
         if self.signal:
             self.signal.connect(self.show_all)
+            self.signal.connect(self.hide_all)
 
         self.setGeometry(QtCore.QRect(10, 40, 601, 411))
         self.scene = QGraphicsScene()
@@ -40,7 +41,9 @@ class base_view(QGraphicsView):
         #self.show_all()
     def get_hdf(self):
         return self.hdf
+    
 
+    """
     @pyqtSlot()
     def show_all(self):
         ltx = 0
@@ -57,17 +60,83 @@ class base_view(QGraphicsView):
             self.scene.addPolygon(polygon, pen, brush)
             ltx += 10
             brx += 10
-
-
-
     """
-    @pyqtSlot()
-    def show_all(self):
+
+
+    
+    @pyqtSlot(int)
+    def show_all(self, code):
+        print('show called')
+        #if code >= 0:
+        """
         if self.hdf:
-            
-            for name, value in self.hdf[str(self.index)].attrs.items():
-                print(name, value)
-            
+            self.hdf[str(0)].attrs[str(0)] = "200;Polygon;[(0,0),(100,0), (100,100), (0, 100)]"
+            self.hdf[str(0)].attrs[str(1)] = "210;Polygon;[(100,0),(200,0), (200,100), (100, 100)]"
+            self.hdf[str(0)].attrs[str(2)] = "230;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
+            del self.hdf[str(0)].attrs[str(3)]
+            del self.hdf[str(0)].attrs[str(4)]
+            del self.hdf[str(0)].attrs[str(5)]
+            del self.hdf[str(0)].attrs[str(6)]
+        """
+        """
+        color_index = 2
+        self.layout.removeWidget(self.list)
+        self.list.deleteLater()
+        self.list = QListWidget()
+        for cclass in hdf.attrs[classifier.HDF_FILE_CLASSES]:
+            pixmap = QPixmap(50,50)
+            color = QColor(Qt.GlobalColor(color_index))
+            pixmap.fill(color)
+            self.list.addItem(QListWidgetItem(QIcon(pixmap), cclass))
+            color_index += 1
+            if color_index == 19:
+                color_index = 2
+        """
+        if code >= 0:
+            if self.hdf:
+                color_index = 2
+                for name, value in self.hdf[str(self.index)].attrs.items():
+                    if value[0]== str(2):
+                        print(name, value)
+                        classes = []
+                        a_class = utils.attrs_get_class(value)
+                        a_type = utils.attrs_get_type(value)
+                        a_points = utils.attrs_get_points(value)
+                        for clas in self.hdf.attrs[classifier.HDF_FILE_CLASSES]:
+                            classes.append(clas[0:3])
+                        #print(classes)
+                        #print(self.hdf.attrs[classifier.HDF_FILE_CLASSES])
+                        #print("c" + str(a_class), self.hdf.attrs[classifier.HDF_FILE_CLASSES])
+                        if str(a_class) in classes:
+                            color = QColor(Qt.GlobalColor(color_index))
+                            color_index += 1
+                            pen = QPen()
+                            brush = QBrush(color, Qt.SolidPattern)
+                        #    print(a_class)
+                        
+                        
+                            if a_type == 'Polygon':
+                                #print("---------")
+                                polygon = QPolygonF()
+                                #tmp_str1 = image_srcs.attrs[str(index)]
+                                #print(a_points)
+                                tmp_str2 = re.sub(r' ', '', a_points)
+                                #print(tmp_str2)
+                                tmp_list = re.findall(r'\([0-9]+,[0-9]+\)', tmp_str2)
+                                #print("list", tmp_list)
+                                tuple_list = []
+                                
+                                for pair in tmp_list:
+                                    tuple_list.append(make_tuple(pair))
+                                for int_pair in tuple_list:
+                                    #print(int_pair[0], int_pair[1])
+                                    polygon.append(QPoint(int_pair[0], int_pair[1]))
+                                #print(polygon)
+                                self.scene.addPolygon(polygon, pen, brush)#pen, brush)
+                            #print("+++++++")
+                            #print(self.scene.items())
+        
+        """
                 if value[0]== str(4):
                 #try:
                     #print(name, value)
@@ -119,13 +188,17 @@ class base_view(QGraphicsView):
                     #print(utils.attrs_get_points(value))
                 #except: 
                 #    pass
-            
-            #self.hdf[str(0)].attrs[str(0)] = "460;Polygon;[(0,0),(1,1)]"
+        """
+        
+        
+        #for i in range(8):
+            #self.hdf[str(0)].attrs[str(i)].__delitem__()
             #self.hdf[str(0)].attrs[str(1)] = "461;Ellipse;[(0,0),(1,1)]"
             #self.hdf[str(0)].attrs[str(2)] = "462;Rect;[(0,0),(1,1)]"
-            #self.hdf[str(0)].attrs[str(5)] = "464;Polygon;[(100,0),(200,0), (200,100), (100, 100)]"
-            #self.hdf[str(0)].attrs[str(7)] = "364;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
-    """            
+            #self.hdf[str(0)].attrs[str(0)] = "200;Polygon;[(0,0),(100,0), (100,100), (0, 100)]"
+            #self.hdf[str(0)].attrs[str(1)] = "210;Polygon;[(100,0),(200,0), (200,100), (100, 100)]"
+            #self.hdf[str(0)].attrs[str(2)] = "230;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
+        
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Plus:
@@ -142,20 +215,60 @@ class base_view(QGraphicsView):
     def zoom_out(self):
         self.scale(0.5, 0.5)
 
-    def hide_all(self):
-        print(self.scene.items())
+    @pyqtSlot(int)
+    def hide_all(self, code):
+        if code == -1:
+            for item in self.scene.items():
+                #print(item)
+                self.scene.removeItem(item)
+            self.restore_pixmap()
+            #print(self.scene.items())
+    """
+    @pyqtSlot(int)
+    def hide_all(self, code):
+        if code == -1:
+            print(self.scene.items())
+    """
+
+    def change_pixmap(self,index):
+        if self.hdf:
+            self.index += index
+            if self.index < 0:
+                self.index = 0
+            elif self.index > self.index_max:
+                self.index = self.index_max
+            if self.background:  
+                self.scene.removeItem(self.background)
+            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            self.background = self.scene.addPixmap(image_as_pixmap)
+    
+    def restore_pixmap(self):
+        print(self.hdf, self.index)
+        print(type(self))
+        print('redtore called')
+        if self.hdf:
+            if self.background:  
+                self.scene.removeItem(self.background)
+            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            self.background = self.scene.addPixmap(image_as_pixmap)
+
+
+            #print(self.scene.items())
 
 class view_view(base_view):
     def __init__(self, parent, file_link=None, signal=None):
         super().__init__(parent=parent, file_link=file_link, signal=signal)
-        self.hide_all()
+        #self.hide_all(-1)
+        #if self.signal:
+            #self.signal.connect(self.show_all)
+            #self.signal.connect(self.hide_all)
 
         if self.hdf:
             self.index_max = self.hdf.attrs[classifier.HDF_FILE_TASK_COUNT] - 1
             image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
             self.change_pixmap(self.index)
-
+    """
     def change_pixmap(self,index):
         if self.hdf:
             if self.index < self.index_max and self.index >= 0:
@@ -165,7 +278,16 @@ class view_view(base_view):
             self.scene.removeItem(self.background)
             image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
-
+    """
+    """
+    @pyqtSlot(int)
+    def hide_all(self, code):
+        if code == -1:
+            for item in self.scene.items():
+                self.scene.removeItem(item)
+            self.change_pixmap(self.index)
+            print(self.scene.items())
+    """
 class view_edit(base_view):
     def __init__(self, parent, file_link=None):
         super().__init__(parent=parent, file_link=file_link)
