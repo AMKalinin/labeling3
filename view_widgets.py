@@ -26,10 +26,10 @@ class base_view(QGraphicsView):
         self.hdf = file_link
         self.index = 0
         self.index_max = 0
-        self.signal = signal
-        if self.signal:
-            self.signal.connect(self.show_all)
-            self.signal.connect(self.hide_all)
+        self.signal_showall = signal
+        if self.signal_showall:
+            self.signal_showall.connect(self.show_all)
+            self.signal_showall.connect(self.hide_all)
 
         self.setGeometry(QtCore.QRect(10, 40, 601, 411))
         self.scene = QGraphicsScene()
@@ -47,6 +47,7 @@ class base_view(QGraphicsView):
     
     @pyqtSlot(int)
     def show_all(self, code):
+        print("view showall", code)
         if code >= 0:
             if self.hdf:
                 color_index = 2
@@ -95,6 +96,11 @@ class base_view(QGraphicsView):
 
     @pyqtSlot(int)
     def hide_all(self, code):
+        if code == -1:
+            for item in self.scene.items():
+                self.scene.removeItem(item)
+            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            self.background = self.scene.addPixmap(image_as_pixmap)
         #print("asd")
         """
         self.hdf[str(0)].attrs[str(0)] = "110;Polygon;[(0,0),(100,0), (100,100), (0, 100)]"
@@ -105,11 +111,7 @@ class base_view(QGraphicsView):
         self.hdf[str(1)].attrs[str(2)] = "310;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
         """
     
-        if code == -1:
-            for item in self.scene.items():
-                self.scene.removeItem(item)
-            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
-            self.background = self.scene.addPixmap(image_as_pixmap)
+
     
 
     def change_pixmap(self,index):
@@ -147,6 +149,13 @@ class view_edit(base_view):
         super().__init__(parent=parent, file_link=file_link, signal=signal)
 
         self.set_pixmap(current_task)
+        self.index = current_task
+
+    def show(self):
+        self.show_all(1)
+    
+    def hide(self):
+        self.hide_all(-1)
 
     
 

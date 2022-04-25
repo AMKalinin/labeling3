@@ -27,8 +27,8 @@ import tab_widget
 class main_window(QMainWindow):
     signal_parseprojects = pyqtSignal()
     signal_openproject = pyqtSignal(str)
-    signal_showmask = pyqtSignal(int)
-    signal_edittask = pyqtSignal([int])
+    signal_showall = pyqtSignal(int)
+    signal_edittask = pyqtSignal(int)
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
         self.file = None
@@ -50,10 +50,10 @@ class main_window(QMainWindow):
 
 
     def init_widgets(self):
-        self.tab_new = tab_widget.my_tab(signal=self.signal_openproject, signal2=self.signal_showmask, signal_edittask=self.signal_edittask)
+        self.tab_new = tab_widget.my_tab(signal=self.signal_openproject, signal2=self.signal_showall, signal_edittask=self.signal_edittask)
         self.higher_control = control_widgets.higher_control(signal=self.signal_parseprojects)
         self.description = control_widgets.project_description_new()
-        self.navigation = control_widgets.view_control(self.signal_showmask, self.signal_edittask)
+        self.navigation = control_widgets.view_control(self.signal_showall, self.signal_edittask)
 
     def place_blocks(self):
         self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)
@@ -146,16 +146,28 @@ class main_window(QMainWindow):
         current_task = self.tab_new.view_w.current_task()
         if index != -1:
             current_task = index
-        edit_widget = QDialog()
-        layout = QGridLayout()
 
+        edit_widget = QDialog()
+        edit_w = view_widgets.view_edit(parent=None, file_link=self.file, current_task=current_task)#, signal_showall=self.signal_showall) 
+        
+        layout = QGridLayout()
         edit_widget.setLayout(layout)
-        btn = QPushButton("test")
-        layout.addWidget(btn, 0, 0)
-        edit_w = view_widgets.view_edit(parent=None, file_link=self.file, current_task=current_task)#, signal=self.signal2) 
-        layout.addWidget(edit_w, 1, 1)
+        btn = QPushButton("showall")
+        btn2 = QPushButton("hideall")
+
+        btn.clicked.connect(edit_w.show)
+        btn2.clicked.connect(edit_w.hide)
+
+        layout.addWidget(edit_w, 0, 0)
+        layout.addWidget(btn, 0, 1)
+        layout.addWidget(btn2, 1, 1)
+
         edit_widget.exec_()
-        print("edit task", current_task)
+
+
+    def on_showall(self):
+        print("showall")
+        self.signal_showall.emit(1)
 
     def previous_view(self):
         self.tab_new.change_view(index=-1)
