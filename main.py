@@ -25,9 +25,10 @@ import control_widgets
 import tab_widget
 
 class main_window(QMainWindow):
-    signal_parse_projects = pyqtSignal()
-    signal_open_project = pyqtSignal(str)
-    signal_show_mask = pyqtSignal(int)
+    signal_parseprojects = pyqtSignal()
+    signal_openproject = pyqtSignal(str)
+    signal_showmask = pyqtSignal(int)
+    signal_edittask = pyqtSignal([int])
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
         self.file = None
@@ -49,10 +50,10 @@ class main_window(QMainWindow):
 
 
     def init_widgets(self):
-        self.tab_new = tab_widget.my_tab(signal=self.signal_open_project, signal2=self.signal_show_mask)
-        self.higher_control = control_widgets.higher_control(signal=self.signal_parse_projects)
+        self.tab_new = tab_widget.my_tab(signal=self.signal_openproject, signal2=self.signal_showmask, signal_edittask=self.signal_edittask)
+        self.higher_control = control_widgets.higher_control(signal=self.signal_parseprojects)
         self.description = control_widgets.project_description_new()
-        self.navigation = control_widgets.view_control(self.signal_show_mask)
+        self.navigation = control_widgets.view_control(self.signal_showmask, self.signal_edittask)
 
     def place_blocks(self):
         self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)
@@ -62,12 +63,15 @@ class main_window(QMainWindow):
         self.show_higher_control()
 
     def connect_ui(self):
-        self.signal_parse_projects.connect(self.tab_new.parse_projects)
-        self.signal_open_project.connect(self.open_project_routine)
+        self.signal_parseprojects.connect(self.tab_new.parse_projects)
+        self.signal_openproject.connect(self.open_project_routine)
         self.tab_new.currentChanged.connect(self.show_tab_new)
-        self.description.btn_add.clicked.connect(self.add_task)
+        self.description.btn_addtask.clicked.connect(self.add_task)
+        #self.description.btn_edittask.clicked.connect(self.on_edittask)
         self.navigation.btn_previous.clicked.connect(self.previous_view)
         self.navigation.btn_next.clicked.connect(self.next_view)
+        #self.navigation.btn_edittask.clicked.connect(self.on_edittask)
+        self.signal_edittask.connect(self.on_edittask)
     
     def show_tab(self):
         if self.tab.currentWidget() == self.tab_split:
@@ -116,10 +120,12 @@ class main_window(QMainWindow):
         self.tab_new.parse_view(self.file)
 
     def project_create_routine(self):
-        dialog = new_project.new_project_dialog_new(signal=self.signal_parse_projects)
+        dialog = new_project.new_project_dialog_new(signal=self.signal_parseprojects)
         dialog.exec_()
 
     def add_task(self):
+        #print(classifier.task_attrs.TO_DO.value)
+        #"""
         if self.file:
             hdf = self.file
             task = QFileDialog.getOpenFileName()[0]
@@ -129,8 +135,27 @@ class main_window(QMainWindow):
                 hdf.create_dataset(str(tasks_count), data=task_numpy)
                 hdf[str(tasks_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
                 hdf[str(tasks_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
+                #hdf[str(tasks_count)].attrs[classifier.task_attrs.STATUS.value] = classifier.task_attrs.TO_DO.value
+                #hdf[str(tasks_count)].attrs[classifier.task_attrs.COUNT.value] = 0
                 hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
                 self.adjust_opened_project()
+        #"""
+
+    @pyqtSlot(int)
+    def on_edittask(self, index=-1):
+        current_task = self.tab_new.view_w.current_task()
+        if index != -1:
+            current_task = index
+        edit_widget = QDialog()
+        layout = QGridLayout()
+
+        edit_widget.setLayout(layout)
+        btn = QPushButton("test")
+        layout.addWidget(btn, 0, 0)
+        edit_w = view_widgets.view_edit(parent=None, file_link=self.file, current_task=current_task)#, signal=self.signal2) 
+        layout.addWidget(edit_w, 1, 1)
+        edit_widget.exec_()
+        print("edit task", current_task)
 
     def previous_view(self):
         self.tab_new.change_view(index=-1)

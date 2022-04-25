@@ -24,10 +24,11 @@ import cv2
 
 
 class my_tab(QTabWidget):
-    def __init__(self, signal, signal2=None, parent=None):
+    def __init__(self, signal, signal2=None, parent=None, signal_edittask=None):
         super().__init__()
         self.signal = signal
         self.signal2=signal2
+        self.signal_edittask = signal_edittask
         self.index = 0
         self.view_w = None
 
@@ -100,7 +101,7 @@ class my_tab(QTabWidget):
         for task_id in range(tasks_count):
             task_status = hdf[str(task_id)].attrs[classifier.HDF_TASK_STATUS]
             if task_status == classifier.HDF_TASK_STATUS_0 or status == classifier.HDF_TASK_STATUS_1:
-                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=task_id, mode=classifier.TASK_WIDGET_MODE_0)#, signal=self.signal_reopen_project)
+                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=task_id, mode=classifier.TASK_WIDGET_MODE_0, signal_edittask=self.signal_edittask)#, signal=self.signal_reopen_project)
                 self.tasksleft_layout.addWidget(task_widget)
             elif task_status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")

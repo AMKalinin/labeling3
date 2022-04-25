@@ -37,6 +37,13 @@ class base_view(QGraphicsView):
         if self.hdf == None:
             image_as_pixmap = utils.pixmap_default()
             self.background = self.scene.addPixmap(image_as_pixmap)
+        else:
+            self.index_max = self.hdf.attrs[classifier.HDF_FILE_TASK_COUNT] - 1
+            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            self.background = self.scene.addPixmap(image_as_pixmap)
+
+    def current_task(self):
+        return self.index
     
     @pyqtSlot(int)
     def show_all(self, code):
@@ -44,7 +51,9 @@ class base_view(QGraphicsView):
             if self.hdf:
                 color_index = 2
                 for name, value in self.hdf[str(self.index)].attrs.items():
-                    if value[0]== str(2):
+                    #print(name, value)
+                    
+                    if name != classifier.task_attrs.COUNT.value and name != classifier.task_attrs.STATUS.value:
                         #print(name, value)
                         classes = []
                         a_class = utils.attrs_get_class(value)
@@ -67,7 +76,7 @@ class base_view(QGraphicsView):
                                 for int_pair in tuple_list:
                                     polygon.append(QPoint(int_pair[0], int_pair[1]))
                                 self.scene.addPolygon(polygon, pen, brush)
-    
+                    
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Plus:
@@ -86,11 +95,22 @@ class base_view(QGraphicsView):
 
     @pyqtSlot(int)
     def hide_all(self, code):
+        #print("asd")
+        """
+        self.hdf[str(0)].attrs[str(0)] = "110;Polygon;[(0,0),(100,0), (100,100), (0, 100)]"
+        self.hdf[str(0)].attrs[str(1)] = "120;Polygon;[(100,0),(200,0), (200,100), (100, 100)]"
+        self.hdf[str(0)].attrs[str(2)] = "130;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
+        self.hdf[str(1)].attrs[str(0)] = "210;Polygon;[(0,0),(100,0), (100,100), (0, 100)]"
+        self.hdf[str(1)].attrs[str(1)] = "220;Polygon;[(100,0),(200,0), (200,100), (100, 100)]"
+        self.hdf[str(1)].attrs[str(2)] = "310;Polygon;[(200,0),(300,0), (300,100), (200, 100)]"
+        """
+    
         if code == -1:
             for item in self.scene.items():
                 self.scene.removeItem(item)
             image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
+    
 
     def change_pixmap(self,index):
         if self.hdf:
@@ -103,21 +123,30 @@ class base_view(QGraphicsView):
                 self.scene.removeItem(self.background)
             image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
+
+    def set_pixmap(self, index):
+        if self.background:  
+            self.scene.removeItem(self.background)
+        image_as_pixmap = utils.pixmap_at_index(self.hdf, index)
+        self.background = self.scene.addPixmap(image_as_pixmap)
+
     
 class view_view(base_view):
     def __init__(self, parent, file_link=None, signal=None):
         super().__init__(parent=parent, file_link=file_link, signal=signal)
-
+        """
         if self.hdf:
             self.index_max = self.hdf.attrs[classifier.HDF_FILE_TASK_COUNT] - 1
             image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
             self.change_pixmap(self.index)
-
+        """
 
 class view_edit(base_view):
-    def __init__(self, parent, file_link=None):
-        super().__init__(parent=parent, file_link=file_link)
+    def __init__(self, parent, file_link=None, signal=None, current_task=0):
+        super().__init__(parent=parent, file_link=file_link, signal=signal)
+
+        self.set_pixmap(current_task)
 
     
 

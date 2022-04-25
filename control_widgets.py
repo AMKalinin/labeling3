@@ -41,7 +41,8 @@ class project_description_new(QGroupBox):
         self.description = ' проект не открыт'
         self.task_count = ' проект не открыт'
 
-        self.btn_add = QPushButton("Добавить задачу")
+        self.btn_addtask = QPushButton("Добавить задачу")
+        self.btn_edittask = QPushButton("edit task")
 
     def init_menu(self):
         self.menu = QListWidget()
@@ -64,7 +65,8 @@ class project_description_new(QGroupBox):
         self.layout = QVBoxLayout()
 
         self.layout.addWidget(self.menu)
-        self.layout.addWidget(self.btn_add)
+        self.layout.addWidget(self.btn_addtask)
+        self.layout.addWidget(self.btn_edittask)
 
         self.setLayout(self.layout)
 
@@ -124,9 +126,10 @@ class higher_control(QGroupBox):
 
 
 class view_control(QGroupBox):
-    def __init__(self, signal):
+    def __init__(self, signal_showall, signal_edittask):
         super().__init__()
-        self.signal = signal
+        self.signal_showall = signal_showall
+        self.signal_edittask = signal_edittask
         self.create_pallete()
         self.init_ui()
 
@@ -137,21 +140,28 @@ class view_control(QGroupBox):
         self.btn_showall.clicked.connect(self.on_showall)
         self.btn_hideall = QPushButton("hide all")
         self.btn_hideall.clicked.connect(self.on_hideall)
+        self.btn_edittask = QPushButton("edit task")
+        self.btn_edittask.clicked.connect(self.on_edittask)
+
 
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.btn_previous)
         self.layout.addWidget(self.btn_next)
         self.layout.addWidget(self.btn_showall)
         self.layout.addWidget(self.btn_hideall)
+        self.layout.addWidget(self.btn_edittask)
         self.layout.addWidget(self.list)
 
         self.setLayout(self.layout)
     
     def on_showall(self):
-        self.signal.emit(1)
+        self.signal_showall.emit(1)
 
     def on_hideall(self):
-        self.signal.emit(-1)
+        self.signal_showall.emit(-1)
+
+    def on_edittask(self):
+        self.signal_edittask.emit(-1)
 
     def create_pallete(self):
         color_index = 2
