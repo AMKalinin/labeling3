@@ -12,11 +12,12 @@ import classifier
 import h5py
 
 class task_widget_new(QGroupBox):
-    def __init__(self, project_file, identifier, mode, signal=None):
+    def __init__(self, project_file, identifier, mode, signal=None, signal_edittask=None):
         super().__init__()
         self.file = project_file
         self.identifier = identifier
         self.mode = mode
+        self.signal_edittask = signal_edittask
         self.signal = signal
         self.init_ui()
         #self.signal.emit(self.file)
@@ -104,6 +105,7 @@ class task_widget_new(QGroupBox):
         #    self.signal.emit()
 
     def on_edit(self):
+        self.signal_edittask.emit(self.identifier)
         pass
         #print("edit")
 
