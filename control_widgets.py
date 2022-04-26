@@ -170,7 +170,7 @@ class view_control(QGroupBox):
             pixmap = QPixmap(50,50)
             color = QColor(Qt.GlobalColor(color_index))
             pixmap.fill(color)
-            self.list.addItem(QListWidgetItem(QIcon(pixmap), cclass.value))
+            self.list.addItem(QListWidgetItem(QIcon(pixmap), str(cclass.value[1]) + " " +str(cclass.value[3])))
             color_index += 1
             if color_index == 19:
                 color_index = 2

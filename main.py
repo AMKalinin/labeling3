@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
                             QScrollArea, QToolButton, QSizePolicy, QComboBox,
-                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene)
+                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QMenuBar)
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 import new_project
@@ -23,6 +23,7 @@ import re
 import cv2
 import control_widgets
 import tab_widget
+import edit_widgets
 
 class main_window(QMainWindow):
     signal_parseprojects = pyqtSignal()
@@ -146,23 +147,8 @@ class main_window(QMainWindow):
         current_task = self.tab_new.view_w.current_task()
         if index != -1:
             current_task = index
-
-        edit_widget = QDialog()
-        edit_w = view_widgets.view_edit(parent=None, file_link=self.file, current_task=current_task)#, signal_showall=self.signal_showall) 
-        
-        layout = QGridLayout()
-        edit_widget.setLayout(layout)
-        btn = QPushButton("showall")
-        btn2 = QPushButton("hideall")
-
-        btn.clicked.connect(edit_w.show)
-        btn2.clicked.connect(edit_w.hide)
-
-        layout.addWidget(edit_w, 0, 0)
-        layout.addWidget(btn, 0, 1)
-        layout.addWidget(btn2, 1, 1)
-
-        edit_widget.exec_()
+        self.edit = edit_widgets.edit_widget(current_task, self.file)
+        self.edit.exec_()
 
 
     def on_showall(self):
