@@ -51,8 +51,29 @@ code_450 =([            "451_Жилое строение",
 code_460 =([            "461_Портовые сооружения и краны"               ])
 
 from enum import Enum
+import os
 
-class classes(Enum):
+
+class methods(Enum):
+    @classmethod
+    def value_0(cls):
+        return list(map(lambda c: c.value[0], cls))
+    @classmethod
+    def value_1(cls):
+        return list(map(lambda c: c.value[1], cls))
+    @classmethod
+    def value_2(cls):
+        return list(map(lambda c: c.value[2], cls))
+
+
+class bases(methods):
+    water = 0, 'Вода'
+    green = 1, 'Растительность'
+    surface = 2, 'Площадные объекты'
+    infrastructure = 3, 'Объекты и сооружения' 
+
+
+class classes(methods):
     #name = unique id, class number, globalcolor id [2-18], text description
     c100 = 0, 100, 2, "Базовый Вода" #"Объект отсутствует"
     c110 = 1, 110, 3, "Река, канал"
@@ -93,7 +114,8 @@ class classes(Enum):
     с461 = 33, 461, 18, "Портовые сооружения и краны"
     с490 = 34, 490, 2, "Особые здания"
 
-class hdf_attrs(Enum):
+class hdfs_attrs(Enum):
+    POSTFIX = '.hdf5'
     NAME = 'name'
     CLASSES = 'classes'
     TIME_C = 'time_created'
@@ -101,13 +123,13 @@ class hdf_attrs(Enum):
     DESCRIPTION = 'description'
     TASK_COUNT = 'task_count'
 
-class task_attrs(Enum):
+class tasks_attrs(Enum):
     COUNT = '__polygon_count'
     STATUS = '__task_status'
-    TO_DO = 0 #при создании файла проекта, при добавлении задачи
-    IN_PROGRESS = 1 #у задачи есть хотя бы один атрибут маски
-    REVIEW = 2 #нажата кнопка отправить на проверку
-    DONE = 3 #модератор нажал кнопку 
+    TO_DO = '0' #при создании файла проекта, при добавлении задачи
+    IN_PROGRESS = '1' #у задачи есть хотя бы один атрибут маски
+    REVIEW = '2' #нажата кнопка отправить на проверку
+    DONE = '3' #модератор нажал кнопку 
 
 
 project_classes = []
@@ -136,8 +158,6 @@ TASK_WIDGET_MODE_0 = 'to do'
 TASK_WIDGET_MODE_1 = 'to check'
 
 
-
-import os
 
 ICON_FOLDER_NAME = '__icons'
 ICON_FOLDER_NAME_FULL = os.getcwd() + '/' + ICON_FOLDER_NAME
@@ -192,6 +212,13 @@ PROJECTS_FOLDER_NAME = '__projects'
 PROJECTS_FOLDER_FULL_NAME = os.getcwd() + '/' + PROJECTS_FOLDER_NAME
 #PROJECTS_LIST = os.listdir(PROJECTS_FOLDER_FULL_NAME)
 
+class items_folders(Enum):
+    program_path = os.getcwd()
+
+    projects = program_path + '/' + '__projects'
+    images = program_path + '/' + '__images'
+
+    previous = images + '/' + 'previous_tbtn.png'
 
 
 import time
