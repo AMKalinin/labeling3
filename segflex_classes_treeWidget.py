@@ -5,7 +5,7 @@ from PyQt5.QtGui import QDrag
 import classifier
 
 
-class allTree(QTreeWidget):
+class all_classes(QTreeWidget):
     def __init__(self):
         super().__init__()
         self.chosen = []
@@ -33,7 +33,7 @@ class allTree(QTreeWidget):
         base_index = tree.indexOfTopLevelItem(widget)
         class_index = tree.indexOfTopLevelItem(widget.parent())
 
-        if (base_index == -1):
+        if base_index == -1:
             base = widget.parent()
             class_index = base.indexOfChild(widget)
             base.removeChild(widget)
@@ -42,7 +42,7 @@ class allTree(QTreeWidget):
                 base_index = tree.indexOfTopLevelItem(base)
                 tree.takeTopLevelItem(base_index)
 
-        elif (class_index == -1):
+        elif class_index == -1:
             base = widget
             base_index = tree.indexOfTopLevelItem(base)
             for index in range(base.childCount()):
@@ -50,7 +50,7 @@ class allTree(QTreeWidget):
             tree.takeTopLevelItem(base_index)
 
 
-class selectedTree(allTree):
+class selected_classes(allTree):
     def __init__(self):
         super().__init__()
 
