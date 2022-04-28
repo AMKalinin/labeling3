@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QTreeWidget, QTreeWidgetItem, QWidget, QLabel, QDialog,
-    QComboBox, QApplication, QListView, QVBoxLayout, QHBoxLayout, QPushButton,
+    QComboBox, QApplication, QListView, QGridLayout, QVBoxLayout, QHBoxLayout, QPushButton,
     QFileDialog)
 from PyQt5.QtCore import pyqtSignal, QObject, Qt
 
@@ -11,6 +11,142 @@ import h5py
 import cv2
 import regex as re
 import segflex_classes_treeWidget as treeWidget
+
+
+class classes_chooseqqqqq(QDialog):
+    def __init__(self, signal, project_name, project_description):
+        super().__init__()
+        self.signal = signal
+        self.name = project_name
+        self.description = project_description
+
+        self.init_ui()
+
+    def init_ui(self):
+        self.adjust_window()
+
+    def adjust_window(self):
+        self.setWindowTitle("Выбор классов проекта")
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+
+
+class classes_choose_new(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.adjust_window()
+        self.init_widgets()
+        self.place_widgets()
+        #return(self.chosen)
+
+    def adjust_window(self):
+        self.layout = QGridLayout()
+        self.setLayout(self.layout)
+
+    def init_widgets(self):
+        self.all = treeWidget.all_classes()
+        #self.all = QTreeWidget()
+        self.all.setColumnCount(2)
+        self.all.setHeaderLabels(['Name', 'Code'])
+        self.fill(self.all)
+
+        self.selected = treeWidget.selected_classes()
+        self.selected.setColumnCount(2)
+        self.selected.setHeaderLabels(['Name', 'Code'])
+        
+
+        #btn_select_class = QPushButton("Добавить")
+        #btn_select_class.clicked.connect(self.on_btn_add)
+        #btn_remove_class = QPushButton("Удалить")
+        #btn_remove_class.clicked.connect(self.on_btn_remove)
+
+        #btn_layout = QVBoxLayout()
+        #btn_layout.addWidget(btn_select_class)
+        #btn_layout.addWidget(btn_remove_class)
+
+        #combo_layout = QHBoxLayout()
+
+        #combo_layout.addWidget(self.tree_all_class)
+        #combo_layout.addLayout(btn_layout)
+        #combo_layout.addWidget(self.tree_selected_class)
+
+        #self.layout.addLayout(combo_layout)
+
+    def fill(self, tree):
+        bases = [(x, y) for x, y in zip(classifier.bases.unique_id(), classifier.bases.name())]
+        classes = [(x, y, z) for x,y,z in zip(classifier.classes.base(), classifier.classes.code(), classifier.classes.name())]
+        for base in bases:
+            tmp = QTreeWidgetItem([base[1]])
+            tree.addTopLevelItem(tmp)
+            for item in classes:
+                if item[0] == base[0]:
+                    child = QTreeWidgetItem([item[2], str(item[1])])
+                    tmp.addChild(child)
+
+    def place_widgets(self):
+        self.layout.addWidget(self.all, 0, 0)
+        self.layout.addWidget(self.selected, 0, 1)
+
+    def on_btn_add(self):
+
+        def get_parent(item):
+            if item.parent() is None:
+                return QTreeWidgetItem([item.text(0), item.text(1)])
+            return get_parent(item.parent())
+
+        def struct(tree, item):
+            match = tree.findItems(item.text(1)[0], Qt.MatchStartsWith | Qt.MatchRecursive, 1)
+            if len(match) > 0:
+                match[0].parent().addChild(QTreeWidgetItem([item.text(0), item.text(1)]))
+                return 1
+            return 0
+
+        it = self.tree_all_class.currentItem()
+        if self.tree_all_class.indexOfTopLevelItem(it) >= 0:
+            return
+        text = it.text(1) + '_' + it.text(0)
+        if text not in classifier.current_project.classes:
+            classifier.current_project.classes.append(text)
+            """
+            par = get_parent(it)
+            par.addChild(QTreeWidgetItem([it.text(0), it.text(1)]))
+            self.tree_selected_class.addTopLevelItem(par)
+            self.tree_selected_class.expandItem(par)
+            self.tree_selected_class.setCurrentItem(par)
+            """
+            if struct(self.tree_selected_class, it) == 0:
+                par = get_parent(it)
+                par.addChild(QTreeWidgetItem([it.text(0), it.text(1)]))
+                self.tree_selected_class.addTopLevelItem(par)
+                self.tree_selected_class.expandItem(par)
+                self.tree_selected_class.setCurrentItem(par)
+
+    def on_btn_remove(self):
+        it = self.tree_selected_class.currentItem()
+        if it is None:
+            return
+        if it.parent() is None:
+            ind = self.tree_selected_class.indexOfTopLevelItem(it)
+            #text = it.child(0).text(1) + '_' + it.child(0).text(0)
+            for i in range(it.childCount()):
+                text = it.child(i).text(1) + '_' + it.child(i).text(0)
+                if text in classifier.current_project.classes:
+                    classifier.current_project.classes.remove(text)
+            self.tree_selected_class.takeTopLevelItem(ind)
+        else:
+            #ind = self.tree_selected_class.indexOfTopLevelItem(it.parent())
+            text = it.text(1) + '_' + it.text(0)
+        #if text in classifier.current_project.classes:
+        #    classifier.current_project.classes.remove(text)
+        #    self.tree_selected_class.takeTopLevelItem(ind)
+            if text in classifier.current_project.classes:
+                classifier.current_project.classes.remove(text)
+                if it.parent().childCount() <= 1:
+                    ind = self.tree_selected_class.indexOfTopLevelItem(it.parent())
+                    self.tree_selected_class.takeTopLevelItem(ind)
+                    return
+                it.parent().removeChild(it)
+
 
 class classes_choose(QDialog):
     signal1 = pyqtSignal()

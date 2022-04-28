@@ -8,6 +8,7 @@ import segflex_classes_choose
 from PyQt5.QtCore import pyqtSignal
 import classifier
 import os
+import segflex_classes_choose
 
 
 class new_project_dialog_new(QDialog):
@@ -37,6 +38,9 @@ class new_project_dialog_new(QDialog):
         self.text_area_name = QLineEdit()
         self.text_area_description = QLineEdit()
 
+        self.choose = segflex_classes_choose.classes_choose_new()
+
+
     def connect_ui(self):
         self.text_area_name.editingFinished.connect(self.set_project_name)
         self.text_area_description.editingFinished.connect(self.set_project_description)
@@ -64,6 +68,7 @@ class new_project_dialog_new(QDialog):
         self.layout.addLayout(layout_name)
         self.layout.addLayout(layout_description)
         self.layout.addLayout(layout_buttons)
+        self.layout.addWidget(self.choose)
 
     def on_btn_cancel(self):
         self.deleteLater()

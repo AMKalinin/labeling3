@@ -120,10 +120,6 @@ class main_window(QMainWindow):
         self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
 
-    def project_create_routine(self):
-        dialog = new_project.new_project_dialog_new(signal=self.signal_parseprojects)
-        dialog.exec_()
-
     def add_task(self):
         #print(classifier.task_attrs.TO_DO.value)
         #"""

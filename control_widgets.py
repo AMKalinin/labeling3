@@ -12,6 +12,7 @@ import new_project
 import project_widgets
 import task_widgets
 import segflex_seg_window as seg
+import segflex_classes_choose
 import view_widgets
 import os
 import json
@@ -121,8 +122,14 @@ class higher_control(QGroupBox):
         self.btn_new.clicked.connect(self.on_new)
 
     def on_new(self):
-        self.dialog = new_project.new_project_dialog_new(signal=self.signal)
+        #self.dialog = new_project.new_project_dialog_new(signal=self.signal)
+        self.dialog = segflex_classes_choose.classes_choose_new()
         self.dialog.exec_()
+        #self.dialog.show()
+        #print(self.dialog.selected.chosen)
+        self.dialog.deleteLater()
+        print(self.dialog.selected.chosen) #????? виджет почему имеет доступ к атрибуту после удаления????
+        #self.dialog.exec_()
 
 
 class view_control(QGroupBox):
