@@ -35,7 +35,6 @@ class all_classes(QTreeWidget):
 
         if base_index == -1:
             base = widget.parent()
-            class_index = base.indexOfChild(widget)
             base.removeChild(widget)
             tree.chosen.remove(widget.text(1))
             if base.childCount() == 0:
@@ -50,7 +49,7 @@ class all_classes(QTreeWidget):
             tree.takeTopLevelItem(base_index)
 
 
-class selected_classes(allTree):
+class selected_classes(all_classes):
     def __init__(self):
         super().__init__()
 
@@ -65,7 +64,6 @@ class selected_classes(allTree):
 
         if base_index == -1:
             base = widget.parent()
-            class_index = base.indexOfChild(widget)
             if widget.text(1) not in self.chosen:
                 self.chosen.append(widget.text(1))
                 base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
@@ -88,3 +86,5 @@ class selected_classes(allTree):
                     if base.child(index).text(1) not in self.chosen:
                         self.chosen.append(base.child(index).text(1))
                         base_in_tree[0].addChild(QTreeWidgetItem([base.child(index).text(0), base.child(index).text(1)]))
+
+        base_in_tree[0].sortChildren(1, Qt.AscendingOrder)
