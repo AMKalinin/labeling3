@@ -100,54 +100,26 @@ class base_view(QGraphicsView):
         point = self.mapToScene(QPoint(event.x(), event.y()))
         self.point_index = None
         self.point_status = self.shape.point_at_pos(point)
-        print(self.point_status)
         if self.point_status: 
             self.point_index = self.shape.index_of_closest(point)
-            #print(self.point_index)
-        #print(self.point_status)
-        #self.shape.add_point(point)
-
-        #if self.shape.point_at_pos(point):
-            #print("there is a point, ind=", self.shape.index_of_closest(point))
-        #print("pressed at", point)
 
     def mouseReleaseEvent(self, event):
         point = self.mapToScene(QPoint(event.x(), event.y()))
-
-
         if self.polygon:
             self.scene.removeItem(self.polygon)
-
-        if event.button() == Qt.LeftButton: #addpoint
-            if self.flag == classifier.figures.POLYGON:
-                point = self.mapToScene(QPoint(event.x(), event.y()))
-                self.shape.add_point(point)
-                self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
-                #self.add
-                #print(event.pos())
-
-        elif event.button() == Qt.RightButton: #deletepoint
-            pass
-        #self.shape.print_points()
-        #print("released at",point)
-        #self.point_index = None
+        if self.flag == classifier.figures.POLYGON:
+            point = self.mapToScene(QPoint(event.x(), event.y()))
+            self.shape.add_point(point)
+            self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
         self.point_status = None
 
     def mouseMoveEvent(self, event):
         point = self.mapToScene(QPoint(event.x(), event.y()))
-        #print("move", event.type())
         if self.point_index != None:
-            #print("status   asd", self.point_status)
-            print("status, index", self.point_status, self.point_index)
             if self.point_status:  
                 self.scene.removeItem(self.polygon)
                 self.shape.change_point(self.point_index, point)
                 self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
-
-                #print("need to replace shape.points[i], i=", self.point_index, 'to', event.pos())
-            
-        #print("released at", event.pos())
-
 
     def save_shape(self):
         shape_number = self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value]

@@ -37,11 +37,7 @@ class shape():
     def point_at_pos(self, point2):
         for point1 in self.points:
             if self.distance(point1, point2) < self.tell_apart_distance:
-                #a = self.distance(point1, point2)
-                #print("point")
-                #print (a)
                 return True
-        #print("no point")
         return False
 
     def closest_to_pos(self, point2):
@@ -50,53 +46,24 @@ class shape():
             minimal_distance = self.distance(closest_point, point2)
             for point in self.points:
                 distance = self.distance(point, point2)
-                #print(distance)
                 if distance < minimal_distance:
                     minimal_distance = distance
                     closest_point = point
-                    #print("point", closest_point)
-                    #print("index", self.points.index(closest_point))
-                    #print(closest_point)
             return closest_point
 
     def index_of_closest(self, point):
-        #print("pointtoadd = ", point, "point closest = ", self.closest_to_pos(point))
         return self.points.index(self.closest_to_pos(point))
 
-
-
-
     def add_point(self, pos):
-        #print("try add x, y =", pos.x(), pos.y())
         if not self.points:
             self.points.append(QPointF(pos.x(), pos.y()))
-            #print("1st point added")
         else:
             if not self.point_at_pos(pos):
                 closest_index = self.points.index(self.closest_to_pos(pos)) 
                 self.points.insert(closest_index, QPointF(pos.x(), pos.y()))
 
-    """
-        elif not self.point_at_pos(pos):
-            closest_index = self.points.index(self.closest_to_pos(pos)) 
-            self.points.insert(closest_index, QPointF(pos.x(), pos.y()))
-            print("point at index added", closest_index, pos)
-            #print("closest index =", self.closest_to_pos(pos))
-    """
-
     def change_point(self, index, newpos):
         self.points[index] = newpos
-
-    #def save_shape(self):
-
-
-    
-    def print_points(self):
-        for point in self.points:
-            print(point)
-        print("---------------")
-    
-
 
 
 
