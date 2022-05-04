@@ -11,7 +11,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import new_project
 import project_widgets
 import task_widgets
-import segflex_seg_window as seg
+#import segflex_seg_window as seg
 import view_widgets
 import os
 import json
@@ -86,22 +86,22 @@ class my_tab(QTabWidget):
         self.addTab(self.view, "Просмотр")
 
     def parse_projects(self):
-        utils.clear_layout(layout=self.projects_layout)
-        projects_list = os.listdir(classifier.PROJECTS_FOLDER_FULL_NAME)
-        for project_short_name in projects_list:
-            project_full_name = classifier.PROJECTS_FOLDER_FULL_NAME + '/' + project_short_name
-            with h5py.File(project_full_name, 'r') as hdf:
-                project_widget = project_widgets.project_widget_new(signal=self.signal, path=project_full_name)
-                self.projects_layout.addWidget(project_widget)
+        utils.clear_layout(self.projects_layout)
+        list = os.listdir(classifier.items.PROJECTS.value)
+        for name in list:
+            path = classifier.items.PROJECTS.value + name
+            with h5py.File(path, 'r') as hdf:
+                widget = project_widgets.project_widget_new(signal=self.signal, path=path)
+                self.projects_layout.addWidget(widget)
 
     def parse_tasks(self, hdf):
         utils.clear_layout(layout=self.tasksleft_layout)
         utils.clear_layout(layout=self.tasksright_layout)
-        tasks_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
-        for task_id in range(tasks_count):
-            task_status = hdf[str(task_id)].attrs[classifier.HDF_TASK_STATUS]
-            if task_status == classifier.HDF_TASK_STATUS_0 or status == classifier.HDF_TASK_STATUS_1:
-                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=task_id, mode=classifier.TASK_WIDGET_MODE_0, signal_edittask=self.signal_edittask)#, signal=self.signal_reopen_project)
+        count = hdf.attrs[classifier.hdfs.TASK_COUNT.value]
+        for id in range(count):
+            status = hdf[str(id)].attrs[classifier.tasks.STATUS.value]
+            if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
+                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=id, mode=classifier.TASK_WIDGET_MODE_0, signal_edittask=self.signal_edittask)#, signal=self.signal_reopen_project)
                 self.tasksleft_layout.addWidget(task_widget)
             elif task_status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")

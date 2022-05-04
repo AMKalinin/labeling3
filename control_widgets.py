@@ -11,8 +11,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import new_project
 import project_widgets
 import task_widgets
-import segflex_seg_window as seg
-import segflex_classes_choose
+#import segflex_seg_window as seg
+#import segflex_classes_choose
 import view_widgets
 import os
 import json
@@ -48,12 +48,12 @@ class project_description_new(QGroupBox):
     def init_menu(self):
         self.menu = QListWidget()
 
-        self.name = QListWidgetItem(classifier.HDF_FILE_NAME + self.name)
-        self.classes = QListWidgetItem(classifier.HDF_FILE_CLASSES + self.classes)
-        self.time_c = QListWidgetItem(classifier.HDF_FILE_TIME_C + self.time_c)
-        self.time_u = QListWidgetItem(classifier.HDF_FILE_TIME_U + self.time_u)
-        self.description = QListWidgetItem(classifier.HDF_FILE_DESCRIPTION + self.description)
-        self.task_count = QListWidgetItem(classifier.HDF_FILE_TASK_COUNT + self.task_count)
+        self.name = QListWidgetItem(classifier.hdfs.NAME.value + self.name)
+        self.classes = QListWidgetItem(classifier.hdfs.CLASSES.value + self.classes)
+        self.time_c = QListWidgetItem(classifier.hdfs.TIME_C.value + self.time_c)
+        self.time_u = QListWidgetItem(classifier.hdfs.TIME_U.value + self.time_u)
+        self.description = QListWidgetItem(classifier.hdfs.DESCRIPTION.value + self.description)
+        self.task_count = QListWidgetItem(classifier.hdfs.TASK_COUNT.value + self.task_count)
 
         self.menu.addItem(self.name)
         self.menu.addItem(self.classes)
@@ -72,9 +72,9 @@ class project_description_new(QGroupBox):
         self.setLayout(self.layout)
 
     def parse_description(self, hdf):
-        self.name.setText(classifier.HDF_FILE_NAME + hdf.attrs[classifier.HDF_FILE_NAME])
-        self.description.setText(classifier.HDF_FILE_DESCRIPTION + hdf.attrs[classifier.HDF_FILE_DESCRIPTION])
-        self.task_count.setText(classifier.HDF_FILE_TASK_COUNT +  str(hdf.attrs[classifier.HDF_FILE_TASK_COUNT])) #str?
+        self.name.setText(classifier.hdfs.NAME.value + hdf.attrs[classifier.hdfs.NAME.value])
+        self.description.setText(classifier.hdfs.DESCRIPTION.value + hdf.attrs[classifier.hdfs.DESCRIPTION.value])
+        self.task_count.setText(classifier.hdfs.TASK_COUNT.value +  str(hdf.attrs[classifier.hdfs.TASK_COUNT.value])) #str?
         """
         self.file_name = hdf.attrs[classifier.HDF_FILE_NAME]
         self.file_classes = hdf.attrs[classifier.HDF_FILE_CLASSES]
@@ -122,13 +122,14 @@ class higher_control(QGroupBox):
         self.btn_new.clicked.connect(self.on_new)
 
     def on_new(self):
-        #self.dialog = new_project.new_project_dialog_new(signal=self.signal)
-        self.dialog = segflex_classes_choose.classes_choose_new()
+        self.dialog = new_project.new_project_dialog_new(signal=self.signal)
+        #self.dialog = segflex_classes_choose.classes_choose_new()
         self.dialog.exec_()
         #self.dialog.show()
         #print(self.dialog.selected.chosen)
-        self.dialog.deleteLater()
-        print(self.dialog.selected.chosen) #????? виджет почему имеет доступ к атрибуту после удаления????
+        #print(self.dialog.selected.chosen) #????? виджет почему имеет доступ к атрибуту после удаления????
+        #self.dialog.deleteLater()
+        #print(self.dialog.selected.chosen) #????? виджет почему имеет доступ к атрибуту после удаления????
         #self.dialog.exec_()
 
 
@@ -187,7 +188,7 @@ class view_control(QGroupBox):
         self.layout.removeWidget(self.list)
         self.list.deleteLater()
         self.list = QListWidget()
-        for cclass in hdf.attrs[classifier.HDF_FILE_CLASSES]:
+        for cclass in hdf.attrs[classifier.hdfs.CLASSES.value]:
             pixmap = QPixmap(50,50)
             color = QColor(Qt.GlobalColor(color_index))
             pixmap.fill(color)

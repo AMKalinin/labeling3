@@ -7,7 +7,7 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import segflex_seg_window as seg_window
+#import segflex_seg_window as seg_window
 import classifier
 import h5py
 

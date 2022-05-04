@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
                             QScrollArea, QToolButton, QSizePolicy, QComboBox, QToolBar, 
-                            QStatusBar, QGraphicsView, QGraphicsScene)
+                            QStatusBar, QGraphicsView, QGraphicsScene, QTreeWidgetItem)
 
 from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -13,7 +13,7 @@ import h5py
 import numpy as np
 import cv2
 import classifier
-import segflex_draw_window as draw
+#import segflex_draw_window as draw
 import re
 from ast import literal_eval as make_tuple
 from PyQt5.QtCore import pyqtSignal, QObject
@@ -49,5 +49,16 @@ def clear_layout(layout):
         layout.itemAt(i).widget().deleteLater()
         
 def check_create_projects_folder():
-    if not os.path.exists(classifier.PROJECTS_FOLDER_FULL_NAME):
-        os.mkdir(classifier.PROJECTS_FOLDER_FULL_NAME)
+    if not os.path.exists(classifier.items.PROJECTS.value):
+        os.mkdir(classifier.items.PROJECTS.value)
+
+def fill_tree(tree):
+    bases = [(x, y) for x, y in zip(classifier.bases.unique_id(), classifier.bases.name())]
+    classes = [(x, y, z) for x,y,z in zip(classifier.classes.base(), classifier.classes.code(), classifier.classes.name())]
+    for base in bases:
+        tmp = QTreeWidgetItem([base[1]])
+        tree.addTopLevelItem(tmp)
+        for item in classes:
+            if item[0] == base[0]:
+                child = QTreeWidgetItem([item[2], str(item[1])])
+                tmp.addChild(child)

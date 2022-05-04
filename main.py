@@ -11,7 +11,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import new_project
 import project_widgets
 import task_widgets
-import segflex_seg_window as seg
+#import segflex_seg_window as seg
 import view_widgets
 import os
 import json
@@ -127,14 +127,14 @@ class main_window(QMainWindow):
             hdf = self.file
             task = QFileDialog.getOpenFileName()[0]
             if task:
-                tasks_count = hdf.attrs[classifier.HDF_FILE_TASK_COUNT]
+                tasks_count = hdf.attrs[classifier.hdfs.TASK_COUNT.value]
                 task_numpy = cv2.imread(task)
                 hdf.create_dataset(str(tasks_count), data=task_numpy)
-                hdf[str(tasks_count)].attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_0
-                hdf[str(tasks_count)].attrs[classifier.HDF_TASK_POLYGON_COUNT] = 0
+                hdf[str(tasks_count)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
+                hdf[str(tasks_count)].attrs[classifier.tasks.COUNT.value] = 0
                 #hdf[str(tasks_count)].attrs[classifier.task_attrs.STATUS.value] = classifier.task_attrs.TO_DO.value
                 #hdf[str(tasks_count)].attrs[classifier.task_attrs.COUNT.value] = 0
-                hdf.attrs[classifier.HDF_FILE_TASK_COUNT] += 1
+                hdf.attrs[classifier.hdfs.TASK_COUNT.value] += 1
                 self.adjust_opened_project()
         #"""
 
