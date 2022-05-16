@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import Qt, QPoint, QRectF#, QVector
+from PyQt5.QtCore import Qt, QPoint, QPointF, QRectF#, QVector
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, QFrame, QGridLayout,
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
@@ -29,6 +29,15 @@ def attrs_get_type(attrs):
 
 def attrs_get_points(attrs):
     return attrs.split(';')[2]
+
+def give_points(attrs_points):
+    rtn = []
+    xy = re.search(r'[0-9]*\.[0-9]*, [0-9]*\.[0-9]*', xy).group(0)
+    xy = xy.split(',')
+    x = float(xy[0])
+    y = float(xy[1])
+    return rtn
+    #print(attrs_points)
 
 
 def pixmap_at_index(file_link, index):
@@ -62,3 +71,34 @@ def fill_tree(tree):
             if item[0] == base[0]:
                 child = QTreeWidgetItem([item[2], str(item[1])])
                 tmp.addChild(child)
+
+def pointslist_from_str(str):
+    rtn = []
+    points = re.findall(r'([0-9]*\.[0-9]*, [0-9]*\.[0-9]*)', str)
+    #print(points)
+    return points
+
+def flist_from_pointslist(list):
+    rtn = []
+    for point in list:
+        xy = str(point)
+        xy = re.search(r'[0-9]*\.[0-9]*, [0-9]*\.[0-9]*', xy).group(0)
+        xy = xy.split(',')
+        x = float(xy[0])
+        y = float(xy[1])
+        xy = (x, y)
+        rtn.append(xy)
+    return rtn
+
+def qpoints_from_flist(list):
+    rtn = []
+    for point in list:
+        rtn.append(QPointF(point[0], point[1]))
+    return rtn
+
+def str_from_flist(list):
+    print('\n'.join([str(x) for t in list for x in t]))
+
+
+def points_from_x_y(list):
+    pass

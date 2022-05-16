@@ -88,3 +88,15 @@ class selected_classes(all_classes):
                         base_in_tree[0].addChild(QTreeWidgetItem([base.child(index).text(0), base.child(index).text(1)]))
         if base_in_tree:
             base_in_tree[0].sortChildren(1, Qt.AscendingOrder)
+
+
+class polygon_classes(all_classes):
+    def __init__(self):
+        super().__init__()
+
+        self.itemEntered.connect()
+
+#    def current_base(self, item, column):
+        
+
+

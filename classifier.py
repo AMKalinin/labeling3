@@ -1,3 +1,4 @@
+"""
 code_base = ([  "Вода",
                 "Растительность",
                 "Площадные объекты",
@@ -49,7 +50,7 @@ code_450 =([            "451_Жилое строение",
                         "456_Склад горючего"                            ])
 
 code_460 =([            "461_Портовые сооружения и краны"               ])
-
+"""
 from enum import Enum
 import os
 
@@ -145,7 +146,7 @@ class items(Enum):
 
     previous    = IMAGES + '/' + 'previous_tbtn.png'
 
-class figures(Enum):
+class shapes(Enum):
     NONE        = 0
     POLYGON     = 1
     RECTANGLE   = 2

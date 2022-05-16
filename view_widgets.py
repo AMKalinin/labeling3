@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
                             QScrollArea, QToolButton, QSizePolicy, QComboBox, QToolBar, 
-                            QStatusBar, QGraphicsView, QGraphicsScene)
+                            QStatusBar, QGraphicsView, QGraphicsScene, QMessageBox, QListWidget, QAbstractItemView)
 
 from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon, QPolygonF
 from PyQt5 import QtWidgets, QtGui, QtCore
@@ -24,7 +24,6 @@ import time
 class base_view(QGraphicsView):
     def __init__(self, parent, file_link=None, signal=None):
         super().__init__(parent=parent)
-        self.flag = classifier.figures.NONE
         self.shape = shape.shape()
         self.polygon = None
         self.hdf = file_link
@@ -49,13 +48,7 @@ class base_view(QGraphicsView):
     def current_task(self):
         return self.index
 
-    """
-    def polygon_list(self):
-        self.p_list = QListWidget()
-        for name, value in self.hdf[str(self.index)].attrs.items():
-            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
-                self.p_list.addItem(value)
-    """
+
     @pyqtSlot(int)
     def show_all(self, code):
         print("view showall", code)
@@ -107,7 +100,7 @@ class base_view(QGraphicsView):
         point = self.mapToScene(QPoint(event.x(), event.y()))
         if self.polygon:
             self.scene.removeItem(self.polygon)
-        if self.flag == classifier.figures.POLYGON:
+        if self.shape.type == classifier.shapes.POLYGON:
             point = self.mapToScene(QPoint(event.x(), event.y()))
             self.shape.add_point(point)
             self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
@@ -121,14 +114,7 @@ class base_view(QGraphicsView):
                 self.shape.change_point(self.point_index, point)
                 self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
 
-    def save_shape(self):
-        shape_number = self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value]
-        #self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] = self.shape.type + ';'.join(self.shape.points)
-        #self.index_max = self.hdf.attrs[classifier.tasks.COUNT.value]
-        print("saving shape = ", self.shape.type, "saving points = ", self.shape.points)
-        self.shape.points.clear()
-        self.scene.removeItem(self.polygon)
-        #self.polygon_list()
+
 
         
     def zoom_in(self):
@@ -137,22 +123,7 @@ class base_view(QGraphicsView):
     def zoom_out(self):
         self.scale(0.5, 0.5)
 
-    def add_none(self):
-        self.shape.points.clear()
-        self.flag = classifier.figures.NONE
 
-    def add_rectangle(self):
-        self.shape.points.clear()
-        self.flag = classifier.figures.RECTANGLE
-
-    def add_polygon(self):
-        self.shape.points.clear()
-        self.shape.type = 'Polygon'
-        self.flag = classifier.figures.POLYGON
-
-    def add_ellipse(self):
-        self.shape.points.clear()
-        self.flag = classifier.figures.ELLIPSE
 
     @pyqtSlot(int)
     def hide_all(self, code):
@@ -205,13 +176,134 @@ class view_view(base_view):
         """
 
 class view_edit(base_view):
-    def __init__(self, parent, file_link=None, signal=None, current_task=0):
+    def __init__(self, parent, file_link=None, signal=None, current_task=0, signal_parsepolygons=None):
         super().__init__(parent=parent, file_link=file_link, signal=signal)
 
         self.set_pixmap(current_task)
         self.index = current_task
+        self.signal = signal_parsepolygons
+        self.p_list = QListWidget()
+        self.p_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        #self.p_list.itemActivated.connect(self.show_shape)
+        #self.p_list.currentItemChanged.connect(self.show_shape)
+        self.p_list.itemSelectionChanged.connect(self.show_shape)
+        self.polygon_list()
+        self.polygons = []
+        self.shapes = []
+
+    def polygon_list(self):
+        #print("parsed")
+        #if self.p_list:
+        #    self.p_list.deleteLater()
+        self.p_list.clear()
+        for name, value in self.hdf[str(self.index)].attrs.items():
+            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+                self.p_list.addItem(value)
+
+
+    def save_shape(self):
+        shape_number = str(self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value])
+        points = utils.flist_from_pointslist(self.shape.points)
+        shape = self.shape.type
+        
+        message = QDialog()
+        message._class = QLineEdit()
+        #message.setText("You are saving polygon to attrs")
+        #message.setInformativeText("You need to choose class")
+        message.layout = QVBoxLayout()
+        message.layout.addWidget(message._class)
+        message.setLayout(message.layout)
+        message.exec_()
+
+        _class = message._class.text()
+        #print(type(shape_number))
+        #print("saving to # ", shape_number)
+        #print("shape is ", shape)
+        #print("class is", _class)
+        #print("points are", str(points))
+        #print("test", utils.str_from_flist(points))
+        self.hdf[str(self.index)].attrs[str(shape_number)] = str(shape) + ';' + _class + ';' + str(points)
+        self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
+        self.add_none()
+        self.scene.removeItem(self.polygon)
+        self.polygon_list()
+        #self.signal.emit() 
+
+
+        
+
+        #self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] = self.shape.type + ';'.join(self.shape.points)
+        #self.index_max = self.hdf.attrs[classifier.tasks.COUNT.value]
+        """
+        print("saving shape = ", self.shape.type, "saving points = ", self.shape.points)
+        print(shape_number)
+        self.shape.points.clear()
+        if self.polygon:
+            self.scene.removeItem(self.polygon)
+        self.signal.emit()
+        """
+        #self.polygon_list()
+    
+    def delete_shapes(self):
+        for item in self.p_list.selectedItems():
+            for name, value in self.hdf[str(self.index)].attrs.items():
+                if item.text() == value:
+                    self.hdf[str(self.index)].attrs.__delitem__(name)
+        self.polygon_list()
+
+    def show_shape(self):
+        for item in self.scene.items():
+            if item.type() != 7:  #7 for pixmap
+                self.scene.removeItem(item)
+
+        for item in self.p_list.selectedItems():
+            #points = [QPointF(1.0, 2.0), QPointF(2.0, 3.0), QPointF(3.0, 4.0)]
+            points = utils.attrs_get_points(item.text())
+            points = utils.pointslist_from_str(points)
+            points = utils.flist_from_pointslist(points)
+            points = utils.qpoints_from_flist(points)
+            #print(points)
+            self.scene.addPolygon(QPolygonF(points))
+
+    """
+        for item in self.polygons:
+            if item not in self.p_list.selectedItems():
+                self.polygons.remove(item)
+
+        for item in self.p_list.selectedItems():
+            if item not in self.polygons:
+                self.polygons.append(item)
+    """
+
+        #for item in self.polygons:
+            #points = utils.attrs_get_points(item.text())
+            #print(points)
+            #polygon = self.scene.addPoolygon(points)
+            #self.shapes.append()
 
     
+        #print(current.text())
+        #if previous:
+            #print(previous.text())
+
+
+
+
+    def add_none(self):
+        self.shape.points.clear()
+        self.shape.type = classifier.shapes.NONE
+
+    def add_rectangle(self):
+        self.shape.points.clear()
+        self.shape.type = classifier.shapes.RECTANGLE
+
+    def add_polygon(self):
+        self.shape.points.clear()
+        self.shape.type = classifier.shapes.POLYGON
+
+    def add_ellipse(self):
+        self.shape.points.clear()
+        self.shape.type = classifier.shapes.ELLIPSE
 
     def show(self):
         self.show_all(1)

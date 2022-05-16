@@ -17,6 +17,7 @@ import os
 import h5py
 import numpy as np
 import cv2
+import classifier
 
 import re
 from ast import literal_eval as make_tuple
@@ -25,7 +26,8 @@ from ast import literal_eval as make_tuple
 class shape():
     def __init__(self):
         self.tell_apart_distance = 3
-        self.type = None
+        self.type = classifier.shapes.NONE
+        self._class = None
         self.points = []
 
     def distance(self, point1, point2):
@@ -66,7 +68,7 @@ class shape():
         self.points[index] = newpos
 
 
-
+"""
 class mask:
     def __init__(self):
         self.code = None
@@ -250,3 +252,4 @@ class Label(QLabel):
     def select_lable(self):
         self.lable_dialog = dialog(self)
         self.lable_dialog.exec_()
+"""
