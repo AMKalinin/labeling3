@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QScrollArea, QToolButton, QSizePolicy, QComboBox, QToolBar, 
                             QStatusBar)
 
-from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon
+from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon, QPolygonF
 
 
 
@@ -24,11 +24,15 @@ from ast import literal_eval as make_tuple
 
 
 class shape():
-    def __init__(self):
-        self.tell_apart_distance = 3
+    tell_apart_distance = 3
+    def __init__(self, points=None):
+        #self.tell_apart_distance = 3
         self.type = classifier.shapes.NONE
         self._class = None
-        self.points = []
+        if points==None:
+            self.points = []
+        else:
+            self.points = points
 
     def distance(self, point1, point2):
         a = (point1.x() - point2.x()) 
@@ -64,8 +68,23 @@ class shape():
                 closest_index = self.points.index(self.closest_to_pos(pos)) 
                 self.points.insert(closest_index, QPointF(pos.x(), pos.y()))
 
+    def del_point(self, index):
+        if self.points:
+            self.points.pop(index)
+
     def change_point(self, index, newpos):
         self.points[index] = newpos
+
+    def polygon(self):
+        return QPolygonF(self.points)
+
+    def clear(self):
+        self.points.clear()
+        self._class = None
+        self.type = classifier.shapes.NONE
+
+    def set_points(self, points):
+        self.points = points
 
 
 """
