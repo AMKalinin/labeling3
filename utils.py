@@ -21,10 +21,10 @@ from PyQt5.QtCore import pyqtSignal, QObject
 def pixmap_default():
     return QPixmap("img_default.jpg")
 
-def attrs_get_class(attrs):
+def attrs_get_type(attrs):
     return attrs.split(';')[0]
 
-def attrs_get_type(attrs):
+def attrs_get_class(attrs):
     return attrs.split(';')[1]
 
 def attrs_get_points(attrs):
@@ -102,3 +102,17 @@ def str_from_flist(list):
 
 def points_from_x_y(list):
     pass
+
+"""
+def update_attrs_names(hdf, name):
+    #if open
+    for name, value in self.hdf[str(self.index)].attrs.items():
+
+    def delete_attrs(self):
+        for item in self.p_list.selectedItems():
+            for name, value in self.hdf[str(self.index)].attrs.items():
+                if item.text() == value:
+                    self.hdf[str(self.index)].attrs.__delitem__(name)
+                    self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] -=  1
+        self.refresh_attrs()
+"""

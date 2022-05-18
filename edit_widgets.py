@@ -45,21 +45,31 @@ class edit_widget(QDialog):
         #self.layout.addWidget(self.showall, 0, 1)
         #self.layout.addWidget(self.hideall, 0, 2)
         #self.layout.addWidget(self.combo, 0, 3)
+
         self.layout.addWidget(self.polygon, 0, 4)
-        self.layout.addWidget(self.none, 0, 5)
+        #self.layout.addWidget(self.new_item, 1, 4)
+        #self.layout.addWidget(self.discard_shape, 2, 4)
+
+        #self.layout.addWidget(self.none, 0, 5)
         self.layout.addWidget(self.edit.p_list, 0, 6)
+
         self.layout.addWidget(self.save, 0, 7)
-        self.layout.addWidget(self.delete, 0, 8)
+        self.layout.addWidget(self.delete, 2, 7)
+        #self.layout.addWidget(self.edit_points, 1, 7)
+        #self.layout.addWidget(self.edit_class, 3, 7)
+
         self.layout.addWidget(self.edit.pallete, 0, 9)
 
-        self.layout.addWidget(self.edit_points, 1, 0)
-        self.layout.addWidget(self.edit_class, 1, 1)
+
+        
 
     def init_widgets(self):
         self.edit = view_widgets.view_edit(parent=None, file_link=self.hdf, current_task=self.index, signal_parsepolygons=self.signal_parsepolygons)
         #self.showall = QPushButton("showall")
         #self.hideall = QPushButton("hideall")
         self.polygon = QPushButton("new polygon")
+        self.new_item = QPushButton("new item")
+        self.discard_shape = QPushButton("discard_shape")
         self.none = QPushButton("none")
         #self.p_list = QListWidget()
         self.save = QPushButton("save")
@@ -82,6 +92,7 @@ class edit_widget(QDialog):
         self.save.clicked.connect(self.edit.save_attr_new)
         #self.signal_parsepolygons.connect(self.polygon_list)
         self.delete.clicked.connect(self.edit.delete_attrs)
+        self.edit_points.clicked.connect(self.edit.edit_attr)
 
     """
     def polygon_list(self):

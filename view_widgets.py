@@ -177,16 +177,19 @@ class view_edit(base_view):
         self.index = current_task
         self.signal = signal_parsepolygons
         self.p_list = QListWidget()
+        self.p_list.setMinimumSize(200, 200)
         self.p_list.setSelectionMode(QAbstractItemView.ExtendedSelection)
         #self.p_list.itemActivated.connect(self.show_shape)
         #self.p_list.currentItemChanged.connect(self.show_shape)
-        #self.p_list.itemSelectionChanged.connect(self.show_shape)
+        self.p_list.itemSelectionChanged.connect(self.display_attr)
         self.p_list.itemDoubleClicked.connect(self.edit_attr)
         self.refresh_attrs()
         self.polygons = []
-        self.shapes = []
+        self.shape_items = []
         self.pallete = QListWidget()
-        self.pallete.setSelectionMode(QAbstractItemView.NoSelection)
+        self.pallete.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.pallete.itemClicked.connect(self.update_class)
+        self.color_class()
         self.adjust_pallete()
 
     def refresh_attrs(self):
@@ -201,21 +204,23 @@ class view_edit(base_view):
                 if item.text() == value:
                     self.hdf[str(self.index)].attrs.__delitem__(name)
                     self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] -=  1
-        self.refresh_attrs()
+        #self.refresh_attrs() без комента не удаляется полигон, с коментом не удаляется строка в списке почему
 
     def save_attr_new(self):
         shape_number = str(self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value])
         points = utils.flist_from_pointslist(self.shape.points)
         s_type= self.shape.type
         
+        """
         message = QDialog()
         message._class = QLineEdit()
         message.layout = QVBoxLayout()
         message.layout.addWidget(message._class)
         message.setLayout(message.layout)
         message.exec_()
+        """
 
-        _class = message._class.text()
+        _class = '000'#message._class.text()
         self.hdf[str(self.index)].attrs[str(shape_number)] = str(s_type) + ';' + _class + ';' + str(points)
         self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
         self.scene.removeItem(self.polygon)
@@ -232,6 +237,7 @@ class view_edit(base_view):
             if text == value:
                 attr_name = name
         self.hdf[str(self.index)].attrs[attr_name] = c_type + ';' + c_class + ';' + str(points)
+        self.refresh_attrs()
         
     
     def save_attr_class(self, attr):
@@ -243,26 +249,28 @@ class view_edit(base_view):
             if text == value:
                 attr_name = name
         self.hdf[str(self.index)].attrs[attr_name] = c_type + ';' + c_class + ';' + str(points)
+        self.refresh_attrs()
 
-        
+    def update_class(self, pallete_item):
+        if self.p_list.currentItem():
+            for item in self.p_list.selectedItems():
+                text = item.text()
+                attr_name = None
+                for name, value in self.hdf[str(self.index)].attrs.items():
+                    if text == value:
+                        attr_name = name
+                text = re.sub(r';[0-9][0-9][0-9];', ';' + pallete_item.text() + ';', text)
+                self.hdf[str(self.index)].attrs[attr_name] = text
+            self.refresh_attrs()
+            self.deselect_pallete()
 
-    #def save_attr_class(self):
 
-
-
-    def edit_attr(self, attr):
-        self.clear_shape()
-        self.clear_scene()
-        
-        points = utils.attrs_get_points(attr.text())
-        points = utils.pointslist_from_str(points)
-        points = utils.flist_from_pointslist(points)
-        points = utils.qpoints_from_flist(points)
-        self.shape.set_points(points)
-        self.shape.type = classifier.shapes.POLYGON
-        self.polygon = self.scene.addPolygon(self.shape.polygon())
-        self.delete_attrs()
+    def deselect_pallete(self):
+        self.pallete.setCurrentItem(None)
     
+    def deselect_attr(self):
+        self.p_list.setCurrentItem(None)
+
     def clear_shape(self):
         self.shape.clear()
     
@@ -271,8 +279,96 @@ class view_edit(base_view):
             if item.type() != 7:  #7 for pixmap
                 self.scene.removeItem(item)
 
+    def clear_scene2(self):
+        for item in self.shape_items:
+            self.scene.removeItem(item)
+
+    def add_polygon(self):
+        self.shape.points.clear()
+        self.shape.type = classifier.shapes.POLYGON
+
+    def display_attr(self):
+        self.clear_scene()
+        for item in self.p_list.selectedItems():
+            #points = [QPointF(1.0, 2.0), QPointF(2.0, 3.0), QPointF(3.0, 4.0)]
+            points = utils.attrs_get_points(item.text())
+            points = utils.pointslist_from_str(points)
+            points = utils.flist_from_pointslist(points)
+            points = utils.qpoints_from_flist(points)
+            #print(points)
+            #self.scene.addPolygon(QPolygonF(points))
+            cclass = utils.attrs_get_class(item.text())
+            color = self.get_color_class(cclass)
+            #print(color)
+            if color:
+                brush = QBrush(color, Qt.SolidPattern)
+                pen = QPen()
+                polygon = self.scene.addPolygon(QPolygonF(points), pen, brush)
+                self.shape_items.append(polygon)
+    """
+    def display_classified(self, points, s_class):
+        for item in self.list:
+            self.scene.removeItem(item)
+        for item in self.p_list.selectedItems():
+            get points 
+            get pen
+            get brush
+            polygon = self.scene.addPolygon
+            self.list.append(polygon)    
+        pass
+    """
+
+
+        
+
+    #def save_attr_class(self):
+
+
+
+    def edit_attr(self, attr):
+        #attr = self.p_list.currentItem()
+        self.clear_shape()
+        self.clear_scene()
+        #self.clear_scene2()
+        
+        points = utils.attrs_get_points(attr.text())
+        points = utils.pointslist_from_str(points)
+        points = utils.flist_from_pointslist(points)
+        points = utils.qpoints_from_flist(points)
+        self.shape.set_points(points)
+        self.shape.type = classifier.shapes.POLYGON
+        #print(self.polygon)
+        #self.polygon = self.scene.addPolygon(self.shape.polygon())
+        self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+        #print(self.polygon)
+        self.delete_attrs()
+    
+    def color_class(self):
+        color_index = 2
+        self.color_class = []
+        for cclass in self.hdf.attrs[classifier.hdfs.CLASSES.value]:
+            color = QColor(Qt.GlobalColor(color_index))
+            pair = (cclass, color)
+            self.color_class.append(pair)
+            color_index += 1
+            if color_index == 19:
+                color_index = 2
+
+    def get_color_class(self, class_index):
+        for cclass, color in self.color_class:
+            #print(cclass, color, class_index)
+            if cclass == class_index:
+                return color
+
+
 
     def adjust_pallete(self):
+        for cclass, color in self.color_class:
+            pixmap = QPixmap(50,50)
+            pixmap.fill(color)
+            self.pallete.addItem(QListWidgetItem(QIcon(pixmap), cclass))
+
+    """
         color_index = 2
         for cclass in self.hdf.attrs[classifier.hdfs.CLASSES.value]:
             pixmap = QPixmap(50,50)
@@ -282,6 +378,8 @@ class view_edit(base_view):
             color_index += 1
             if color_index == 19:
                 color_index = 2
+    """
+
 
 
 
