@@ -51,7 +51,7 @@ class edit_widget(QDialog):
         #self.layout.addWidget(self.discard_shape, 2, 4)
 
         #self.layout.addWidget(self.none, 0, 5)
-        self.layout.addWidget(self.edit.p_list, 0, 6)
+        self.layout.addWidget(self.edit.attr_list, 0, 6)
 
         self.layout.addWidget(self.save, 0, 7)
         self.layout.addWidget(self.delete, 2, 7)
@@ -71,7 +71,7 @@ class edit_widget(QDialog):
         self.new_item = QPushButton("new item")
         self.discard_shape = QPushButton("discard_shape")
         self.none = QPushButton("none")
-        #self.p_list = QListWidget()
+        #self.attr_list = QListWidget()
         self.save = QPushButton("save")
         self.delete = QPushButton("delete")
         #self.list = QListWidget()
@@ -89,19 +89,19 @@ class edit_widget(QDialog):
         #self.hideall.clicked.connect(self.edit.hide)
         self.polygon.clicked.connect(self.edit.add_polygon)
         self.none.clicked.connect(self.edit.add_none)
-        self.save.clicked.connect(self.edit.save_attr_new)
+        self.save.clicked.connect(self.edit.save_attrhdf)
         #self.signal_parsepolygons.connect(self.polygon_list)
-        self.delete.clicked.connect(self.edit.delete_attrs)
+        self.delete.clicked.connect(self.edit.delete_attrlistitem)
         self.edit_points.clicked.connect(self.edit.edit_attr)
 
     """
     def polygon_list(self):
         #print("parsed")
-        #if self.p_list:
-        #    self.p_list.deleteLater()
-        self.p_list.clear()
+        #if self.attr_list:
+        #    self.attr_list.deleteLater()
+        self.attr_list.clear()
         for name, value in self.hdf[str(self.index)].attrs.items():
             if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
-                self.p_list.addItem(value)
+                self.attr_list.addItem(value)
     """
 
