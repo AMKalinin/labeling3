@@ -105,6 +105,7 @@ class base_view(QGraphicsView):
         if self.shape.type == classifier.shapes.POLYGON:
             point = self.mapToScene(QPoint(event.x(), event.y()))
             if event.button() == Qt.LeftButton:
+                print(event.button())
                 self.shape.add_point(point)
             elif event.button() == Qt.RightButton and self.point_status:
                 self.shape.del_point(self.point_index)
@@ -113,13 +114,15 @@ class base_view(QGraphicsView):
         self.point_index = None
 
     def mouseMoveEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            point = self.mapToScene(QPoint(event.x(), event.y()))
-            if self.point_index != None:
-                if self.point_status:  
-                    self.scene.removeItem(self.polygon)
-                    self.shape.change_point(self.point_index, point)
-                    self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+        #print('now moving', event.button(), Qt.LeftButton)
+        #if event.button() == Qt.LeftButton: #почему евент.бтн возвращает 0 когда нажимаешь левую кнопку (и правую тоже)???
+        point = self.mapToScene(QPoint(event.x(), event.y()))
+        #print(self.point_index)
+        if self.point_index != None:
+            if self.point_status:  
+                self.scene.removeItem(self.polygon)
+                self.shape.change_point(self.point_index, point)
+                self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
 
     
 
@@ -162,13 +165,7 @@ class base_view(QGraphicsView):
 class view_view(base_view):
     def __init__(self, parent, file_link=None, signal=None):
         super().__init__(parent=parent, file_link=file_link, signal=signal)
-        """
-        if self.hdf:
-            self.index_max = self.hdf.attrs[classifier.HDF_FILE_TASK_COUNT] - 1
-            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
-            self.background = self.scene.addPixmap(image_as_pixmap)
-            self.change_pixmap(self.index)
-        """
+
 
 class view_edit(base_view):
     def __init__(self, parent, file_link=None, signal=None, current_task=0, signal_parsepolygons=None):
@@ -214,6 +211,7 @@ class view_edit(base_view):
         for name, value in self.hdf[str(self.index)].attrs.items():
             if item.text() == value:
                 self.delete_attrhdf(name)
+        #self.attr_list.removeItemWidget(item)
         #self.refresh_attrlist() #без комента не удаляется полигон, с коментом не удаляется строка в списке почему
 
     def delete_attrhdf(self, attr_name):
