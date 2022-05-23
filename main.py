@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import pyqtSignal, QObject, pyqtSlot
+from PyQt5.QtCore import pyqtSignal, QObject, pyqtSlot, QSize
 from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, QFrame, QGridLayout,
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
@@ -44,8 +44,9 @@ class main_window(QMainWindow):
     def adjust_window(self):
         self.main_frame = QFrame()
         self.setCentralWidget(self.main_frame)
-        self.setWindowTitle("Segmentation app. 0.9")
-        self.resize(1024, 600)
+        self.setWindowTitle("Segmentation app. 1.0::MVP")
+        size = QSize(1366, 768)
+        self.setMinimumSize(size)
         self.main_layout = QGridLayout()
         self.main_frame.setLayout(self.main_layout)
 

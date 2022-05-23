@@ -8,7 +8,9 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+import time
 #import segflex_seg_window as seg_window
+import utils
 import re
 import h5py
 import cv2
@@ -43,8 +45,18 @@ class project_widget_new(QGroupBox):
         self.setMaximumHeight(120)
 
     def init_content(self):
+        name = utils.get_name(self.path)
+        description = utils.get_description(self.path)
+        alltasks = utils.get_alltasks(self.path)
+        donetasks = utils.get_donetasks(self.path)
+        startdate = time.ctime(utils.get_startdate(self.path))
+        lastupdate = time.ctime(utils.get_lastupdate(self.path))
+
+        self.info = QLabel(name + '\n' 
+                        + description + '\n'
+                        + str(donetasks) + ' / ' + str(alltasks) + '\n'
+                        + startdate + ' / ' + lastupdate)
         self.btn_open = QPushButton("Открыть проект")
-        self.info = QLabel(self.path)
 
     def fill_layouts(self):
         self.layout_actions.addWidget(self.btn_open)

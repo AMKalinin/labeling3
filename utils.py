@@ -103,6 +103,37 @@ def str_from_flist(list):
 def points_from_x_y(list):
     pass
 
+def get_name(path):
+    name = re.search(r'[/][^/]*\.hdf', path).group(0)
+    return name[1:-4]
+
+def get_description(path):
+    with h5py.File(path, 'r') as hdf:
+        description = hdf.attrs[classifier.hdfs.DESCRIPTION.value]
+    return description
+
+def get_alltasks(path):
+    with h5py.File(path, 'r') as hdf:
+        alltasks = hdf.attrs[classifier.hdfs.TASK_COUNT.value]
+    return alltasks
+
+def get_donetasks(path):
+    donetasks = 0
+    with h5py.File(path, 'r') as hdf:
+        max_index = hdf.attrs[classifier.hdfs.TASK_COUNT.value]
+        for index in range(max_index):
+            if hdf[str(index)].attrs[classifier.tasks.STATUS.value] == classifier.tasks.DONE.value:
+                donetasks += 1
+    return donetasks
+
+def get_startdate(path):
+    startdate = os.path.getctime(path)
+    return startdate
+
+def get_lastupdate(path):
+    lastupdate = os.path.getmtime(path)
+    return lastupdate
+
 """
 def update_attrs_names(hdf, name):
     #if open
