@@ -3,7 +3,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, QFrame, QGridLayout,
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
-                            QScrollArea, QToolButton, QSizePolicy, QComboBox)
+                            QScrollArea, QToolButton, QSizePolicy, QComboBox, QProgressBar)
 import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -42,25 +42,35 @@ class project_widget_new(QGroupBox):
         self.setLayout(self.layout)
 
     def adjust_size(self):
-        self.setMaximumHeight(120)
+        self.setMaximumHeight(130)
 
     def init_content(self):
-        name = utils.get_name(self.path)
-        description = utils.get_description(self.path)
-        alltasks = utils.get_alltasks(self.path)
-        donetasks = utils.get_donetasks(self.path)
-        startdate = time.ctime(utils.get_startdate(self.path))
-        lastupdate = time.ctime(utils.get_lastupdate(self.path))
-
-        self.info = QLabel(name + '\n' 
-                        + description + '\n'
-                        + str(donetasks) + ' / ' + str(alltasks) + '\n'
-                        + startdate + ' / ' + lastupdate)
+        self.init_info()
+        self.init_progressbar()
         self.btn_open = QPushButton("Открыть проект")
+
+    def init_info(self):
+        self.name = utils.get_name(self.path)
+        self.description = utils.get_description(self.path)
+        self.alltasks = utils.get_alltasks(self.path)
+        self.donetasks = utils.get_donetasks(self.path)
+        self.startdate = time.ctime(utils.get_startdate(self.path))
+        self.lastupdate = time.ctime(utils.get_lastupdate(self.path))
+        self.info = QLabel(self.name + '\n' 
+                        + self.description + '\n'
+                        + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
+                        + self.startdate + ' / ' + self.lastupdate)
+
+    def init_progressbar(self):
+        self.progressbar = QProgressBar()
+        self.progressbar.setMaximum(self.alltasks)
+        self.progressbar.setMinimum(0)
+        self.progressbar.setValue(self.donetasks)
 
     def fill_layouts(self):
         self.layout_actions.addWidget(self.btn_open)
         self.layout_info.addWidget(self.info)
+        self.layout_info.addWidget(self.progressbar)
     
     def connect_ui(self):
         self.btn_open.clicked.connect(self.on_open)
