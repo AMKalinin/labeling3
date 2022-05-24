@@ -30,6 +30,7 @@ class main_window(QMainWindow):
     signal_openproject = pyqtSignal(str)
     signal_showall = pyqtSignal(int)
     signal_edittask = pyqtSignal(int)
+    signal_editdescription = pyqtSignal(str)
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
         self.file = None
@@ -53,8 +54,8 @@ class main_window(QMainWindow):
 
     def init_widgets(self):
         self.tab_new = tab_widget.my_tab(signal=self.signal_openproject, signal2=self.signal_showall, signal_edittask=self.signal_edittask)
-        self.higher_control = control_widgets.higher_control(signal=self.signal_parseprojects)
-        self.description = control_widgets.project_description_new()
+        self.higher_control = control_widgets.higher_control(signal1=self.signal_parseprojects, signal2=self.signal_editdescription)
+        self.description = control_widgets.project_description_new(signal=self.signal_editdescription)
         self.navigation = control_widgets.view_control(self.signal_showall, self.signal_edittask)
 
     def place_blocks(self):
@@ -74,6 +75,7 @@ class main_window(QMainWindow):
         self.navigation.btn_next.clicked.connect(self.next_view)
         #self.navigation.btn_edittask.clicked.connect(self.on_edittask)
         self.signal_edittask.connect(self.on_edittask)
+        self.signal_editdescription.connect(self.on_editdescription)
     
     def show_tab(self):
         if self.tab.currentWidget() == self.tab_split:
@@ -115,6 +117,7 @@ class main_window(QMainWindow):
         self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
         self.navigation.adjust_pallete(self.file)
+        self.higher_control.description.updateitem(self.file.attrs[classifier.hdfs.DESCRIPTION.value])
 
     def adjust_opened_project(self):
         self.tab_new.parse_tasks(self.file)
@@ -146,6 +149,11 @@ class main_window(QMainWindow):
             current_task = index
         self.edit = edit_widgets.edit_widget(current_task, self.file)
         self.edit.exec_()
+
+    @pyqtSlot(str)
+    def on_editdescription(self, newdescription):
+        if self.file: #корректно проверяю открыт ли hdf????
+            self.file.attrs[classifier.hdfs.DESCRIPTION.value] = newdescription
 
 
     def on_showall(self):

@@ -92,10 +92,56 @@ class project_description_new(QGroupBox):
         self.item_task_count.setText(classifier.HDF_FILE_TASK_COUNT + str(int(self.file_task_count)))
         """
 
-class higher_control(QGroupBox):
+class getdescription(QDialog):
     def __init__(self, signal, parent=None):
         super().__init__()
         self.signal = signal
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
+        self.line = QLineEdit()
+        self.layout.addWidget(self.line)
+        self.line.textChanged.connect(self.mysignal)
+
+    def mysignal(self):
+        text = self.line.text()
+        self.signal.emit(text)
+
+
+class mydescription(QListWidget):
+    def __init__(self, signal1, signal2, parent=None):
+        super().__init__()
+        self.signal1 = signal1
+        self.signal2 = signal2
+        self.setMouseTracking(True)
+        self.setMaximumSize(300, 300)
+        self.addItem("Описание проекта")
+        self.item = self.item(0)
+        self.itemDoubleClicked.connect(self.on_dc)
+        self.signal2.connect(self.updateitem)
+
+    def enterEvent(self, event):
+        print("enterEvent")
+    
+    def leaveEvent(self, event):
+        print("leaveEvent")
+
+    def on_dc(self):
+        print("double clicked")
+        a = getdescription(self.signal2)
+        a.exec_()
+        self.signal1.emit()
+    
+    def updateitem(self, text):
+        self.item.setText(text)
+
+        
+    
+
+class higher_control(QGroupBox):
+    def __init__(self, signal1, signal2, parent=None):
+        super().__init__()
+        self.signal1 = signal1
+        self.signal2 = signal2
         self.init_ui()
 
     def init_ui(self):
@@ -112,11 +158,28 @@ class higher_control(QGroupBox):
         self.layout.addWidget(self.btn_new)
         self.layout.addWidget(self.btn_add)
         self.layout.addWidget(self.btn_based)
+        self.layout.addWidget(self.description)
 
     def init_content(self):
         self.btn_new = QPushButton("Создать новый файл проекта")
         self.btn_add = QPushButton("Добавить проект из ...")
         self.btn_based = QPushButton("Создать проект на основе существующего")
+        self.init_description()
+        
+
+    def init_description(self):
+        #self.description = QListWidget()
+        #self.description.setMouseTracking(True)
+        #self.description.itemEntered.connect(self.test)
+        #btn_qsize = self.btn_based.size()
+        #btn_width = btn_qsize.width()
+        #self.description.setMaximumSize(btn_width, 300)
+        #self.description.setMaximumSize(100, 300)
+        self.description = mydescription(signal1=self.signal1, signal2=self.signal2)
+
+
+    #def test(self):
+    #    print("item entered")
 
     def connect_ui(self):
         self.btn_new.clicked.connect(self.on_new)
