@@ -134,8 +134,62 @@ class mydescription(QListWidget):
     def updateitem(self, text):
         self.item.setText(text)
 
+class task_description(QWidget):
+    def __init__(self, parent=None):
+        super().__init__()
+
         
+        #self.adjust_window()
+        self.set_layouts()
+        self.init_widgets()
+        self.fill_layouts()
     
+    def adjust_window(self):
+        pass
+        #self.setMaximumSize(300, 300)       
+
+    def set_layouts(self):
+        self.layout = QGridLayout()
+        self.left = QVBoxLayout()
+        self.right = QVBoxLayout()
+        self.setLayout(self.layout)
+        self.layout.addLayout(self.left, 1, 0)
+        self.layout.addLayout(self.right, 1, 1)
+
+    def init_widgets(self):
+        self.save = QPushButton("Сохранить")
+
+        self.line0 = QLineEdit()
+        self.line1 = QLineEdit()
+        self.line2 = QLineEdit()
+        self.line3 = QLineEdit()
+        self.line4 = QLineEdit()
+        self.line5 = QLineEdit()
+        self.line6 = QLineEdit()
+        self.line7 = QLineEdit()
+
+    def fill_layouts(self):
+        self.left.addWidget(QLabel('0'))
+        self.left.addWidget(QLabel('1'))
+        self.left.addWidget(QLabel('2'))
+        self.left.addWidget(QLabel('3'))
+        self.left.addWidget(QLabel('4'))
+        self.left.addWidget(QLabel('5'))
+        self.left.addWidget(QLabel('6'))
+        self.left.addWidget(QLabel('7'))
+
+        self.right.addWidget(self.line0)
+        self.right.addWidget(self.line1)
+        self.right.addWidget(self.line2)
+        self.right.addWidget(self.line3)
+        self.right.addWidget(self.line4)
+        self.right.addWidget(self.line5)
+        self.right.addWidget(self.line6)
+        self.right.addWidget(self.line7)
+
+        self.layout.addWidget(self.save, 2, 1)
+        self.layout.addWidget(QLabel("Параметры снимка:"), 0, 0)
+
 
 class higher_control(QGroupBox):
     def __init__(self, signal1, signal2, parent=None):
@@ -185,7 +239,7 @@ class higher_control(QGroupBox):
         self.btn_new.clicked.connect(self.on_new)
 
     def on_new(self):
-        self.dialog = new_project.new_project_dialog_new(signal=self.signal)
+        self.dialog = new_project.new_project_dialog_new(signal=self.signal1)
         #self.dialog = segflex_classes_choose.classes_choose_new()
         self.dialog.exec_()
         #self.dialog.show()
