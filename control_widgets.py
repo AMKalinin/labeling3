@@ -158,6 +158,7 @@ class task_description(QWidget):
 
     def init_widgets(self):
         self.save = QPushButton("Сохранить")
+        self.discard = QPushButton("Отменить редактирование")
 
         self.line0 = QLineEdit()
         self.line1 = QLineEdit()
@@ -188,6 +189,7 @@ class task_description(QWidget):
         self.right.addWidget(self.line7)
 
         self.layout.addWidget(self.save, 2, 1)
+        self.layout.addWidget(self.discard, 2, 0)
         self.layout.addWidget(QLabel("Параметры снимка:"), 0, 0)
 
 

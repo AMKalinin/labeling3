@@ -69,6 +69,7 @@ class task_widget_new(QGroupBox):
             #self.layout_actions.addWidget(self.btn_done)
 
     def adjust_window(self):
+        self.setMouseTracking(True)
         self.setMaximumHeight(120)
         self.setLayout(self.layout)
 
@@ -90,10 +91,10 @@ class task_widget_new(QGroupBox):
         return image_resized
 
     def fill_actions(self):
-        self.emit_btn = QPushButton("emit")
+        self.emit_btn = QPushButton("Редактировать параметры снимка")
         self.emit_btn.clicked.connect(self.on_emit)
 
-        self.edit_btn = QPushButton("edit")
+        self.edit_btn = QPushButton("Открыть окно сегментации")
         self.edit_btn.clicked.connect(self.on_edit)
 
         self.layout_actions.addWidget(self.emit_btn)
@@ -108,6 +109,12 @@ class task_widget_new(QGroupBox):
         self.signal_edittask.emit(self.identifier)
         pass
         #print("edit")
+
+    def enterEvent(self, event):
+        print("enterEvent")
+    
+    def leaveEvent(self, event):
+        print("leaveEvent")
 
 
 
@@ -305,11 +312,6 @@ class task_widget(QGroupBox):
             task.attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_2
         self.deleteLater()
 
-    def enterEvent(self, event):
-        print("enterEvent")
-    
-    def leaveEvent(self, event):
-        print("leaveEvent")
 
 
 
