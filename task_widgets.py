@@ -179,6 +179,7 @@ class task_widget(QGroupBox):
 
 
     def adjust_window(self):
+        self.setMouseTracking(True)
         self.setMaximumHeight(120)
         self.setLayout(self.layout)
     
@@ -303,7 +304,13 @@ class task_widget(QGroupBox):
             task = group[str(self.identifier)]
             task.attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_2
         self.deleteLater()
-        pass
+
+    def enterEvent(self, event):
+        print("enterEvent")
+    
+    def leaveEvent(self, event):
+        print("leaveEvent")
+
 
 
 
