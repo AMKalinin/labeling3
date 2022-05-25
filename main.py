@@ -58,12 +58,14 @@ class main_window(QMainWindow):
         #self.description = control_widgets.project_description_new(signal=self.signal_editdescription)
         self.description = control_widgets.task_description()
         self.navigation = control_widgets.view_control(self.signal_showall, self.signal_edittask)
+        self.navigation_toolbar = control_widgets.view_toolbar()
 
     def place_blocks(self):
-        self.main_layout.addWidget(self.tab_new, 0, 0, 4, 1)
-        self.main_layout.addWidget(self.higher_control, 0, 1)
-        self.main_layout.addWidget(self.description, 0, 1)
-        self.main_layout.addWidget(self.navigation, 0, 1)
+        self.main_layout.addWidget(self.tab_new, 1, 0, 4, 1)
+        self.main_layout.addWidget(self.higher_control, 1, 1)
+        self.main_layout.addWidget(self.description, 1, 1)
+        self.main_layout.addWidget(self.navigation, 1, 1)
+        self.main_layout.addWidget(self.navigation_toolbar, 0, 0)
         self.show_higher_control()
 
     def connect_ui(self):
@@ -97,17 +99,20 @@ class main_window(QMainWindow):
     def show_description(self):
         self.higher_control.setVisible(False)
         self.navigation.setVisible(False)
+        self.navigation_toolbar.setVisible(False)
         self.description.setVisible(True)
 
     def show_higher_control(self):
         self.higher_control.setVisible(True)
         self.navigation.setVisible(False)
+        self.navigation_toolbar.setVisible(False)
         self.description.setVisible(False)
 
     def show_navigation(self):
         self.higher_control.setVisible(False)
         self.description.setVisible(False)
         self.navigation.setVisible(True)
+        self.navigation_toolbar.setVisible(True)
 
     @pyqtSlot(str)
     def open_project_routine(self, project_path):

@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
                             QScrollArea, QToolButton, QSizePolicy, QComboBox,
-                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene)
+                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QToolBar)
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 import new_project
@@ -251,6 +251,25 @@ class higher_control(QGroupBox):
         #print(self.dialog.selected.chosen) #????? виджет почему имеет доступ к атрибуту после удаления????
         #self.dialog.exec_()
 
+class view_toolbar(QToolBar):
+    def __init__(self, parent=None):
+        super().__init__()
+
+        self.add_actions()
+
+    def init_widgets(self):
+        self.first = QToolButton()
+        self.first.setIcon(QIcon('__icons__/cancel_tbtn.png'))
+
+    def add_actions(self):
+        self.first = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to first image in project')
+        self.previous = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to previous image in project')
+        self.next = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to next image in project')
+        self.last = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to last image in project')
+        self.add = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'add new image to project')
+        self.delete = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'delete image from project')
+        self.showall = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'set all polygons in list as selected')
+        self.hideall = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'set all polygons in list as deselected')
 
 class view_control(QGroupBox):
     def __init__(self, signal_showall, signal_edittask):
