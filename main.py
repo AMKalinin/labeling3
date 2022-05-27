@@ -41,7 +41,6 @@ class main_window(QMainWindow):
         
     def init_ui(self):
         self.adjust_window()
-        self.read_codes()
         self.init_widgets()
         self.place_blocks()
         self.connect_ui()
@@ -129,6 +128,7 @@ class main_window(QMainWindow):
             self.file.close()
         self.file = h5py.File(project_path, 'r+')
         self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
+        self.update_codenamecolor()
         self.tab_new.parse_tasks(self.file)
         #self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
@@ -175,12 +175,14 @@ class main_window(QMainWindow):
         if self.file: #корректно проверяю открыт ли hdf????
             self.file.attrs[classifier.hdfs.DESCRIPTION.value] = newdescription
 
-    def read_codes(self):
+    def update_codenamecolor(self):
+        self.codenamecolor_list.clear()
         codes = classifier.classes.code()
         names = classifier.classes.name()
         colors= classifier.classes.color()
         for code, name, color in zip(codes, names, colors):
-            self.codenamecolor_list.append((code, name, color))
+            if str(code) in self.file.attrs[classifier.hdfs.CLASSES.value]:
+                self.codenamecolor_list.append((code, name, color))
 
     def on_showall(self):
         print("showall")

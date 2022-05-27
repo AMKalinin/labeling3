@@ -166,7 +166,6 @@ class view_edit(base_view):
     
     def init_ui(self):
         self.set_pixmap(self.index)
-        self.color_class()
         self.init_widgets()
         self.refresh_attrlist()
         self.connect_ui()
@@ -303,8 +302,8 @@ class view_edit(base_view):
             points = utils.qpoints_from_flist(points)
             #print(points)
             #self.scene.addPolygon(QPolygonF(points))
-            cclass = utils.attrs_get_class(item.text())
-            color = self.get_color_class(cclass)
+            code = utils.attrs_get_class(item.text())
+            color = Qt.GlobalColor(self.main.get_color(int(code)))
             #print(color)
             if color:
                 brush = QBrush(color, Qt.SolidPattern)
@@ -314,36 +313,12 @@ class view_edit(base_view):
 
         
 
-    #def save_attr_class(self):
-
-
-
-
-    
-    def color_class(self):
-        color_index = 2
-        self.color_class = []
-        for cclass in self.main.file.attrs[classifier.hdfs.CLASSES.value]:
-            color = QColor(Qt.GlobalColor(color_index))
-            pair = (cclass, color)
-            self.color_class.append(pair)
-            color_index += 1
-            if color_index == 19:
-                color_index = 2
-
-    def get_color_class(self, class_index):
-        for cclass, color in self.color_class:
-            #print(cclass, color, class_index)
-            if cclass == class_index:
-                return color
-
-
 
     def adjust_pallete(self):
-        for cclass, color in self.color_class:
+        for triple in self.main.codenamecolor_list:
             pixmap = QPixmap(50,50)
-            pixmap.fill(color)
-            self.pallete.addItem(QListWidgetItem(QIcon(pixmap), cclass))
+            pixmap.fill(Qt.GlobalColor(triple[2]))
+            self.pallete.addItem(QListWidgetItem(QIcon(pixmap), str(triple[0])))
 
 
     def add_none(self):
