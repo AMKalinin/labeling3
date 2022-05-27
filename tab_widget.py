@@ -100,7 +100,7 @@ class my_tab(QTabWidget):
         for index in range(self.main.task_count):
             status = hdf[str(index)].attrs[classifier.tasks.STATUS.value]
             if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
-                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=index, mode=classifier.TASK_WIDGET_MODE_0, signal_edittask=self.signal_edittask)#, signal=self.signal_reopen_project)
+                task_widget = task_widgets.task_widget_new(parent=self, main=self.main, identifier=index, mode=classifier.TASK_WIDGET_MODE_0)
                 self.tasksleft_layout.addWidget(task_widget)
             elif task_status == classifier.HDF_TASK_STATUS_2: #or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")

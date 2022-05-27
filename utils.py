@@ -134,6 +134,17 @@ def get_lastupdate(path):
     lastupdate = os.path.getmtime(path)
     return lastupdate
 
+def create_preview(hdf, identifier): #load froma data???
+    dataset = hdf[str(identifier)]
+    image_as_numpy = dataset[()]
+    height, width, channel = image_as_numpy.shape
+    bytesPerLine = 3 * width
+    image_as_qimage = QImage(image_as_numpy, width, height, bytesPerLine, QImage.Format_RGB888)
+    image_correct_rgb = image_as_qimage.rgbSwapped()
+    image_as_pixmap = QPixmap(image_correct_rgb)
+    image_resized = image_as_pixmap.scaled(100, 100)
+    return image_resized
+
 """
 def update_attrs_names(hdf, name):
     #if open

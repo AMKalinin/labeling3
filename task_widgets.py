@@ -7,20 +7,18 @@ import sys
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-#import segflex_seg_window as seg_window
 import classifier
 import h5py
+import utils
 
 class task_widget_new(QGroupBox):
-    def __init__(self, project_file, identifier, mode, signal=None, signal_edittask=None):
-        super().__init__()
-        self.file = project_file
+    def __init__(self, parent, main, identifier, mode):
+        super().__init__(parent = parent)
+        self.main = main
         self.identifier = identifier
         self.mode = mode
-        self.signal_edittask = signal_edittask
-        self.signal = signal
+
         self.init_ui()
-        #self.signal.emit(self.file)
 
     def init_ui(self):
         self.create_layouts()
@@ -76,19 +74,8 @@ class task_widget_new(QGroupBox):
 
     def fill_preview(self):
         self.preview = QLabel(self)
-        pixmap = self.create_preview(hdf=self.file, identifier = self.identifier)
+        pixmap = utils.create_preview(hdf=self.main.file, identifier = self.identifier)
         self.preview.setPixmap(pixmap)
-
-    def create_preview(self, hdf, identifier): #load froma data???
-        dataset = hdf[str(identifier)]
-        image_as_numpy = dataset[()]
-        height, width, channel = image_as_numpy.shape
-        bytesPerLine = 3 * width
-        image_as_qimage = QImage(image_as_numpy, width, height, bytesPerLine, QImage.Format_RGB888)
-        image_correct_rgb = image_as_qimage.rgbSwapped()
-        image_as_pixmap = QPixmap(image_correct_rgb)
-        image_resized = image_as_pixmap.scaled(100, 100)
-        return image_resized
 
     def fill_actions(self):
         self.emit_btn = QPushButton("Редактировать параметры снимка")
@@ -106,7 +93,7 @@ class task_widget_new(QGroupBox):
         #    self.signal.emit()
 
     def on_edit(self):
-        self.signal_edittask.emit(self.identifier)
+        self.main.signal_edittask.emit(self.identifier)
         pass
         #print("edit")
 
@@ -117,7 +104,7 @@ class task_widget_new(QGroupBox):
         print("leaveEvent")
 
 
-
+#LEGACY CODE BELOW THIS LINE 
 class task_widget(QGroupBox):
     def __init__(self, path, identifier, mode, signal):
         super().__init__()
