@@ -355,6 +355,7 @@ class polygon_classes_new(QTreeWidget):
     
         self.setColumnCount(4)
         self.setHeaderLabels(['Name', 'Code', 'Index', 'Points'])
+        self.setMaximumSize(200, 400)
 
     def update(self, index):
         self.index += index

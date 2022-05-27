@@ -28,25 +28,88 @@ class base_view(QGraphicsView):
         self.shape = shape.shape()
         self.polygon = None
         self.index = 0
-        self.index_max = 0
         #self.main.signal_showall.connect(self.show_all)
         #self.main.signal_showall.connect(self.hide_all)
 
-        self.setGeometry(QtCore.QRect(10, 40, 601, 411))
+        self.adjust_window()
+        self.init_background()
+
+    def adjust_window(self):
         self.scene = QGraphicsScene()
         self.setScene(self.scene)
+        self.setGeometry(QtCore.QRect(0, 0, 800, 600))
+
+
+    def init_background(self):
         if self.main.file == None:
             image_as_pixmap = utils.pixmap_default()
             self.background = self.scene.addPixmap(image_as_pixmap)
+            self.index_max = 0
         else:
-            self.index_max = self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] - 1
             image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
+            self.index_max = self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] - 1
+
+    def change_pixmap(self,index):
+        if self.main.file:
+            self.index += index
+            if self.index < 0:
+                self.index = 0
+            elif self.index > self.index_max:
+                self.index = self.index_max
+            if self.background:  
+                self.scene.removeItem(self.background)
+            image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
+            self.background = self.scene.addPixmap(image_as_pixmap)
+
+    def set_pixmap(self, index):
+        if self.background:  
+            self.scene.removeItem(self.background)
+        image_as_pixmap = utils.pixmap_at_index(self.main.file, index)
+        self.background = self.scene.addPixmap(image_as_pixmap)
+
 
     def current_task(self):
         return self.index
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Plus:
+            self.scale(1.5, 1.5)
+        elif event.key() == Qt.Key_Minus:
+            self.scale(0.5, 0.5)
 
+    def mousePressEvent(self, event):
+        point = self.mapToScene(QPoint(event.x(), event.y()))
+        self.point_index = None
+        self.point_status = self.shape.point_at_pos(point)
+        if self.point_status: 
+            self.point_index = self.shape.index_of_closest(point)
+
+
+    def mouseReleaseEvent(self, event):
+        point = self.mapToScene(QPoint(event.x(), event.y()))
+        if self.polygon:
+            self.scene.removeItem(self.polygon)
+        if self.shape.type == classifier.shapes.POLYGON:
+            point = self.mapToScene(QPoint(event.x(), event.y()))
+            if event.button() == Qt.LeftButton:
+                print(event.button())
+                self.shape.add_point(point)
+            elif event.button() == Qt.RightButton and self.point_status:
+                self.shape.del_point(self.point_index)
+            self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+        self.point_status = None
+        self.point_index = None
+
+    def mouseMoveEvent(self, event):
+        point = self.mapToScene(QPoint(event.x(), event.y()))
+        if self.point_index != None:
+            if self.point_status:  
+                self.scene.removeItem(self.polygon)
+                self.shape.change_point(self.point_index, point)
+                self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+
+    """
     @pyqtSlot(int)
     def show_all(self, code):
         print("view showall", code)
@@ -80,59 +143,8 @@ class base_view(QGraphicsView):
                                     polygon.append(QPoint(int_pair[0], int_pair[1]))
                                 self.scene.addPolygon(polygon, pen, brush)
                     
-
-    
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key_Plus:
-            self.zoom_in()
-        elif event.key() == Qt.Key_Minus:
-            self.zoom_out()
-
-    def mousePressEvent(self, event):
-        point = self.mapToScene(QPoint(event.x(), event.y()))
-        self.point_index = None
-        self.point_status = self.shape.point_at_pos(point)
-        if self.point_status: 
-            self.point_index = self.shape.index_of_closest(point)
-
-
-    def mouseReleaseEvent(self, event):
-        point = self.mapToScene(QPoint(event.x(), event.y()))
-        if self.polygon:
-            self.scene.removeItem(self.polygon)
-        if self.shape.type == classifier.shapes.POLYGON:
-            point = self.mapToScene(QPoint(event.x(), event.y()))
-            if event.button() == Qt.LeftButton:
-                print(event.button())
-                self.shape.add_point(point)
-            elif event.button() == Qt.RightButton and self.point_status:
-                self.shape.del_point(self.point_index)
-            self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
-        self.point_status = None
-        self.point_index = None
-
-    def mouseMoveEvent(self, event):
-        #print('now moving', event.button(), Qt.LeftButton)
-        #if event.button() == Qt.LeftButton: #почему евент.бтн возвращает 0 когда нажимаешь левую кнопку (и правую тоже)???
-        point = self.mapToScene(QPoint(event.x(), event.y()))
-        #print(self.point_index)
-        if self.point_index != None:
-            if self.point_status:  
-                self.scene.removeItem(self.polygon)
-                self.shape.change_point(self.point_index, point)
-                self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
-
-    
-
-        
-    def zoom_in(self):
-        self.scale(1.5, 1.5)
-    
-    def zoom_out(self):
-        self.scale(0.5, 0.5)
-
-
-
+    """
+    """
     @pyqtSlot(int)
     def hide_all(self, code):
         if code == -1:
@@ -140,24 +152,8 @@ class base_view(QGraphicsView):
                 self.scene.removeItem(item)
             image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
+    """
 
-    def change_pixmap(self,index):
-        if self.main.file:
-            self.index += index
-            if self.index < 0:
-                self.index = 0
-            elif self.index > self.index_max:
-                self.index = self.index_max
-            if self.background:  
-                self.scene.removeItem(self.background)
-            image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
-            self.background = self.scene.addPixmap(image_as_pixmap)
-
-    def set_pixmap(self, index):
-        if self.background:  
-            self.scene.removeItem(self.background)
-        image_as_pixmap = utils.pixmap_at_index(self.main.file, index)
-        self.background = self.scene.addPixmap(image_as_pixmap)
 
     
 class view_view(base_view):
