@@ -27,8 +27,9 @@ import tab_widget
 
 class edit_widget(QDialog):
     signal_parsepolygons = pyqtSignal()
-    def __init__(self, index, hdf):
+    def __init__(self, main, index, hdf):
         super().__init__()
+        self.main = main
         self.index = index
         self.hdf = hdf
         
@@ -64,7 +65,7 @@ class edit_widget(QDialog):
         
 
     def init_widgets(self):
-        self.edit = view_widgets.view_edit(parent=None, file_link=self.hdf, current_task=self.index, signal_parsepolygons=self.signal_parsepolygons)
+        self.edit = view_widgets.view_edit(parent=None, main=self.main, current_task=self.index)
         #self.showall = QPushButton("showall")
         #self.hideall = QPushButton("hideall")
         self.polygon = QPushButton("new polygon")

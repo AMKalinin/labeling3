@@ -22,27 +22,25 @@ import utils
 import time
 
 class base_view(QGraphicsView):
-    def __init__(self, parent, file_link=None, signal=None):
+    def __init__(self, parent, main):
         super().__init__(parent=parent)
+        self.main = main
         self.shape = shape.shape()
         self.polygon = None
-        self.hdf = file_link
         self.index = 0
         self.index_max = 0
-        self.signal_showall = signal
-        if self.signal_showall:
-            self.signal_showall.connect(self.show_all)
-            self.signal_showall.connect(self.hide_all)
+        #self.main.signal_showall.connect(self.show_all)
+        #self.main.signal_showall.connect(self.hide_all)
 
         self.setGeometry(QtCore.QRect(10, 40, 601, 411))
         self.scene = QGraphicsScene()
         self.setScene(self.scene)
-        if self.hdf == None:
+        if self.main.file == None:
             image_as_pixmap = utils.pixmap_default()
             self.background = self.scene.addPixmap(image_as_pixmap)
         else:
-            self.index_max = self.hdf.attrs[classifier.hdfs.TASK_COUNT.value] - 1
-            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            self.index_max = self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] - 1
+            image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
 
     def current_task(self):
@@ -53,9 +51,9 @@ class base_view(QGraphicsView):
     def show_all(self, code):
         print("view showall", code)
         if code >= 0:
-            if self.hdf:
+            if self.main.file:
                 color_index = 2
-                for name, value in self.hdf[str(self.index)].attrs.items():
+                for name, value in self.main.file[str(self.index)].attrs.items():
                     #print(name, value)
                     
                     if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
@@ -64,7 +62,7 @@ class base_view(QGraphicsView):
                         a_class = utils.attrs_get_class(value)
                         a_type = utils.attrs_get_type(value)
                         a_points = utils.attrs_get_points(value)
-                        for p_class in self.hdf.attrs[classifier.hdfs.CLASSES.value]:
+                        for p_class in self.main.file.attrs[classifier.hdfs.CLASSES.value]:
                             classes.append(p_class[0:3])
                         if str(a_class) in classes:
                             color = QColor(Qt.GlobalColor(color_index))
@@ -140,11 +138,11 @@ class base_view(QGraphicsView):
         if code == -1:
             for item in self.scene.items():
                 self.scene.removeItem(item)
-            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
 
     def change_pixmap(self,index):
-        if self.hdf:
+        if self.main.file:
             self.index += index
             if self.index < 0:
                 self.index = 0
@@ -152,24 +150,24 @@ class base_view(QGraphicsView):
                 self.index = self.index_max
             if self.background:  
                 self.scene.removeItem(self.background)
-            image_as_pixmap = utils.pixmap_at_index(self.hdf, self.index)
+            image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
 
     def set_pixmap(self, index):
         if self.background:  
             self.scene.removeItem(self.background)
-        image_as_pixmap = utils.pixmap_at_index(self.hdf, index)
+        image_as_pixmap = utils.pixmap_at_index(self.main.file, index)
         self.background = self.scene.addPixmap(image_as_pixmap)
 
     
 class view_view(base_view):
-    def __init__(self, parent, file_link=None, signal=None):
-        super().__init__(parent=parent, file_link=file_link, signal=signal)
+    def __init__(self, parent, main):
+        super().__init__(main=main, parent=parent)
 
 
 class view_edit(base_view):
-    def __init__(self, parent, file_link=None, signal=None, current_task=0, signal_parsepolygons=None):
-        super().__init__(parent=parent, file_link=file_link, signal=signal)
+    def __init__(self, parent, main, current_task=0):
+        super().__init__(main=main, parent=parent)
 
         self.index = current_task
         self.shape_items = []
@@ -202,28 +200,28 @@ class view_edit(base_view):
 
     def refresh_attrlist(self):
         self.attr_list.clear()
-        for name, value in self.hdf[str(self.index)].attrs.items():
+        for name, value in self.main.file[str(self.index)].attrs.items():
             if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
                 self.attr_list.addItem(value)
 
     def delete_attrlistitem(self):
         item = self.attr_list.currentItem()
-        for name, value in self.hdf[str(self.index)].attrs.items():
+        for name, value in self.main.file[str(self.index)].attrs.items():
             if item.text() == value:
                 self.delete_attrhdf(name)
         #self.attr_list.removeItemWidget(item)
         #self.refresh_attrlist() #без комента не удаляется полигон, с коментом не удаляется строка в списке почему
 
     def delete_attrhdf(self, attr_name):
-        self.hdf[str(self.index)].attrs.__delitem__(attr_name)
-        self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] -=  1
-        for name, value in self.hdf[str(self.index)].attrs.items():
+        self.main.file[str(self.index)].attrs.__delitem__(attr_name)
+        self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] -=  1
+        for name, value in self.main.file[str(self.index)].attrs.items():
             if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
                 if int(name) > int(attr_name):
-                    self.hdf[str(self.index)].attrs.__delitem__(name)
+                    self.main.file[str(self.index)].attrs.__delitem__(name)
                     name = int(name)
                     name -= 1
-                    self.hdf[str(self.index)].attrs[str(name)] = value
+                    self.main.file[str(self.index)].attrs[str(name)] = value
 
 
     def edit_attr(self, attr):
@@ -233,7 +231,7 @@ class view_edit(base_view):
         #self.clear_scene2()
         text = attr.text()
         attr_name = None
-        for name, value in self.hdf[str(self.index)].attrs.items():
+        for name, value in self.main.file[str(self.index)].attrs.items():
             if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
                 if value == text:
                     attr_name = name
@@ -256,12 +254,12 @@ class view_edit(base_view):
 
 
     def save_attrhdf(self):
-        name = self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value]
+        name = self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value]
         points = utils.flist_from_pointslist(self.shape.points)
         s_type = self.shape.type
         cclass = '000'#message._class.text()
-        self.hdf[str(self.index)].attrs[str(name)] = str(s_type) + ';' + cclass + ';' + str(points)
-        self.hdf[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
+        self.main.file[str(self.index)].attrs[str(name)] = str(s_type) + ';' + cclass + ';' + str(points)
+        self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
 
         self.scene.removeItem(self.polygon)
         self.shape.clear()
@@ -273,11 +271,11 @@ class view_edit(base_view):
             for item in self.attr_list.selectedItems():
                 text = item.text()
                 attr_name = None
-                for name, value in self.hdf[str(self.index)].attrs.items():
+                for name, value in self.main.file[str(self.index)].attrs.items():
                     if text == value:
                         attr_name = name
                 text = re.sub(r';[0-9][0-9][0-9];', ';' + pallete_item.text() + ';', text)
-                self.hdf[str(self.index)].attrs[attr_name] = text
+                self.main.file[str(self.index)].attrs[attr_name] = text
             self.refresh_attrlist()
             self.deselect_class()
 
@@ -334,7 +332,7 @@ class view_edit(base_view):
     def color_class(self):
         color_index = 2
         self.color_class = []
-        for cclass in self.hdf.attrs[classifier.hdfs.CLASSES.value]:
+        for cclass in self.main.file.attrs[classifier.hdfs.CLASSES.value]:
             color = QColor(Qt.GlobalColor(color_index))
             pair = (cclass, color)
             self.color_class.append(pair)

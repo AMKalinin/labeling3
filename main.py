@@ -167,7 +167,7 @@ class main_window(QMainWindow):
         current_task = self.tab_new.view_w.current_task()
         if index != -1:
             current_task = index
-        self.edit = edit_widgets.edit_widget(current_task, self.file)
+        self.edit = edit_widgets.edit_widget(index=current_task, main=self, hdf=self.file)
         self.edit.exec_()
 
     @pyqtSlot(str)

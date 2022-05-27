@@ -18,7 +18,6 @@ import cv2
 class project_widget_new(QGroupBox):
     def __init__(self, path, parent, main):
         super().__init__(parent=parent)
-        self.parent = parent
         self.main = main
         self.path = path
         self.init_ui()
