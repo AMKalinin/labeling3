@@ -110,12 +110,12 @@ class my_tab(QTabWidget):
     def parse_view(self, hdf):
         #self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf)
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
-        self.view_w = view_widgets.view_view(main=self.main, parent=self.view)
+        self.view_w = view_widgets.base_view(main=self.main, parent=self.view)
         #self.view_w = view_widgets.view_view(parent = self.parent, file_link=hdf, signal=self.signal2) 
 
     def init_view(self):
         #self.view_w = view_widgets.view_project(parent=self.view, file_link=None)
-        self.view_w = view_widgets.view_view(main=self.main, parent=self.view)
+        self.view_w = view_widgets.base_view(main=self.main, parent=self.view)
         #self.view_w = view_widgets.view_view(parent = self.parent,file_link=None, signal=self.signal2)
     
     def change_view(self, index):

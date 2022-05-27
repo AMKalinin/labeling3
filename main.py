@@ -35,7 +35,7 @@ class main_window(QMainWindow):
         QMainWindow.__init__(self, flags=QtCore.Qt.Window)
         self.file = None
         self.task_count = 0
-        self.codename_list = []
+        self.codenamecolor_list = []
         self.init_ui()
         print(self)
         
@@ -178,8 +178,9 @@ class main_window(QMainWindow):
     def read_codes(self):
         codes = classifier.classes.code()
         names = classifier.classes.name()
-        for code, name in zip(codes, names):
-            self.codename_list.append((code, name))
+        colors= classifier.classes.color()
+        for code, name, color in zip(codes, names, colors):
+            self.codenamecolor_list.append((code, name, color))
 
     def on_showall(self):
         print("showall")
@@ -200,13 +201,18 @@ class main_window(QMainWindow):
         self.navigation.update(index=+1)
 
     def get_name(self, code):
-        for pair in self.codename_list:
-            if pair[0] == code:
-                return pair[1]
+        for triple in self.codenamecolor_list:
+            if triple[0] == code:
+                return triple[1]
 
     def get_code(self, name):
-        for pair in self.codename_list:
-            if pair[1] == name:
-                return pair[0]
+        for triple in self.codenamecolor_list:
+            if triple[1] == name:
+                return triple[0]
+
+    def get_color(self, code):
+        for triple in self.codenamecolor_list:
+            if triple[0] == code:
+                return triple[2]
 
     

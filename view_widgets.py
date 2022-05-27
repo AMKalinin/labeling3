@@ -50,7 +50,7 @@ class base_view(QGraphicsView):
             self.background = self.scene.addPixmap(image_as_pixmap)
             self.index_max = self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] - 1
 
-    def change_pixmap(self,index):
+    def change_pixmap(self,index): 
         if self.main.file:
             self.index += index
             if self.index < 0:
@@ -154,11 +154,6 @@ class base_view(QGraphicsView):
             self.background = self.scene.addPixmap(image_as_pixmap)
     """
 
-
-    
-class view_view(base_view):
-    def __init__(self, parent, main):
-        super().__init__(main=main, parent=parent)
 
 
 class view_edit(base_view):
