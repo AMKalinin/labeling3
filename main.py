@@ -74,9 +74,13 @@ class main_window(QMainWindow):
         self.tab_new.currentChanged.connect(self.show_tab_new)
         #self.description.btn_addtask.clicked.connect(self.add_task)
         #self.description.btn_edittask.clicked.connect(self.on_edittask)
-        self.navigation.btn_previous.clicked.connect(self.previous_view)
-        self.navigation.btn_next.clicked.connect(self.next_view)
+        #self.navigation.btn_previous.clicked.connect(self.previous_view)
+        #self.navigation.btn_next.clicked.connect(self.next_view)
         #self.navigation.btn_edittask.clicked.connect(self.on_edittask)
+        self.navigation_toolbar.previous.triggered.connect(self.previous_view)
+        self.navigation_toolbar.next.triggered.connect(self.next_view)
+        self.navigation_toolbar.previous.triggered.connect(self.previous_polygons)
+        self.navigation_toolbar.next.triggered.connect(self.next_polygons)
         self.signal_edittask.connect(self.on_edittask)
         #self.signal_editdescription.connect(self.on_editdescription)
     
@@ -122,7 +126,8 @@ class main_window(QMainWindow):
         self.tab_new.parse_tasks(self.file)
         #self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
-        self.navigation.adjust_pallete(self.file)
+        #self.navigation.adjust_pallete(self.file)
+        self.navigation.tree.fill_fromhdf(self.file)
         self.higher_control.description.updateitem(self.file.attrs[classifier.hdfs.DESCRIPTION.value])
 
     def adjust_opened_project(self):
@@ -171,3 +176,9 @@ class main_window(QMainWindow):
 
     def next_view(self):
         self.tab_new.change_view(index=+1)
+
+    def previous_polygons(self):
+        self.navigation.tree.change_polygons(index=-1, hdf=self.file)
+
+    def next_polygons(self):
+        self.navigation.tree.change_polygons(index=+1, hdf=self.file)

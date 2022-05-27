@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
                             QScrollArea, QToolButton, QSizePolicy, QComboBox,
-                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QToolBar)
+                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QToolBar, QTreeWidget, QTreeWidgetItem)
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 import new_project
@@ -14,6 +14,7 @@ import task_widgets
 #import segflex_seg_window as seg
 #import segflex_classes_choose
 import view_widgets
+import select_classes as tree
 import os
 import json
 import classifier
@@ -263,8 +264,8 @@ class view_toolbar(QToolBar):
 
     def add_actions(self):
         self.first = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to first image in project')
-        self.previous = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to previous image in project')
-        self.next = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to next image in project')
+        self.previous = self.addAction(QIcon('__icons__/previous_tbtn.png'), 'go to previous image in project')
+        self.next = self.addAction(QIcon('__icons__/next_tbtn.png'), 'go to next image in project')
         self.last = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to last image in project')
         self.add = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'add new image to project')
         self.delete = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'delete image from project')
@@ -276,10 +277,14 @@ class view_control(QGroupBox):
         super().__init__()
         self.signal_showall = signal_showall
         self.signal_edittask = signal_edittask
-        self.create_pallete()
+        #self.create_pallete()
         self.init_ui()
+        self.tree = polygon_classes()
+        self.layout.addWidget(self.tree)
+        
 
     def init_ui(self):
+        """
         self.btn_previous = QPushButton("<<")
         self.btn_next = QPushButton(">>")
         self.btn_showall = QPushButton("show all")
@@ -288,16 +293,17 @@ class view_control(QGroupBox):
         self.btn_hideall.clicked.connect(self.on_hideall)
         self.btn_edittask = QPushButton("edit task")
         self.btn_edittask.clicked.connect(self.on_edittask)
-
+        """
 
         self.layout = QVBoxLayout()
+        """"
         self.layout.addWidget(self.btn_previous)
         self.layout.addWidget(self.btn_next)
         self.layout.addWidget(self.btn_showall)
         self.layout.addWidget(self.btn_hideall)
         self.layout.addWidget(self.btn_edittask)
         self.layout.addWidget(self.list)
-
+        """
         self.setLayout(self.layout)
     
     def on_showall(self):
@@ -308,6 +314,8 @@ class view_control(QGroupBox):
 
     def on_edittask(self):
         self.signal_edittask.emit(-1)
+
+    """
 
     def create_pallete(self):
         color_index = 2
@@ -336,3 +344,72 @@ class view_control(QGroupBox):
                 color_index = 2
 
         self.layout.addWidget(self.list)
+    """
+
+class polygon_classes(QTreeWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setColumnCount(4)
+        self.setHeaderLabels(['Name', 'Code', 'Index', 'Points'])
+        self.pairlist = []
+        self.make_tuple()
+        self.index = 0
+        self.index_max = 0
+        self.toplevelitems_count = 0
+        #self.fill_fromhdf()
+
+    def change_polygons(self, index, hdf):
+
+    #def change_pixmap(self,index):
+    #    if self.hdf:
+        self.index += index
+        if self.index < 0:
+            self.index = 0
+        elif self.index > self.index_max:
+            self.index = self.index_max
+        self.fill_fromhdf(hdf)
+
+    def fill_fromhdf(self, hdf):
+        self.index_max = hdf.attrs[classifier.hdfs.TASK_COUNT.value] - 1
+        self.clear()
+        for cclass in hdf.attrs[classifier.hdfs.CLASSES.value]:
+            #print(type(cclass))
+            name = self.get_name(int(cclass))
+            #print(name)
+            self.addTopLevelItem(QTreeWidgetItem([name, cclass]))
+            #print(cclass)
+            #self.addTopLevelItem(QTreeWidgetItem([base.text(0)]))
+        #for base in classifier.bases.name():
+        #    print(base)
+        #self.itemEntered.connect()
+        self.fill_fromhdf2(hdf)
+
+    def fill_fromhdf2(self, hdf):
+        for name, value in hdf[str(self.index)].attrs.items():
+            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+                
+                attr_class = utils.attrs_get_class(value)
+                attr_points = utils.attrs_get_points(value)
+                #print(attr_class, attr_points)
+                for index in range(self.topLevelItemCount()):
+                    #print(index, self.topLevelItem(index).text(1))
+                    if self.topLevelItem(index).text(1) == attr_class:
+                        self.topLevelItem(index).addChild(QTreeWidgetItem(['', attr_class, name, attr_points]))
+
+    def make_tuple(self):
+        codelist = classifier.classes.code()
+        namelist = classifier.classes.name()
+
+        for code, name in zip(codelist, namelist):
+            self.pairlist.append((code, name))
+            #print(type(code))
+       #print(self.pairlist)
+    
+    def get_name(self, code):
+        for pair in self.pairlist:
+            if pair[0] == code:
+                return pair[1]
+
+
+#    def current_base(self, item, column):

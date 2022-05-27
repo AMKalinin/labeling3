@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QTreeWidgetItem, QTreeWidget
 from PyQt5.QtCore import Qt, QMimeData
 from PyQt5.QtGui import QDrag
+import classifier
 
 
 
@@ -94,7 +95,42 @@ class polygon_classes(all_classes):
     def __init__(self):
         super().__init__()
 
-        self.itemEntered.connect()
+        self.setColumnCount(3)
+        self.setHeaderLabels(['Name', 'Code', 'Points'])
+        self.pairlist = []
+        self.make_tuple()
+        #self.fill_fromhdf()
+
+    def fill_fromhdf(self, hdf):
+        self.clear()
+        for cclass in hdf.attrs[classifier.hdfs.CLASSES.value]:
+            #print(type(cclass))
+            name = self.get_name(int(cclass))
+            #print(name)
+            self.addTopLevelItem(QTreeWidgetItem([name, cclass]))
+            #print(cclass)
+            #self.addTopLevelItem(QTreeWidgetItem([base.text(0)]))
+        #for base in classifier.bases.name():
+        #    print(base)
+        #self.itemEntered.connect()
+
+    #def fill_fromhdf2(self, hdf):
+    #    for item in hdf.
+
+    def make_tuple(self):
+        codelist = classifier.classes.code()
+        namelist = classifier.classes.name()
+
+        for code, name in zip(codelist, namelist):
+            self.pairlist.append((code, name))
+            #print(type(code))
+       #print(self.pairlist)
+    
+    def get_name(self, code):
+        for pair in self.pairlist:
+            if pair[0] == code:
+                return pair[1]
+
 
 #    def current_base(self, item, column):
         
