@@ -31,8 +31,8 @@ class main_window(QMainWindow):
     signal_showall = pyqtSignal(int)
     signal_edittask = pyqtSignal(int)
     signal_editdescription = pyqtSignal(str)
-    def __init__(self, parent=None):
-        QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
+    def __init__(self):
+        QMainWindow.__init__(self, flags=QtCore.Qt.Window)
         self.file = None
         self.task_count = 0
         self.codename_list = []
@@ -57,7 +57,7 @@ class main_window(QMainWindow):
 
 
     def init_widgets(self):
-        self.tab_new = tab_widget.my_tab(signal=self.signal_openproject, signal2=self.signal_showall, signal_edittask=self.signal_edittask)
+        self.tab_new = tab_widget.my_tab(signal=self.signal_openproject, signal2=self.signal_showall, signal_edittask=self.signal_edittask, parent=self)
         self.higher_control = control_widgets.higher_control(signal1=self.signal_parseprojects, signal2=self.signal_editdescription)
         #self.description = control_widgets.project_description_new(signal=self.signal_editdescription)
         self.description = control_widgets.task_description()
@@ -128,13 +128,15 @@ class main_window(QMainWindow):
         if self.file:
             self.file.close()
         self.file = h5py.File(project_path, 'r+')
+        self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
         self.tab_new.parse_tasks(self.file)
         #self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
         #self.navigation.adjust_pallete(self.file)
         self.navigation.fill()
         self.higher_control.description.updateitem(self.file.attrs[classifier.hdfs.DESCRIPTION.value])
-        self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
+        #self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
+        #self.tab_new.update_info()
         #print(self.task_count)
 
     def adjust_opened_project(self):

@@ -25,7 +25,8 @@ import cv2
 
 class my_tab(QTabWidget):
     def __init__(self, signal, signal2=None, parent=None, signal_edittask=None):
-        super().__init__()
+        super().__init__(parent=parent)
+        self.main = parent
         self.signal = signal
         self.signal2=signal2
         self.signal_edittask = signal_edittask
@@ -52,7 +53,7 @@ class my_tab(QTabWidget):
         self.projects = QScrollArea(self)
         self.tasksleft = QScrollArea(self)
         self.tasksright = QScrollArea(self)
-        self.view = QWidget(self) 
+        self.view = QWidget(self)
 
         self.projects.setWidgetResizable(True)
         self.tasksleft.setWidgetResizable(True)
@@ -87,23 +88,21 @@ class my_tab(QTabWidget):
 
     def parse_projects(self):
         utils.clear_layout(self.projects_layout)
-        list = os.listdir(classifier.items.PROJECTS.value)
-        for name in list:
+        names = os.listdir(classifier.items.PROJECTS.value)
+        for name in names:
             path = classifier.items.PROJECTS.value + name
-            with h5py.File(path, 'r') as hdf:
-                widget = project_widgets.project_widget_new(signal=self.signal, path=path)
-                self.projects_layout.addWidget(widget)
+            widget = project_widgets.project_widget_new(path=path, parent=self, main=self.main)
+            self.projects_layout.addWidget(widget)
 
     def parse_tasks(self, hdf):
         utils.clear_layout(layout=self.tasksleft_layout)
         utils.clear_layout(layout=self.tasksright_layout)
-        count = hdf.attrs[classifier.hdfs.TASK_COUNT.value]
-        for id in range(count):
-            status = hdf[str(id)].attrs[classifier.tasks.STATUS.value]
+        for index in range(self.main.task_count):
+            status = hdf[str(index)].attrs[classifier.tasks.STATUS.value]
             if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
-                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=id, mode=classifier.TASK_WIDGET_MODE_0, signal_edittask=self.signal_edittask)#, signal=self.signal_reopen_project)
+                task_widget = task_widgets.task_widget_new(project_file=hdf, identifier=index, mode=classifier.TASK_WIDGET_MODE_0, signal_edittask=self.signal_edittask)#, signal=self.signal_reopen_project)
                 self.tasksleft_layout.addWidget(task_widget)
-            elif task_status == classifier.HDF_TASK_STATUS_2 or status == classifier.HDF_TASK_STATUS_3:
+            elif task_status == classifier.HDF_TASK_STATUS_2: #or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")
                 #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
                 #self.tab_tasks_right_layout.addWidget(task_widget)
@@ -111,11 +110,13 @@ class my_tab(QTabWidget):
     def parse_view(self, hdf):
         #self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf)
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
-        self.view_w = view_widgets.view_view(parent=self.view, file_link=hdf, signal=self.signal2) 
+        self.view_w = view_widgets.view_view(parent=self.view, file_link=hdf, signal=self.signal2)
+        #self.view_w = view_widgets.view_view(parent = self.parent, file_link=hdf, signal=self.signal2) 
 
     def init_view(self):
         #self.view_w = view_widgets.view_project(parent=self.view, file_link=None)
         self.view_w = view_widgets.view_view(parent=self.view, file_link=None, signal=self.signal2)
+        #self.view_w = view_widgets.view_view(parent = self.parent,file_link=None, signal=self.signal2)
     
     def change_view(self, index):
         self.view_w.change_pixmap(index)

@@ -16,9 +16,10 @@ import h5py
 import cv2
 
 class project_widget_new(QGroupBox):
-    def __init__(self, signal, path, parent=None):
-        super().__init__()
-        self.signal = signal
+    def __init__(self, path, parent, main):
+        super().__init__(parent=parent)
+        self.parent = parent
+        self.main = main
         self.path = path
         self.init_ui()
 
@@ -47,7 +48,7 @@ class project_widget_new(QGroupBox):
     def init_content(self):
         self.init_info()
         self.init_progressbar()
-        self.btn_open = QPushButton("Открыть проект")
+        self.open = QPushButton("Открыть проект")
 
     def init_info(self):
         self.name = utils.get_name(self.path)
@@ -68,12 +69,12 @@ class project_widget_new(QGroupBox):
         self.progressbar.setValue(self.donetasks)
 
     def fill_layouts(self):
-        self.layout_actions.addWidget(self.btn_open)
+        self.layout_actions.addWidget(self.open)
         self.layout_info.addWidget(self.info)
         self.layout_info.addWidget(self.progressbar)
     
     def connect_ui(self):
-        self.btn_open.clicked.connect(self.on_open)
+        self.open.clicked.connect(self.on_open)
 
     def on_open(self):
-        self.signal.emit(self.path)
+        self.main.signal_openproject.emit(self.path)
