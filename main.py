@@ -34,10 +34,14 @@ class main_window(QMainWindow):
     def __init__(self, parent=None):
         QMainWindow.__init__(self, parent, flags=QtCore.Qt.Window)
         self.file = None
+        self.task_count = 0
+        self.codename_list = []
         self.init_ui()
+        print(self)
         
     def init_ui(self):
         self.adjust_window()
+        self.read_codes()
         self.init_widgets()
         self.place_blocks()
         self.connect_ui()
@@ -57,7 +61,8 @@ class main_window(QMainWindow):
         self.higher_control = control_widgets.higher_control(signal1=self.signal_parseprojects, signal2=self.signal_editdescription)
         #self.description = control_widgets.project_description_new(signal=self.signal_editdescription)
         self.description = control_widgets.task_description()
-        self.navigation = control_widgets.view_control(self.signal_showall, self.signal_edittask)
+        #self.navigation = control_widgets.view_control(self.signal_showall, self.signal_edittask, self)
+        self.navigation = control_widgets.polygon_classes_new(self)
         self.navigation_toolbar = control_widgets.view_toolbar()
 
     def place_blocks(self):
@@ -127,8 +132,10 @@ class main_window(QMainWindow):
         #self.description.parse_description(self.file)
         self.tab_new.parse_view(self.file)
         #self.navigation.adjust_pallete(self.file)
-        self.navigation.tree.fill_fromhdf(self.file)
+        self.navigation.fill()
         self.higher_control.description.updateitem(self.file.attrs[classifier.hdfs.DESCRIPTION.value])
+        self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
+        #print(self.task_count)
 
     def adjust_opened_project(self):
         self.tab_new.parse_tasks(self.file)
@@ -166,6 +173,11 @@ class main_window(QMainWindow):
         if self.file: #корректно проверяю открыт ли hdf????
             self.file.attrs[classifier.hdfs.DESCRIPTION.value] = newdescription
 
+    def read_codes(self):
+        codes = classifier.classes.code()
+        names = classifier.classes.name()
+        for code, name in zip(codes, names):
+            self.codename_list.append((code, name))
 
     def on_showall(self):
         print("showall")
@@ -178,7 +190,21 @@ class main_window(QMainWindow):
         self.tab_new.change_view(index=+1)
 
     def previous_polygons(self):
-        self.navigation.tree.change_polygons(index=-1, hdf=self.file)
+        #self.navigation.tree.change_polygons(index=-1, hdf=self.file)
+        self.navigation.update(index=-1)
 
     def next_polygons(self):
-        self.navigation.tree.change_polygons(index=+1, hdf=self.file)
+        #self.navigation.tree.change_polygons(index=+1, hdf=self.file)
+        self.navigation.update(index=+1)
+
+    def get_name(self, code):
+        for pair in self.codename_list:
+            if pair[0] == code:
+                return pair[1]
+
+    def get_code(self, name):
+        for pair in self.codename_list:
+            if pair[1] == name:
+                return pair[0]
+
+    

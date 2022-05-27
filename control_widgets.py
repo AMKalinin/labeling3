@@ -11,8 +11,6 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import new_project
 import project_widgets
 import task_widgets
-#import segflex_seg_window as seg
-#import segflex_classes_choose
 import view_widgets
 import select_classes as tree
 import os
@@ -273,13 +271,13 @@ class view_toolbar(QToolBar):
         self.hideall = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'set all polygons in list as deselected')
 
 class view_control(QGroupBox):
-    def __init__(self, signal_showall, signal_edittask):
-        super().__init__()
+    def __init__(self, signal_showall, signal_edittask, parent=None):
+        super().__init__(parent=parent)
         self.signal_showall = signal_showall
         self.signal_edittask = signal_edittask
         #self.create_pallete()
         self.init_ui()
-        self.tree = polygon_classes()
+        self.tree = polygon_classes(parent)
         self.layout.addWidget(self.tree)
         
 
@@ -346,70 +344,40 @@ class view_control(QGroupBox):
         self.layout.addWidget(self.list)
     """
 
-class polygon_classes(QTreeWidget):
-    def __init__(self):
-        super().__init__()
+#class view_control_new(QGroupBox):
 
+
+class polygon_classes_new(QTreeWidget):
+    def __init__(self,parent=None):
+        super().__init__(parent=parent)
+        self.parent = parent
+        self.index = 0
+    
         self.setColumnCount(4)
         self.setHeaderLabels(['Name', 'Code', 'Index', 'Points'])
-        self.pairlist = []
-        self.make_tuple()
-        self.index = 0
-        self.index_max = 0
-        self.toplevelitems_count = 0
-        #self.fill_fromhdf()
 
-    def change_polygons(self, index, hdf):
-
-    #def change_pixmap(self,index):
-    #    if self.hdf:
+    def update(self, index):
         self.index += index
         if self.index < 0:
             self.index = 0
-        elif self.index > self.index_max:
-            self.index = self.index_max
-        self.fill_fromhdf(hdf)
+        elif self.index > self.parent.task_count - 1:
+            self.index = self.parent.task_count - 1
+        self.fill()
 
-    def fill_fromhdf(self, hdf):
-        self.index_max = hdf.attrs[classifier.hdfs.TASK_COUNT.value] - 1
+    def fill(self):
         self.clear()
-        for cclass in hdf.attrs[classifier.hdfs.CLASSES.value]:
-            #print(type(cclass))
-            name = self.get_name(int(cclass))
-            #print(name)
-            self.addTopLevelItem(QTreeWidgetItem([name, cclass]))
-            #print(cclass)
-            #self.addTopLevelItem(QTreeWidgetItem([base.text(0)]))
-        #for base in classifier.bases.name():
-        #    print(base)
-        #self.itemEntered.connect()
-        self.fill_fromhdf2(hdf)
+        for code in self.parent.file.attrs[classifier.hdfs.CLASSES.value]:
+            name = self.parent.get_name(int(code))
+            self.addTopLevelItem(QTreeWidgetItem([name, code, '', '']))
 
-    def fill_fromhdf2(self, hdf):
-        for name, value in hdf[str(self.index)].attrs.items():
+        for name, value in self.parent.file[str(self.index)].attrs.items():
             if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
-                
                 attr_class = utils.attrs_get_class(value)
                 attr_points = utils.attrs_get_points(value)
-                #print(attr_class, attr_points)
                 for index in range(self.topLevelItemCount()):
-                    #print(index, self.topLevelItem(index).text(1))
                     if self.topLevelItem(index).text(1) == attr_class:
                         self.topLevelItem(index).addChild(QTreeWidgetItem(['', attr_class, name, attr_points]))
 
-    def make_tuple(self):
-        codelist = classifier.classes.code()
-        namelist = classifier.classes.name()
-
-        for code, name in zip(codelist, namelist):
-            self.pairlist.append((code, name))
-            #print(type(code))
-       #print(self.pairlist)
-    
-    def get_name(self, code):
-        for pair in self.pairlist:
-            if pair[0] == code:
-                return pair[1]
 
 
-#    def current_base(self, item, column):
+
