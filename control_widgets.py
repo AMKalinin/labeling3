@@ -5,7 +5,8 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
                             QScrollArea, QToolButton, QSizePolicy, QComboBox,
-                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QToolBar, QTreeWidget, QTreeWidgetItem)
+                            QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QToolBar,
+                            QTreeWidget, QTreeWidgetItem, QListView, QAbstractItemView                 )
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 import new_project
@@ -256,9 +257,6 @@ class view_toolbar(QToolBar):
 
         self.add_actions()
 
-    def init_widgets(self):
-        self.first = QToolButton()
-        self.first.setIcon(QIcon('__icons__/cancel_tbtn.png'))
 
     def add_actions(self):
         self.first = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to first image in project')
@@ -346,12 +344,38 @@ class view_control(QGroupBox):
 
 #class view_control_new(QGroupBox):
 
+class polygon_pallete(QListWidget):
+    def __init__(self, main, parent):
+        super().__init__(parent=parent)
+        self.main = main
+        self.parent = parent
+        self.setFlow(QListView.LeftToRight)
+        self.setMouseTracking(True)
+        self.setSelectionMode(QAbstractItemView.SingleSelection)
+        self.fill()
+        self.itemClicked.connect(self.adjust_code)
+
+    def fill(self):
+        for triple in self.main.codenamecolor_list:
+            pixmap = QPixmap(50,50)
+            pixmap.fill(Qt.GlobalColor(triple[2]))
+            self.addItem(QListWidgetItem(QIcon(pixmap), str(triple[0])))
+
+    def leaveEvent(self, event):
+        self.setCurrentItem(None)
+
+    def adjust_code(self, item):
+        self.parent.adjust_code(item)
+
+
 
 class polygon_classes_new(QTreeWidget):
-    def __init__(self,parent=None):
+    def __init__(self, main, parent):
         super().__init__(parent=parent)
+        self.main = main
         self.parent = parent
         self.index = 0
+        self.setSelectionMode(QAbstractItemView.ExtendedSelection)
     
         self.setColumnCount(4)
         self.setHeaderLabels(['Name', 'Code', 'Index', 'Points'])
@@ -361,23 +385,47 @@ class polygon_classes_new(QTreeWidget):
         self.index += index
         if self.index < 0:
             self.index = 0
-        elif self.index > self.parent.task_count - 1:
-            self.index = self.parent.task_count - 1
+        elif self.index > self.main.task_count - 1:
+            self.index = self.main.task_count - 1
         self.fill()
 
     def fill(self):
         self.clear()
-        for code in self.parent.file.attrs[classifier.hdfs.CLASSES.value]:
-            name = self.parent.get_name(int(code))
+        for code in self.main.file.attrs[classifier.hdfs.CLASSES.value]:
+            name = self.main.get_name(int(code))
             self.addTopLevelItem(QTreeWidgetItem([name, code, '', '']))
+        self.addTopLevelItem(QTreeWidgetItem(['ВЫБРАТЬ КЛАСС', '000', '', '']))
 
-        for name, value in self.parent.file[str(self.index)].attrs.items():
+        for name, value in self.main.file[str(self.index)].attrs.items():
             if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
                 attr_class = utils.attrs_get_class(value)
                 attr_points = utils.attrs_get_points(value)
                 for index in range(self.topLevelItemCount()):
                     if self.topLevelItem(index).text(1) == attr_class:
                         self.topLevelItem(index).addChild(QTreeWidgetItem(['', attr_class, name, attr_points]))
+
+    def delete_item(self):
+        item = self.currentItem()
+        if self.indexOfTopLevelItem(item) != -1:
+            self.setCurrentItem(None)
+        else:
+            name = item.text(2)
+            self.delete_attr(name)
+
+    def delete_attr(self, name):
+        self.main.file[str(self.index)].attrs.__delitem__(name)
+        self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] -=  1
+        self.update_names(name)
+
+    def update_names(self, deleted_name):
+        for name, value in self.main.file[str(self.index)].attrs.items():
+            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+                if int(name) > int(deleted_name):
+                    self.main.file[str(self.index)].attrs.__delitem__(name)
+                    name = int(name)
+                    name -= 1
+                    self.main.file[str(self.index)].attrs[str(name)] = value
+        self.parent.signal_refreshTree.emit()
 
 
 

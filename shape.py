@@ -27,7 +27,7 @@ class shape():
     tell_apart_distance = 3
     def __init__(self, points=None):
         #self.tell_apart_distance = 3
-        self.type = classifier.shapes.NONE
+        self.type = classifier.shapes.NONE.value
         self._class = None
         if points==None:
             self.points = []
@@ -81,7 +81,7 @@ class shape():
     def clear(self):
         self.points.clear()
         self._class = None
-        self.type = classifier.shapes.NONE
+        self.type = classifier.shapes.NONE.value
 
     def set_points(self, points):
         self.points = points

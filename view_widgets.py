@@ -90,7 +90,7 @@ class base_view(QGraphicsView):
         point = self.mapToScene(QPoint(event.x(), event.y()))
         if self.polygon:
             self.scene.removeItem(self.polygon)
-        if self.shape.type == classifier.shapes.POLYGON:
+        if self.shape.type == classifier.shapes.POLYGON.value:
             point = self.mapToScene(QPoint(event.x(), event.y()))
             if event.button() == Qt.LeftButton:
                 print(event.button())
@@ -154,6 +154,49 @@ class base_view(QGraphicsView):
             self.background = self.scene.addPixmap(image_as_pixmap)
     """
 
+class view_edit_new(base_view):
+    def __init__(self, parent, main, current_task):
+        super().__init__(main=main, parent=parent)
+        self.parent = parent
+        self.index = current_task
+        self.set_pixmap(self.index)
+
+    def discard(self):
+        self.shape.clear()
+        self.clear_scene()
+        self.polygon = None
+    
+    def clear_scene(self):
+        for item in self.scene.items():
+            if item.type() != 7:  #7 for pixmap
+                self.scene.removeItem(item)
+
+    def newshape_polygon(self, points=None):
+        self.save_shape()
+        self.shape.type = classifier.shapes.POLYGON.value
+        if points:
+            self.shape.points = points
+
+    def save_shape(self):
+        if self.shape.points:
+            name = self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value]
+            points = utils.flist_from_pointslist(self.shape.points)
+            s_type = self.shape.type
+            code = '000'
+            self.main.file[str(self.index)].attrs[str(name)] = str(s_type) + ';' + code + ';' + str(points)
+            self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
+        self.discard()
+        self.parent.signal_refreshTree.emit()
+
+    """
+    def add_rectangle(self):
+        self.shape.points.clear()
+        self.shape.type = classifier.shapes.RECTANGLE
+
+    def add_ellipse(self):
+        self.shape.points.clear()
+        self.shape.type = classifier.shapes.ELLIPSE 
+    """
 
 
 class view_edit(base_view):

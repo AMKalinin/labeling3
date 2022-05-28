@@ -61,7 +61,7 @@ class main_window(QMainWindow):
         #self.description = control_widgets.project_description_new(signal=self.signal_editdescription)
         self.description = control_widgets.task_description()
         #self.navigation = control_widgets.view_control(self.signal_showall, self.signal_edittask, self)
-        self.navigation = control_widgets.polygon_classes_new(self)
+        self.navigation = control_widgets.polygon_classes_new(parent=self, main=self)
         self.navigation_toolbar = control_widgets.view_toolbar()
 
     def place_blocks(self):
@@ -167,7 +167,8 @@ class main_window(QMainWindow):
         current_task = self.tab_new.view_w.current_task()
         if index != -1:
             current_task = index
-        self.edit = edit_widgets.edit_widget(index=current_task, main=self, hdf=self.file)
+        #self.edit = edit_widgets.edit_widget(index=current_task, main=self, hdf=self.file)
+        self.edit = edit_widgets.edit_widget_new(parent=self, main=self, index=current_task)
         self.edit.exec_()
 
     @pyqtSlot(str)
@@ -216,5 +217,10 @@ class main_window(QMainWindow):
         for triple in self.codenamecolor_list:
             if triple[0] == code:
                 return triple[2]
+
+    def adjust_code(self, taskindex, itemindex, newcode):
+        attr = self.file[str(taskindex)].attrs[str(itemindex)]
+        attr = re.sub(r';[0-9][0-9][0-9];', ';' + newcode + ';', attr)
+        self.file[str(taskindex)].attrs[str(itemindex)] = attr
 
     
