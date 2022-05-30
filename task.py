@@ -11,7 +11,7 @@ import classifier
 import h5py
 import utils
 
-class task_widget_new(QGroupBox):
+class taskWidget(QGroupBox):
     def __init__(self, parent, main, identifier, mode):
         super().__init__(parent = parent)
         self.main = main
@@ -103,7 +103,7 @@ class task_widget_new(QGroupBox):
     def leaveEvent(self, event):
         print("leaveEvent")
 
-
+"""
 #LEGACY CODE BELOW THIS LINE 
 class task_widget(QGroupBox):
     def __init__(self, path, identifier, mode, signal):
@@ -186,7 +186,7 @@ class task_widget(QGroupBox):
         self.info_number = QLabel("#" )#+ name)
         self.info_created_by = QLabel("Created by Hashly on November 1st 2021")
         self.info_last_update = QLabel("Last updated 15 days ago")
-    """
+    
     def fill_delete(self):
         self.delete_btn = QToolButton()
         self.delete_btn.setFixedSize(100,100)
@@ -196,7 +196,7 @@ class task_widget(QGroupBox):
         #delete_icon.addPixmap(delete_pixmap)
         delete_icon.addPixmap(QPixmap(classifier.ICON_DELETE_TASK_FULL))
         self.delete_btn.setIcon(delete_icon)
-    """
+    
     def fill_backward(self):
         self.backward_btn = QToolButton()
         backward_icon = QIcon()
@@ -299,7 +299,7 @@ class task_widget(QGroupBox):
             task.attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_2
         self.deleteLater()
 
-
+"""
 
 
 
