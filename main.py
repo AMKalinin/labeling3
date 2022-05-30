@@ -25,6 +25,7 @@ import control_widgets
 import tab_widget
 import edit_widgets
 
+
 class main_window(QMainWindow):
     signal_parseprojects = pyqtSignal()
     signal_openproject = pyqtSignal(str)
