@@ -19,7 +19,7 @@ import re
 import cv2
 import control
 
-class edit_widget_new(QDialog):
+class editWidget(QDialog):
     #signal_refreshTree = pyqtSignal()
     def __init__(self, parent, main, index):
         super().__init__(parent=parent)
@@ -92,97 +92,6 @@ class edit_widget_new(QDialog):
         points = utils.flist_from_pointslist(points)
         points = utils.qpoints_from_flist(points)
 
-        #s_type = sdfsdfwe
-        #self.view.shape_frompoints(points, type)
-        #print(points, type(points))
         self.tree.delete_item()
         self.view.discard()
         self.view.shape_frompoints(points)
-        #self.view.shape.set_points(points)
-        #self.view.shape.set_type(classifier.shapes.POLYGON.value)
-        #self.view.polygon = self.view.scene.addPolygon(QPolygonF(self.view.shape.points))
-
-
-
-
-class edit_widget(QDialog):
-    signal_parsepolygons = pyqtSignal()
-    def __init__(self, main, index, hdf):
-        super().__init__()
-        self.main = main
-        self.index = index
-        self.hdf = hdf
-        
-        self.init_widgets()
-        self.init_layout()
-        self.connect_ui()
-        #self.polygon_list()
-
-    def init_layout(self):
-        self.layout = QGridLayout()
-        self.setLayout(self.layout)
-    
-        self.layout.addWidget(self.edit, 0, 0)
-        #self.layout.addWidget(self.showall, 0, 1)
-        #self.layout.addWidget(self.hideall, 0, 2)
-        #self.layout.addWidget(self.combo, 0, 3)
-
-        self.layout.addWidget(self.polygon, 0, 4)
-        #self.layout.addWidget(self.new_item, 1, 4)
-        #self.layout.addWidget(self.discard_shape, 2, 4)
-
-        #self.layout.addWidget(self.none, 0, 5)
-        self.layout.addWidget(self.edit.attr_list, 0, 6)
-
-        self.layout.addWidget(self.save, 0, 7)
-        self.layout.addWidget(self.delete, 2, 7)
-        #self.layout.addWidget(self.edit_points, 1, 7)
-        #self.layout.addWidget(self.edit_class, 3, 7)
-
-        self.layout.addWidget(self.edit.pallete, 0, 9)
-
-
-        
-
-    def init_widgets(self):
-        self.edit = view.view_edit(parent=None, main=self.main, current_task=self.index)
-        #self.showall = QPushButton("showall")
-        #self.hideall = QPushButton("hideall")
-        self.polygon = QPushButton("new polygon")
-        self.new_item = QPushButton("new item")
-        self.discard_shape = QPushButton("discard_shape")
-        self.none = QPushButton("none")
-        #self.attr_list = QListWidget()
-        self.save = QPushButton("save")
-        self.delete = QPushButton("delete")
-        #self.list = QListWidget()
-        self.edit_points = QPushButton("edit points")
-        self.edit_class = QPushButton("edit class")
-
-        """
-        self.combo = QComboBox()
-        for name, value in self.hdf[str(self.index)].attrs.items():
-            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
-                self.combo.addItem(value)
-        """
-    def connect_ui(self):
-        #self.showall.clicked.connect(self.edit.show)
-        #self.hideall.clicked.connect(self.edit.hide)
-        self.polygon.clicked.connect(self.edit.add_polygon)
-        self.none.clicked.connect(self.edit.add_none)
-        self.save.clicked.connect(self.edit.save_attrhdf)
-        #self.signal_parsepolygons.connect(self.polygon_list)
-        self.delete.clicked.connect(self.edit.delete_attrlistitem)
-        self.edit_points.clicked.connect(self.edit.edit_attr)
-
-    """
-    def polygon_list(self):
-        #print("parsed")
-        #if self.attr_list:
-        #    self.attr_list.deleteLater()
-        self.attr_list.clear()
-        for name, value in self.hdf[str(self.index)].attrs.items():
-            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
-                self.attr_list.addItem(value)
-    """
-

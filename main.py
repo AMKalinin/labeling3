@@ -163,7 +163,7 @@ class main_window(QMainWindow):
         if index != -1:
             current_task = index
         #self.edit = edit.edit_widget(index=current_task, main=self, hdf=self.file)
-        self.edit = edit.edit_widget_new(parent=self, main=self, index=current_task)
+        self.edit = edit.editWidget(parent=self, main=self, index=current_task)
         self.edit.exec_()
 
     @pyqtSlot(str)
