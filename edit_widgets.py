@@ -25,7 +25,7 @@ import control_widgets
 import tab_widget
 
 class edit_widget_new(QDialog):
-    signal_refreshTree = pyqtSignal()
+    #signal_refreshTree = pyqtSignal()
     def __init__(self, parent, main, index):
         super().__init__(parent=parent)
         self.main = main
@@ -78,16 +78,17 @@ class edit_widget_new(QDialog):
         self.save.triggered.connect(self.view.save_shape)
         self.discard.triggered.connect(self.view.discard)
         self.delete.triggered.connect(self.tree.delete_item)
-        self.signal_refreshTree.connect(self.tree.fill)
+        self.main.signal_refreshTree.connect(self.tree.fill)
         #self.signal_adjustCode.connect(self.adjust_code)
 
     def adjust_code(self, palleteItem):
-        selected = self.tree.currentItem()
-        if selected:
+        #selected = self.tree.currentItem()
+        #if selected:
             for item in self.tree.selectedItems():
-                attr_index = item.text(2)
-                self.main.adjust_code(self.index, attr_index, palleteItem.text())
-            self.signal_refreshTree.emit()
+                if self.tree.indexOfTopLevelItem(item) == -1:
+                    attr_index = item.text(2)
+                    self.main.adjust_code(self.index, attr_index, palleteItem.text())
+            self.main.signal_refreshTree.emit()
 
 
 class edit_widget(QDialog):

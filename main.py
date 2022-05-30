@@ -31,6 +31,7 @@ class main_window(QMainWindow):
     signal_showall = pyqtSignal(int)
     signal_edittask = pyqtSignal(int)
     signal_editdescription = pyqtSignal(str)
+    signal_refreshTree = pyqtSignal()
     def __init__(self):
         QMainWindow.__init__(self, flags=QtCore.Qt.Window)
         self.file = None
@@ -86,6 +87,7 @@ class main_window(QMainWindow):
         self.navigation_toolbar.previous.triggered.connect(self.previous_polygons)
         self.navigation_toolbar.next.triggered.connect(self.next_polygons)
         self.signal_edittask.connect(self.on_edittask)
+        self.signal_refreshTree.connect(self.navigation.fill)
         #self.signal_editdescription.connect(self.on_editdescription)
     
     def show_tab(self):

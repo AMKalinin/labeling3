@@ -186,7 +186,7 @@ class view_edit_new(base_view):
             self.main.file[str(self.index)].attrs[str(name)] = str(s_type) + ';' + code + ';' + str(points)
             self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
         self.discard()
-        self.parent.signal_refreshTree.emit()
+        self.main.signal_refreshTree.emit()
 
     """
     def add_rectangle(self):
