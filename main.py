@@ -8,11 +8,6 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QMenuBar)
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-import new_project
-import project_widgets
-import task_widgets
-#import segflex_seg_window as seg
-import view_widgets
 import os
 import json
 import classifier
@@ -21,9 +16,9 @@ import h5py
 import time
 import re
 import cv2
-import control_widgets
-import tab_widget
-import edit_widgets
+import control
+import tab
+import edit
 
 
 class main_window(QMainWindow):
@@ -56,11 +51,11 @@ class main_window(QMainWindow):
         self.main_frame.setLayout(self.main_layout)
 
     def init_widgets(self):
-        self.tab = tab_widget.tab(self)
-        self.projectControl = control_widgets.projectControl(self)
-        self.taskDescription = control_widgets.taskDescription(self)
-        self.viewTree = control_widgets.polygonTree(parent=self, main=self)
-        self.viewToolbar = control_widgets.viewToolbar()
+        self.tab = tab.tab(self)
+        self.projectControl = control.projectControl(self)
+        self.taskDescription = control.taskDescription(self)
+        self.viewTree = control.polygonTree(parent=self, main=self)
+        self.viewToolbar = control.viewToolbar()
 
     def place_blocks(self):
         self.main_layout.addWidget(self.tab, 1, 0, 4, 1)
@@ -167,8 +162,8 @@ class main_window(QMainWindow):
         current_task = self.tab.view_w.current_task()
         if index != -1:
             current_task = index
-        #self.edit = edit_widgets.edit_widget(index=current_task, main=self, hdf=self.file)
-        self.edit = edit_widgets.edit_widget_new(parent=self, main=self, index=current_task)
+        #self.edit = edit.edit_widget(index=current_task, main=self, hdf=self.file)
+        self.edit = edit.edit_widget_new(parent=self, main=self, index=current_task)
         self.edit.exec_()
 
     @pyqtSlot(str)

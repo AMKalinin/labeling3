@@ -9,11 +9,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QTreeWidget, QTreeWidgetItem, QListView, QAbstractItemView                 )
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-import new_project
-import project_widgets
-import task_widgets
-import view_widgets
-import select_classes as tree
+import dialog
 import os
 import classifier
 import utils
@@ -99,7 +95,7 @@ class projectControl(QGroupBox):
         self.new.clicked.connect(self.on_new)
 
     def on_new(self):
-        self.dialog = new_project.new_project_dialog_new()
+        self.dialog = dialog.newProject()
         self.dialog.exec_()
         self.main.signal_parseprojects.emit()
 

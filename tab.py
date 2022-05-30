@@ -8,11 +8,11 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene)
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-import new_project
-import project_widgets
-import task_widgets
+
+import projects
+import task
 #import segflex_seg_window as seg
-import view_widgets
+import view
 import os
 import json
 import classifier
@@ -88,7 +88,7 @@ class tab(QTabWidget):
         names = os.listdir(classifier.items.PROJECTS.value)
         for name in names:
             path = classifier.items.PROJECTS.value + name
-            widget = project_widgets.project_widget_new(path=path, parent=self, main=self.main)
+            widget = projects.project(path=path, parent=self, main=self.main)
             self.projects_layout.addWidget(widget)
 
     def parse_tasks(self, hdf):
@@ -97,7 +97,7 @@ class tab(QTabWidget):
         for index in range(self.main.task_count):
             status = hdf[str(index)].attrs[classifier.tasks.STATUS.value]
             if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
-                task_widget = task_widgets.task_widget_new(parent=self, main=self.main, identifier=index, mode=classifier.TASK_WIDGET_MODE_0)
+                task_widget = task.task_widget_new(parent=self, main=self.main, identifier=index, mode=classifier.TASK_WIDGET_MODE_0)
                 self.tasksleft_layout.addWidget(task_widget)
             elif task_status == classifier.HDF_TASK_STATUS_2: #or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")
@@ -105,10 +105,10 @@ class tab(QTabWidget):
 
     def parse_view(self, hdf):
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
-        self.view_w = view_widgets.base_view(main=self.main, parent=self.view)
+        self.view_w = view.base_view(main=self.main, parent=self.view)
 
     def init_view(self):
-        self.view_w = view_widgets.base_view(main=self.main, parent=self.view)
+        self.view_w = view.base_view(main=self.main, parent=self.view)
     
     def change_view(self, index):
         self.view_w.change_pixmap(index)

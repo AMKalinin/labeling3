@@ -8,11 +8,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QMenuBar, QToolBar)
 from PyQt5 import QtWidgets, QtGui, QtCore
 
-import new_project
-import project_widgets
-import task_widgets
-#import segflex_seg_window as seg
-import view_widgets
+import view
 import os
 import json
 import classifier
@@ -21,8 +17,7 @@ import h5py
 import time
 import re
 import cv2
-import control_widgets
-import tab_widget
+import control
 
 class edit_widget_new(QDialog):
     #signal_refreshTree = pyqtSignal()
@@ -48,10 +43,10 @@ class edit_widget_new(QDialog):
         self.setLayout(self.layout)
 
     def init_widgets(self):
-        self.view = view_widgets.view_edit_new(parent=self, main=self.main, current_task=self.index)
-        self.tree = control_widgets.polygonTree(parent=self, main=self.main)
+        self.view = view.view_edit_new(parent=self, main=self.main, current_task=self.index)
+        self.tree = control.polygonTree(parent=self, main=self.main)
         self.tree.update(self.index)
-        self.pallete = control_widgets.polygonPallete(parent=self, main=self.main)
+        self.pallete = control.polygonPallete(parent=self, main=self.main)
         self.toolbar = QToolBar()
         self.add_actions()
 
@@ -150,7 +145,7 @@ class edit_widget(QDialog):
         
 
     def init_widgets(self):
-        self.edit = view_widgets.view_edit(parent=None, main=self.main, current_task=self.index)
+        self.edit = view.view_edit(parent=None, main=self.main, current_task=self.index)
         #self.showall = QPushButton("showall")
         #self.hideall = QPushButton("hideall")
         self.polygon = QPushButton("new polygon")

@@ -15,7 +15,7 @@ import re
 import h5py
 import cv2
 
-class project_widget_new(QGroupBox):
+class project(QGroupBox):
     def __init__(self, path, parent, main):
         super().__init__(parent=parent)
         self.main = main
