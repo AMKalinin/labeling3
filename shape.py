@@ -86,6 +86,13 @@ class shape():
     def set_points(self, points):
         self.points = points
 
+    def set_type(self, s_type):
+        self.type = s_type
+
+    def set_shape(self, s_type, points):
+        self.set_points(points)
+        self.set_type(s_type)
+
 
 """
 class mask:

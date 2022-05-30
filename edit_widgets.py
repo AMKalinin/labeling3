@@ -1,6 +1,6 @@
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtCore import pyqtSignal, QObject, pyqtSlot, QSize
-from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon
+from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon, QPolygonF
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, QFrame, QGridLayout,
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
@@ -79,6 +79,7 @@ class edit_widget_new(QDialog):
         self.discard.triggered.connect(self.view.discard)
         self.delete.triggered.connect(self.tree.delete_item)
         self.main.signal_refreshTree.connect(self.tree.fill)
+        self.tree.itemDoubleClicked.connect(self.adjust_points)
         #self.signal_adjustCode.connect(self.adjust_code)
 
     def adjust_code(self, palleteItem):
@@ -89,6 +90,24 @@ class edit_widget_new(QDialog):
                     attr_index = item.text(2)
                     self.main.adjust_code(self.index, attr_index, palleteItem.text())
             self.main.signal_refreshTree.emit()
+
+    def adjust_points(self, treeItem):
+        points = treeItem.text(3)
+        points = utils.pointslist_from_str(points)
+        points = utils.flist_from_pointslist(points)
+        points = utils.qpoints_from_flist(points)
+
+        #s_type = sdfsdfwe
+        #self.view.shape_frompoints(points, type)
+        #print(points, type(points))
+        self.tree.delete_item()
+        self.view.discard()
+        self.view.shape_frompoints(points)
+        #self.view.shape.set_points(points)
+        #self.view.shape.set_type(classifier.shapes.POLYGON.value)
+        #self.view.polygon = self.view.scene.addPolygon(QPolygonF(self.view.shape.points))
+
+
 
 
 class edit_widget(QDialog):

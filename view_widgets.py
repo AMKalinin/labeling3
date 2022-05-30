@@ -177,6 +177,12 @@ class view_edit_new(base_view):
         if points:
             self.shape.points = points
 
+    def shape_frompoints(self, points):
+        self.shape.clear()
+        self.shape.set_points(points)
+        self.shape.set_type(classifier.shapes.POLYGON.value)
+        self.polygon = self.scene.addPolygon(self.shape.polygon())
+
     def save_shape(self):
         if self.shape.points:
             name = self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value]
