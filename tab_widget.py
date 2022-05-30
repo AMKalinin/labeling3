@@ -23,13 +23,10 @@ import re
 import cv2
 
 
-class my_tab(QTabWidget):
-    def __init__(self, signal, signal2=None, parent=None, signal_edittask=None):
+class tab(QTabWidget):
+    def __init__(self, parent):
         super().__init__(parent=parent)
         self.main = parent
-        self.signal = signal
-        self.signal2=signal2
-        self.signal_edittask = signal_edittask
         self.index = 0
         self.view_w = None
 
@@ -104,19 +101,14 @@ class my_tab(QTabWidget):
                 self.tasksleft_layout.addWidget(task_widget)
             elif task_status == classifier.HDF_TASK_STATUS_2: #or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")
-                #task_widget = task_base.task_widget(path=project_path, identifier=number, mode=classifier.TASK_WIDGET_MODE_1, signal=self.signal_parse_tasks)
-                #self.tab_tasks_right_layout.addWidget(task_widget)
+
 
     def parse_view(self, hdf):
-        #self.view_w = view_widgets.view_project(parent=self.view, file_link=hdf)
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
         self.view_w = view_widgets.base_view(main=self.main, parent=self.view)
-        #self.view_w = view_widgets.view_view(parent = self.parent, file_link=hdf, signal=self.signal2) 
 
     def init_view(self):
-        #self.view_w = view_widgets.view_project(parent=self.view, file_link=None)
         self.view_w = view_widgets.base_view(main=self.main, parent=self.view)
-        #self.view_w = view_widgets.view_view(parent = self.parent,file_link=None, signal=self.signal2)
     
     def change_view(self, index):
         self.view_w.change_pixmap(index)

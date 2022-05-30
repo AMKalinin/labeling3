@@ -49,9 +49,9 @@ class edit_widget_new(QDialog):
 
     def init_widgets(self):
         self.view = view_widgets.view_edit_new(parent=self, main=self.main, current_task=self.index)
-        self.tree = control_widgets.polygon_classes_new(parent=self, main=self.main)
+        self.tree = control_widgets.polygonTree(parent=self, main=self.main)
         self.tree.update(self.index)
-        self.pallete = control_widgets.polygon_pallete(parent=self, main=self.main)
+        self.pallete = control_widgets.polygonPallete(parent=self, main=self.main)
         self.toolbar = QToolBar()
         self.add_actions()
 

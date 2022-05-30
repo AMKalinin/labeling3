@@ -13,10 +13,9 @@ import h5py
 
 
 class new_project_dialog_new(QDialog):
-    def __init__(self, signal):
+    def __init__(self):
         super().__init__()
         self.setWindowTitle("Создание нового проекта")
-        self.signal = signal
         self.init_ui()
 
     def init_ui(self):
@@ -93,7 +92,7 @@ class new_project_dialog_new(QDialog):
                     task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
         except FileExistsError:
             message = QMessageBox.about(self, "Ошибка:", "Файл с таким именем уже существует!")
-        self.signal.emit()
+        #self.signal.emit()
         self.deleteLater()
 
 

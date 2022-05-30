@@ -39,7 +39,6 @@ class main_window(QMainWindow):
         self.task_count = 0
         self.codenamecolor_list = []
         self.init_ui()
-        print(self)
         
     def init_ui(self):
         self.adjust_window()
@@ -56,74 +55,71 @@ class main_window(QMainWindow):
         self.main_layout = QGridLayout()
         self.main_frame.setLayout(self.main_layout)
 
-
     def init_widgets(self):
-        self.tab_new = tab_widget.my_tab(signal=self.signal_openproject, signal2=self.signal_showall, signal_edittask=self.signal_edittask, parent=self)
-        self.higher_control = control_widgets.higher_control(signal1=self.signal_parseprojects, signal2=self.signal_editdescription)
-        #self.description = control_widgets.project_description_new(signal=self.signal_editdescription)
-        self.description = control_widgets.task_description()
-        #self.navigation = control_widgets.view_control(self.signal_showall, self.signal_edittask, self)
-        self.navigation = control_widgets.polygon_classes_new(parent=self, main=self)
-        self.navigation_toolbar = control_widgets.view_toolbar()
+        self.tab = tab_widget.tab(self)
+        self.projectControl = control_widgets.projectControl(self)
+        self.taskDescription = control_widgets.taskDescription(self)
+        self.viewTree = control_widgets.polygonTree(parent=self, main=self)
+        self.viewToolbar = control_widgets.viewToolbar()
 
     def place_blocks(self):
-        self.main_layout.addWidget(self.tab_new, 1, 0, 4, 1)
-        self.main_layout.addWidget(self.higher_control, 1, 1)
-        self.main_layout.addWidget(self.description, 1, 1)
-        self.main_layout.addWidget(self.navigation, 1, 1)
-        self.main_layout.addWidget(self.navigation_toolbar, 0, 0)
-        self.show_higher_control()
+        self.main_layout.addWidget(self.tab, 1, 0, 4, 1)
+        self.main_layout.addWidget(self.projectControl, 1, 1)
+        self.main_layout.addWidget(self.taskDescription, 1, 1)
+        self.main_layout.addWidget(self.viewTree, 1, 1)
+        self.main_layout.addWidget(self.viewToolbar, 0, 0)
+        self.show_tab1()
 
     def connect_ui(self):
-        self.signal_parseprojects.connect(self.tab_new.parse_projects)
+        self.signal_parseprojects.connect(self.tab.parse_projects)
         self.signal_openproject.connect(self.open_project_routine)
-        self.tab_new.currentChanged.connect(self.show_tab_new)
-        #self.description.btn_addtask.clicked.connect(self.add_task)
-        #self.description.btn_edittask.clicked.connect(self.on_edittask)
-        #self.navigation.btn_previous.clicked.connect(self.previous_view)
-        #self.navigation.btn_next.clicked.connect(self.next_view)
-        #self.navigation.btn_edittask.clicked.connect(self.on_edittask)
-        self.navigation_toolbar.previous.triggered.connect(self.previous_view)
-        self.navigation_toolbar.next.triggered.connect(self.next_view)
-        self.navigation_toolbar.previous.triggered.connect(self.previous_polygons)
-        self.navigation_toolbar.next.triggered.connect(self.next_polygons)
+        self.tab.currentChanged.connect(self.show_tab)
+        #self.taskDescription.btn_addtask.clicked.connect(self.add_task)
+        #self.taskDescription.btn_edittask.clicked.connect(self.on_edittask)
+        #self.viewTree.btn_previous.clicked.connect(self.previous_view)
+        #self.viewTree.btn_next.clicked.connect(self.next_view)
+        #self.viewTree.btn_edittask.clicked.connect(self.on_edittask)
+        self.viewToolbar.previous.triggered.connect(self.previous_view)
+        self.viewToolbar.next.triggered.connect(self.next_view)
+        self.viewToolbar.previous.triggered.connect(self.previous_polygons)
+        self.viewToolbar.next.triggered.connect(self.next_polygons)
         self.signal_edittask.connect(self.on_edittask)
-        self.signal_refreshTree.connect(self.navigation.fill)
+        self.signal_refreshTree.connect(self.viewTree.fill)
         #self.signal_editdescription.connect(self.on_editdescription)
     
     def show_tab(self):
         if self.tab.currentWidget() == self.tab_split:
-            self.show_description()
+            self.show_tab2()
         elif self.tab.currentWidget() == self.tab_projects_area:
-            self.show_higher_control()
+            self.show_tab1()
         elif self.tab.currentWidget() == self.tab_view:
-            self.show_navigation()
+            self.show_tab3()
     
-    def show_tab_new(self):
-        if self.tab_new.currentWidget() == self.tab_new.split:
-            self.show_description()
-        elif self.tab_new.currentWidget() == self.tab_new.projects:
-            self.show_higher_control()
-        elif self.tab_new.currentWidget() == self.tab_new.view:
-            self.show_navigation()
+    def show_tab(self):
+        if self.tab.currentWidget() == self.tab.split:
+            self.show_tab2()
+        elif self.tab.currentWidget() == self.tab.projects:
+            self.show_tab1()
+        elif self.tab.currentWidget() == self.tab.view:
+            self.show_tab3()
 
-    def show_description(self):
-        self.higher_control.setVisible(False)
-        self.navigation.setVisible(False)
-        self.navigation_toolbar.setVisible(False)
-        self.description.setVisible(True)
+    def show_tab2(self):
+        self.projectControl.setVisible(False)
+        self.viewTree.setVisible(False)
+        self.viewToolbar.setVisible(False)
+        self.taskDescription.setVisible(True)
 
-    def show_higher_control(self):
-        self.higher_control.setVisible(True)
-        self.navigation.setVisible(False)
-        self.navigation_toolbar.setVisible(False)
-        self.description.setVisible(False)
+    def show_tab1(self):
+        self.projectControl.setVisible(True)
+        self.viewTree.setVisible(False)
+        self.viewToolbar.setVisible(False)
+        self.taskDescription.setVisible(False)
 
-    def show_navigation(self):
-        self.higher_control.setVisible(False)
-        self.description.setVisible(False)
-        self.navigation.setVisible(True)
-        self.navigation_toolbar.setVisible(True)
+    def show_tab3(self):
+        self.projectControl.setVisible(False)
+        self.taskDescription.setVisible(False)
+        self.viewTree.setVisible(True)
+        self.viewToolbar.setVisible(True)
 
     @pyqtSlot(str)
     def open_project_routine(self, project_path):
@@ -132,20 +128,21 @@ class main_window(QMainWindow):
         self.file = h5py.File(project_path, 'r+')
         self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
         self.update_codenamecolor()
-        self.tab_new.parse_tasks(self.file)
-        #self.description.parse_description(self.file)
-        self.tab_new.parse_view(self.file)
-        #self.navigation.adjust_pallete(self.file)
-        self.navigation.fill()
-        self.higher_control.description.updateitem(self.file.attrs[classifier.hdfs.DESCRIPTION.value])
+        self.tab.parse_tasks(self.file)
+        #self.taskDescription.parse_description(self.file)
+        self.tab.parse_view(self.file)
+        #self.viewTree.adjust_pallete(self.file)
+        self.viewTree.fill()
+        self.projectControl.description.updateWidget()
+        #self.projectControl.description.updateitem(self.file.attrs[classifier.hdfs.DESCRIPTION.value])
         #self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
-        #self.tab_new.update_info()
+        #self.tab.update_info()
         #print(self.task_count)
 
     def adjust_opened_project(self):
-        self.tab_new.parse_tasks(self.file)
-        #self.description.parse_description(self.file)
-        self.tab_new.parse_view(self.file)
+        self.tab.parse_tasks(self.file)
+        #self.taskDescription.parse_description(self.file)
+        self.tab.parse_view(self.file)
 
     def add_task(self):
         #print(classifier.task_attrs.TO_DO.value)
@@ -167,7 +164,7 @@ class main_window(QMainWindow):
 
     @pyqtSlot(int)
     def on_edittask(self, index=-1):
-        current_task = self.tab_new.view_w.current_task()
+        current_task = self.tab.view_w.current_task()
         if index != -1:
             current_task = index
         #self.edit = edit_widgets.edit_widget(index=current_task, main=self, hdf=self.file)
@@ -193,18 +190,18 @@ class main_window(QMainWindow):
         self.signal_showall.emit(1)
 
     def previous_view(self):
-        self.tab_new.change_view(index=-1)
+        self.tab.change_view(index=-1)
 
     def next_view(self):
-        self.tab_new.change_view(index=+1)
+        self.tab.change_view(index=+1)
 
     def previous_polygons(self):
-        #self.navigation.tree.change_polygons(index=-1, hdf=self.file)
-        self.navigation.update(index=-1)
+        #self.viewTree.tree.change_polygons(index=-1, hdf=self.file)
+        self.viewTree.update(index=-1)
 
     def next_polygons(self):
-        #self.navigation.tree.change_polygons(index=+1, hdf=self.file)
-        self.navigation.update(index=+1)
+        #self.viewTree.tree.change_polygons(index=+1, hdf=self.file)
+        self.viewTree.update(index=+1)
 
     def get_name(self, code):
         for triple in self.codenamecolor_list:
