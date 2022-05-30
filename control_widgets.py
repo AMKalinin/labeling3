@@ -425,7 +425,7 @@ class polygon_classes_new(QTreeWidget):
                     name = int(name)
                     name -= 1
                     self.main.file[str(self.index)].attrs[str(name)] = value
-        self.parent.signal_refreshTree.emit()
+        self.main.signal_refreshTree.emit()
 
 
 
