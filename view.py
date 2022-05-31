@@ -214,6 +214,14 @@ class view_edit_new(base_view):
             color = Qt.GlobalColor(self.main.get_color(int(item.text(1))))
             self.coloredshape_frompoints(points, color)
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Plus:
+            self.scale(1.5, 1.5)
+        elif event.key() == Qt.Key_Minus:
+            self.scale(0.5, 0.5)
+        elif event.key() == Qt.Key_Enter:
+            self.save_shape()
+
 
     """
     def add_rectangle(self):

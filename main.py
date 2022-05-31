@@ -203,6 +203,9 @@ class main_window(QMainWindow):
         for triple in self.codenamecolor_list:
             if triple[0] == code:
                 return triple[2]
+        #if triple[0] == '000':
+        if code == 0:
+            return 5
 
     def adjust_code(self, taskindex, itemindex, newcode):
         attr = self.file[str(taskindex)].attrs[str(itemindex)]
