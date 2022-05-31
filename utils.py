@@ -145,6 +145,19 @@ def create_preview(hdf, identifier): #load froma data???
     image_resized = image_as_pixmap.scaled(100, 100)
     return image_resized
 
+def fill_tree_with_select_classes(tree, classes_code):
+    b_old = [int(x[0])-1 for x in classes_code]
+    bases = [(x, y) for x, y in zip(classifier.bases.unique_id(), classifier.bases.name()) if x in b_old]
+    cls_old = [int(x) for x in classes_code]
+    classes = [(x, y, z) for x, y, z in zip(classifier.classes.base(), classifier.classes.code(), classifier.classes.name()) if y in cls_old]
+    for base in bases:
+        tmp = QTreeWidgetItem([base[1]])
+        tree.addTopLevelItem(tmp)
+        for item in classes:
+            if item[0] == base[0]:
+                child = QTreeWidgetItem([item[2], str(item[1])])
+                tmp.addChild(child)
+
 """
 def update_attrs_names(hdf, name):
     #if open

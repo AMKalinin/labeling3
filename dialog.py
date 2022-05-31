@@ -9,6 +9,7 @@ from PyQt5.QtCore import Qt, QMimeData
 from PyQt5.QtGui import QDrag
 
 import classifier
+import project
 import os
 import utils
 import cv2
@@ -180,9 +181,55 @@ class newProject(QDialog):
                     task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
         except FileExistsError:
             message = QMessageBox.about(self, "Ошибка:", "Файл с таким именем уже существует!")
-        #self.signal.emit()
+        self.main.signal_parseprojects.emit()
         self.deleteLater()
 
+
+class basedProject(newProject):
+    def __init__(self, main, old_hdf):
+        super().__init__()
+        self.main = main
+        self.old_hdf = old_hdf
+        self.parse_old()
+
+    def parse_old(self):
+        with h5py.File(self.old_hdf, 'r') as hdf:
+            self.classes.chosen = [x for x in hdf.attrs[classifier.hdfs.CLASSES.value]]
+            utils.fill_tree_with_select_classes(self.classes, hdf.attrs[classifier.hdfs.CLASSES.value])
+            self.input_name.setText(hdf.attrs[classifier.hdfs.NAME.value]+'(копия)')
+            self.input_description.setText('Основан на: '+hdf.attrs[classifier.hdfs.NAME.value])
+
+
+    def on_btn_ok(self):
+        project = classifier.items.PROJECTS.value + self.input_name.text() + classifier.hdfs.POSTFIX.value
+        try:
+            with h5py.File(project, 'w-') as hdf:
+                hdf.attrs[classifier.hdfs.NAME.value] = self.input_name.text()
+                hdf.attrs[classifier.hdfs.DESCRIPTION.value] = self.input_description.text()
+                hdf.attrs[classifier.hdfs.CLASSES.value] = self.classes.chosen
+                with h5py.File(self.old_hdf, 'r') as hdf_o:
+                    count = hdf_o.attrs[classifier.hdfs.TASK_COUNT.value]
+                    hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.images_list) + count
+                    for id in range(count):
+                        task = hdf.create_dataset(str(id), data=hdf_o[str(id)])
+                        task.attrs[classifier.tasks.COUNT.value] = hdf_o[str(id)].attrs[classifier.tasks.COUNT.value]
+                        task.attrs[classifier.tasks.STATUS.value] = hdf_o[str(id)].attrs[classifier.tasks.STATUS.value]
+                        count_m = hdf_o[str(id)].attrs[classifier.tasks.COUNT.value]
+                        i = 0
+                        for id_polygon in range(count_m):
+                            cclas = utils.attrs_get_class(hdf_o[str(id)].attrs[str(id_polygon)])
+                            if cclas in self.classes.chosen:
+                                task.attrs[str(id_polygon-i)] = hdf_o[str(id)].attrs[str(id_polygon)]
+                            else:
+                                i += 1
+                for image in self.images_list:
+                    task = hdf.create_dataset(str(self.images_list.index(image)+count), data=cv2.imread(image))
+                    task.attrs[classifier.tasks.COUNT.value] = 0
+                    task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
+        except FileExistsError:
+            message = QMessageBox.about(self, "Ошибка:", "Файл с таким именем уже существует!")
+        self.main.signal_parseprojects.emit()
+        self.deleteLater()
 
 
 

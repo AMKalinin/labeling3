@@ -12,6 +12,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 import dialog
 import os
 import classifier
+import dialog
 import utils
 import h5py
 import time
@@ -93,11 +94,21 @@ class projectControl(QGroupBox):
 
     def connect_ui(self):
         self.new.clicked.connect(self.on_new)
+        self.based.clicked.connect(self.on_base)
 
     def on_new(self):
         self.dialog = dialog.newProject()
         self.dialog.exec_()
-        self.main.signal_parseprojects.emit()
+        
+
+    def on_base(self):
+        file_dialog_response = QFileDialog.getOpenFileName()[0]
+
+        if file_dialog_response[-5:] == classifier.hdfs.POSTFIX.value:
+            self.dialog = dialog.basedProject(main = self.main, old_hdf=file_dialog_response)
+            self.dialog.exec_()
+        else:
+            message = QMessageBox.about(self, "Ошибка:", "Неправильный тип файла")
 
 class taskDescription(QWidget):
     def __init__(self, parent):
