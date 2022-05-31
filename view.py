@@ -28,6 +28,8 @@ class base_view(QGraphicsView):
         self.shape = shape.shape()
         self.polygon = None
         self.index = 0
+        if not isinstance(parent, QDialog):
+            parent.layout().addWidget(self)
         #self.main.signal_showall.connect(self.show_all)
         #self.main.signal_showall.connect(self.hide_all)
 
@@ -183,6 +185,14 @@ class view_edit_new(base_view):
         self.shape.set_type(classifier.shapes.POLYGON.value)
         self.polygon = self.scene.addPolygon(self.shape.polygon())
 
+    def coloredshape_frompoints(self, points, color):
+        self.shape.clear()
+        self.shape.set_points(points)
+        self.shape.set_type(classifier.shapes.POLYGON.value)
+        brush = QBrush(color, Qt.SolidPattern)
+        pen = QPen()
+        self.polygon = self.scene.addPolygon(QPolygonF(points), pen, brush)
+
     def save_shape(self):
         if self.shape.points:
             name = self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value]
@@ -193,6 +203,17 @@ class view_edit_new(base_view):
             self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
         self.discard()
         self.main.signal_refreshTree.emit()
+
+    def show_shapes(self, items):
+        self.discard()
+        for item in items:
+            points = item.text(3)
+            points = utils.pointslist_from_str(points)
+            points = utils.flist_from_pointslist(points)
+            points = utils.qpoints_from_flist(points)
+            color = Qt.GlobalColor(self.main.get_color(int(item.text(1))))
+            self.coloredshape_frompoints(points, color)
+
 
     """
     def add_rectangle(self):

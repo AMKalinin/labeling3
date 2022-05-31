@@ -21,6 +21,7 @@ import control
 
 class editWidget(QDialog):
     #signal_refreshTree = pyqtSignal()
+    signal_selectedItems = pyqtSignal(list)
     def __init__(self, parent, main, index):
         super().__init__(parent=parent)
         self.main = main
@@ -75,7 +76,17 @@ class editWidget(QDialog):
         self.delete.triggered.connect(self.tree.delete_item)
         self.main.signal_refreshTree.connect(self.tree.fill)
         self.tree.itemDoubleClicked.connect(self.adjust_points)
+        self.tree.itemSelectionChanged.connect(self.send_selected)
+        self.signal_selectedItems.connect(self.view.show_shapes)
+        
         #self.signal_adjustCode.connect(self.adjust_code)
+
+    def send_selected(self):
+        items = []
+        for item in self.tree.selectedItems():
+            if self.tree.indexOfTopLevelItem(item) == -1:
+                items.append(item)
+        self.signal_selectedItems.emit(items)
 
     def adjust_code(self, palleteItem):
         #selected = self.tree.currentItem()

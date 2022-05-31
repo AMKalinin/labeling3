@@ -62,7 +62,8 @@ class main_window(QMainWindow):
         self.main_layout.addWidget(self.projectControl, 1, 1)
         self.main_layout.addWidget(self.taskDescription, 1, 1)
         self.main_layout.addWidget(self.viewTree, 1, 1)
-        self.main_layout.addWidget(self.viewToolbar, 0, 0)
+        #self.main_layout.addWidget(self.viewToolbar, 0, 0)
+        self.tab.view_layout.setMenuBar(self.viewToolbar)
         self.show_tab1()
 
     def connect_ui(self):
