@@ -204,7 +204,7 @@ class view_edit_new(base_view):
         self.shape.type = classifier.shapes.ELLIPSE 
     """
 
-
+"""
 class view_edit(base_view):
     def __init__(self, parent, main, current_task=0):
         super().__init__(main=main, parent=parent)
@@ -385,8 +385,7 @@ class view_edit(base_view):
     def add_ellipse(self):
         self.shape.points.clear()
         self.shape.type = classifier.shapes.ELLIPSE 
-    
-    """
+
     def show(self):
         self.show_all(1)
     

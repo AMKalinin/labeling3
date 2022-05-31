@@ -79,6 +79,8 @@ class hdfs(Enum):
 class tasks(Enum):
     COUNT       = '__polygon_count__'
     STATUS      = '__task_status__'
+    LEFT        = '__tasks_left__'
+    RIGHT       = '__tasks_right__'
     TO_DO       = '__0__' #при создании файла проекта, при добавлении задачи
     IN_PROGRESS = '__1__' #у задачи есть хотя бы один атрибут маски
     REVIEW      = '__2__' #нажата кнопка отправить на проверку
@@ -97,102 +99,3 @@ class shapes(Enum):
     POLYGON     = 1
     RECTANGLE   = 2
     ELLIPSE     = 3
-
-
-project_classes = []
-
-HDF_GROUP_SRCS_NAME = '__srcs_images'
-HDF_GROUP_FEATURES_NAME = '__features'
-HDF_GROUP_OBJECT_LAYERS_NAME = '__object_layers'
-HDF_POSTFIX = '.hdf5'
-
-HDF_FILE_NAME = 'name'
-HDF_FILE_CLASSES = 'classes'
-HDF_FILE_TIME_C = 'time_created'
-HDF_FILE_TIME_U = 'time_updated'
-HDF_FILE_DESCRIPTION = 'description'
-HDF_FILE_TASK_COUNT = 'task_count'
-
-HDF_TASK_POLYGON_COUNT = '__polygon_count'
-HDF_TASK_STATUS = '__task_status'
-HDF_TASK_STATUS_0 = 'to do' #при создании файла проекта, при добавлении задачи
-HDF_TASK_STATUS_1 = 'in progress' #у задачи есть хотя бы один атрибут маски
-HDF_TASK_STATUS_2 = 'review' #нажата кнопка отправить на проверку
-HDF_TASK_STATUS_3 = 'done' #модератор нажал кнопку 
-
-
-TASK_WIDGET_MODE_0 = 'to do'
-TASK_WIDGET_MODE_1 = 'to check'
-
-
-
-ICON_FOLDER_NAME = '__icons'
-ICON_FOLDER_NAME_FULL = os.getcwd() + '/' + ICON_FOLDER_NAME
-
-IMAGES_FOLDER_NAME = '__images'
-IMAGES_FOLDER_NAME_FULL = os.getcwd() + '/' + IMAGES_FOLDER_NAME
-
-ICON_SEG_TBTN_PREVIOUS = 'previous_tbtn.png'
-ICON_SEG_TBTN_PREVIOUS_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_SEG_TBTN_PREVIOUS
-
-ICON_SEG_TBTN_NEXT = 'next_tbtn.png'
-ICON_SEG_TBTN_NEXT_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_SEG_TBTN_NEXT
-
-ICON_SEG_TBTN_TOFIRST = 'tofirst_tbtn.png'
-ICON_SEG_TBTN_TOFIRST_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_SEG_TBTN_TOFIRST
-
-ICON_SEG_TBTN_TOLAST = 'tolast_tbtn.png'
-ICON_SEG_TBTN_TOLAST_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_SEG_TBTN_TOLAST
-
-ICON_SEG_TBTN_DOTS_INSTRUMENT = 'dots_instrument_tbtn.png'
-ICON_SEG_TBTN_DOTS_INSTRUMENT_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_SEG_TBTN_DOTS_INSTRUMENT
-
-ICON_PENCIL_TBTN_DRAW_INSTRUMENT = 'pencil_tbtn.png'
-ICON_PENCIL_TBTN_DRAW_INSTRUMENT_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_PENCIL_TBTN_DRAW_INSTRUMENT
-
-ICON_POLYGON_TBTN_DRAW_INSTRUMENT = 'polygon_tbtn'
-ICON_POLYGON_TBTN_DRAW_INSTRUMENT_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_POLYGON_TBTN_DRAW_INSTRUMENT
-
-ICON_CANCEL_TBTN_DRAW_INSTRUMENT = 'cancel_tbtn.png'
-ICON_CANCEL_TBTN_DRAW_INSTRUMENT_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_CANCEL_TBTN_DRAW_INSTRUMENT
-
-ICON_SAVE_TO_ATTRS_TBTN = 'save_to_attrs_tbtn.png'
-ICON_SAVE_TO_ATTRS_TBTN_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_SAVE_TO_ATTRS_TBTN
-
-ICON_DELETE_TASK = 'delete_tbtn.png'
-ICON_DELETE_TASK_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_DELETE_TASK
-
-ICON_FORWARD_PASS_TASK = 'forward_pass_tbtn.png'
-ICON_FORWARD_PASS_TASK_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_FORWARD_PASS_TASK
-
-ICON_FORWARD_CHECK_TASK = 'forward_check_tbtn.png'
-ICON_FORWARD_CHECK_TASK_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_FORWARD_CHECK_TASK
-
-ICON_BACKWARD_DELETE_TASK = 'backward_delete_tbtn.png'
-ICON_BACKWARD_DELETE_TASK_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_BACKWARD_DELETE_TASK
-
-ICON_BACKWARD_PASS_TASK = 'backward_pass_tbtn.png'
-ICON_BACKWARD_PASS_TASK_FULL = ICON_FOLDER_NAME_FULL + '/' + ICON_BACKWARD_PASS_TASK
-
-
-PROJECTS_FOLDER_NAME = '__projects'
-PROJECTS_FOLDER_FULL_NAME = os.getcwd() + '/' + PROJECTS_FOLDER_NAME
-#PROJECTS_LIST = os.listdir(PROJECTS_FOLDER_FULL_NAME)
-
-
-
-
-import time
-
-class project_ini():
-    name = ""
-    id = 0
-    author = ""
-    time_start = time.localtime()
-    time_last_change = time.localtime()
-    classes = []
-    description = ""
-    base_project = None
-    selected_files = []
-
-current_project = project_ini()

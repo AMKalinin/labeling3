@@ -75,22 +75,14 @@ class main_window(QMainWindow):
         #self.viewTree.btn_next.clicked.connect(self.next_view)
         #self.viewTree.btn_edittask.clicked.connect(self.on_edittask)
         self.viewToolbar.previous.triggered.connect(self.previous_view)
-        self.viewToolbar.next.triggered.connect(self.next_view)
         self.viewToolbar.previous.triggered.connect(self.previous_polygons)
+        self.viewToolbar.next.triggered.connect(self.next_view)
         self.viewToolbar.next.triggered.connect(self.next_polygons)
         self.signal_edittask.connect(self.on_edittask)
         self.signal_refreshTree.connect(self.viewTree.fill)
         #self.signal_editdescription.connect(self.on_editdescription)
-    
-    def show_tab(self):
-        if self.tab.currentWidget() == self.tab_split:
-            self.show_tab2()
-        elif self.tab.currentWidget() == self.tab_projects_area:
-            self.show_tab1()
-        elif self.tab.currentWidget() == self.tab_view:
-            self.show_tab3()
-    
-    def show_tab(self):
+     
+    def show_tab(self):      
         if self.tab.currentWidget() == self.tab.split:
             self.show_tab2()
         elif self.tab.currentWidget() == self.tab.projects:
@@ -123,9 +115,9 @@ class main_window(QMainWindow):
         self.file = h5py.File(project_path, 'r+')
         self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
         self.update_codenamecolor()
-        self.tab.parse_tasks(self.file)
+        self.tab.parse_tasks()
         #self.taskDescription.parse_description(self.file)
-        self.tab.parse_view(self.file)
+        self.tab.parse_view()
         #self.viewTree.adjust_pallete(self.file)
         self.viewTree.fill()
         self.projectControl.description.updateWidget()
@@ -135,9 +127,9 @@ class main_window(QMainWindow):
         #print(self.task_count)
 
     def adjust_opened_project(self):
-        self.tab.parse_tasks(self.file)
+        self.tab.parse_tasks()
         #self.taskDescription.parse_description(self.file)
-        self.tab.parse_view(self.file)
+        self.tab.parse_view()
 
     def add_task(self):
         #print(classifier.task_attrs.TO_DO.value)
@@ -191,11 +183,9 @@ class main_window(QMainWindow):
         self.tab.change_view(index=+1)
 
     def previous_polygons(self):
-        #self.viewTree.tree.change_polygons(index=-1, hdf=self.file)
         self.viewTree.update(index=-1)
 
     def next_polygons(self):
-        #self.viewTree.tree.change_polygons(index=+1, hdf=self.file)
         self.viewTree.update(index=+1)
 
     def get_name(self, code):

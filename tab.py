@@ -26,7 +26,6 @@ class tab(QTabWidget):
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.main = parent
-        self.index = 0
         self.view_w = None
 
         self.init_ui()
@@ -90,19 +89,19 @@ class tab(QTabWidget):
             widget = project.project(path=path, parent=self, main=self.main)
             self.projects_layout.addWidget(widget)
 
-    def parse_tasks(self, hdf):
+    def parse_tasks(self):
         utils.clear_layout(layout=self.tasksleft_layout)
         utils.clear_layout(layout=self.tasksright_layout)
         for index in range(self.main.task_count):
-            status = hdf[str(index)].attrs[classifier.tasks.STATUS.value]
+            status = self.main.file[str(index)].attrs[classifier.tasks.STATUS.value]
             if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
-                task_widget = task.taskWidget(parent=self, main=self.main, identifier=index, mode=classifier.TASK_WIDGET_MODE_0)
-                self.tasksleft_layout.addWidget(task_widget)
+                widget = task.taskWidget(parent=self, main=self.main, identifier=index, mode=classifier.tasks.LEFT.value)
+                self.tasksleft_layout.addWidget(widget)
             elif task_status == classifier.HDF_TASK_STATUS_2: #or status == classifier.HDF_TASK_STATUS_3:
                 print("creating right")
 
 
-    def parse_view(self, hdf):
+    def parse_view(self):
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
         self.view_w = view.base_view(main=self.main, parent=self.view)
 
