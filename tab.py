@@ -9,9 +9,8 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 
-import projects
+import project
 import task
-#import segflex_seg_window as seg
 import view
 import os
 import json
@@ -88,7 +87,7 @@ class tab(QTabWidget):
         names = os.listdir(classifier.items.PROJECTS.value)
         for name in names:
             path = classifier.items.PROJECTS.value + name
-            widget = projects.project(path=path, parent=self, main=self.main)
+            widget = project.project(path=path, parent=self, main=self.main)
             self.projects_layout.addWidget(widget)
 
     def parse_tasks(self, hdf):

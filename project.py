@@ -9,7 +9,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 import time
-#import segflex_seg_window as seg_window
 import utils
 import re
 import h5py
