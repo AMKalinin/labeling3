@@ -78,7 +78,7 @@ class project(QGroupBox):
                 topLeftX += width
                 index += 1
             topLeftY += height
-        painter = None #correct destroy?
+        painter.end()# = None #correct destroy?
         self.preview.setPixmap(pixmap)
 
     def init_progressbar(self):
