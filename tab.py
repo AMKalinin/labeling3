@@ -90,15 +90,18 @@ class tab(QTabWidget):
             self.projects_layout.addWidget(widget)
 
     def parse_tasks(self):
+        print('parse tasks')
         utils.clear_layout(layout=self.tasksleft_layout)
         utils.clear_layout(layout=self.tasksright_layout)
         for index in range(self.main.task_count):
             status = self.main.file[str(index)].attrs[classifier.tasks.STATUS.value]
+            print(status)
             if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
                 widget = task.taskWidget(parent=self, main=self.main, identifier=index, mode=classifier.tasks.LEFT.value)
                 self.tasksleft_layout.addWidget(widget)
-            elif task_status == classifier.HDF_TASK_STATUS_2: #or status == classifier.HDF_TASK_STATUS_3:
-                print("creating right")
+            elif status == classifier.tasks.TO_CHECK.value: #or status == classifier.HDF_TASK_STATUS_3:
+                widget = task.taskWidget(parent=self, main=self.main, identifier=index, mode=classifier.tasks.RIGHT.value)
+                self.tasksright_layout.addWidget(widget)
 
 
     def parse_view(self):

@@ -17,39 +17,150 @@ class taskWidget(QGroupBox):
         self.main = main
         self.identifier = identifier
         self.mode = mode
-
         self.init_ui()
 
     def init_ui(self):
-        self.create_layouts()
-        self.fill_layouts()
-        self.place_layouts()
-        #self.connect_ui()
+        self.check_status()
+        self.status = self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value]
         self.adjust_window()
+        self.create_layouts()
+        self.order_layouts()
+        self.init_widgets()
+        self.place_widgets()
+        #self.fill_layouts()
+        #self.place_layouts()
+        self.connect_ui()
 
+    def adjust_window(self):
+        self.layout = QHBoxLayout()
+        self.setMouseTracking(True)
+        self.setMaximumHeight(120)
+        self.setLayout(self.layout)
 
     def create_layouts(self):
-        self.layout = QHBoxLayout()
         self.layout_preview = QVBoxLayout()
         self.layout_actions = QVBoxLayout()
         self.layout_backward = QVBoxLayout()
         self.layout_forward = QVBoxLayout()
-        self.layout_controls = QVBoxLayout()
+        #self.layout_controls = QVBoxLayout()
+        self.layout_status = QVBoxLayout()
 
+    def order_layouts(self):
+        self.layout.addLayout(self.layout_backward)
+        self.layout.addLayout(self.layout_preview)
+        self.layout.addLayout(self.layout_status)
+        self.layout.addLayout(self.layout_actions)
+        self.layout.addLayout(self.layout_forward)
+
+    """
     def fill_layouts(self):
         self.fill_preview()
         self.fill_actions()
         #self.fill_forward()
         #self.fill_backward()
         #self.fill_controls()
+    """
 
+    def init_widgets(self):
+        self.init_preview()
+        self.init_actions()
+
+    def init_preview(self):
+        self.preview = QLabel(self)
+        pixmap = utils.create_preview(hdf=self.main.file, identifier = self.identifier)
+        self.preview.setPixmap(pixmap)
+
+    def init_actions(self):
+        tocheck = QIcon(QPixmap(classifier.items.tocheck.value))
+        redo = QIcon(QPixmap(classifier.items.redo.value))
+        checked = QIcon(QPixmap(classifier.items.checked.value))
+
+        todo = QPixmap(classifier.items.status_todo.value)
+        inpr = QPixmap(classifier.items.status_inpr.value)
+        toch = QPixmap(classifier.items.status_toch.value)
+
+        self.tocheck = QToolButton()
+        self.redo = QToolButton()
+        self.checked = QToolButton()
+
+        self.todo = QLabel()
+        self.inpr = QLabel()
+        self.toch = QLabel()
+
+        self.tocheck.setIcon(tocheck)        
+        self.redo.setIcon(redo)        
+        self.checked.setIcon(checked)
+
+        self.todo.setPixmap(todo)
+        self.inpr.setPixmap(inpr)
+        self.toch.setPixmap(toch)
+
+        self.attrs = QPushButton("Редактировать параметры снимка")
+        self.edit = QPushButton("Открыть окно сегментации")
+
+    def place_widgets(self):
+        self.layout_preview.addWidget(self.preview)
+        self.layout_actions.addWidget(self.attrs)
+        self.layout_actions.addWidget(self.edit)
+
+        if self.mode == classifier.tasks.LEFT.value:
+            self.layout_forward.addWidget(self.tocheck)
+            if self.status == classifier.tasks.TO_DO.value:
+                self.layout_status.addWidget(self.todo)
+            elif self.status == classifier.tasks.IN_PROGRESS.value:
+                self.layout_status.addWidget(self.inpr)
+        elif self.mode == classifier.tasks.RIGHT.value:
+            self.layout_forward.addWidget(self.checked)
+            self.layout_backward.addWidget(self.redo)
+            self.layout_status.addWidget(self.toch)
+
+    def connect_ui(self):
+        self.attrs.clicked.connect(self.on_attrs)
+        self.edit.clicked.connect(self.on_edit)
+        self.tocheck.clicked.connect(self.on_tocheck)
+        self.redo.clicked.connect(self.on_redo)
+        self.checked.clicked.connect(self.on_checked)
+
+    def check_status(self):
+        count = utils.get_task_polygons(self.main.file, self.identifier)
+        if (count != 0 and
+            self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] != classifier.tasks.TO_CHECK.value and
+            self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] != classifier.tasks.DONE.value):
+            self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.IN_PROGRESS.value
+
+
+    def on_attrs(self):
+        pass
+
+    def on_edit(self):
+        self.main.signal_edittask.emit(self.identifier)
+        self.main.tab.parse_tasks()
+
+    def on_tocheck(self):
+        self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_CHECK.value
+        self.main.tab.parse_tasks()
+
+    def on_redo(self):
+        self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.IN_PROGRESS.value
+        self.main.tab.parse_tasks()
+
+    def on_checked(self):
+        self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.DONE.value
+        self.main.tab.parse_tasks()
+
+
+
+
+    """
     def place_layouts(self):
         #self.layout.addLayout(self.layout_backward)
         self.layout.addLayout(self.layout_preview)
         #self.layout.addLayout(self.layout_controls)
         #self.layout.addLayout(self.layout_info)
         self.layout.addLayout(self.layout_actions)
-        #self.layout.addLayout(self.layout_forward)
+        self.layout.addLayout(self.layout_forward)
+        self.layout.addLayout(self.layout_backward)
+        self.layout.addLayout(self.layout_status)
         self.layout_preview.addWidget(self.preview)
         #self.layout_info.addWidget(self.info_number)
         #self.layout_info.addWidget(self.info_created_by)
@@ -65,37 +176,22 @@ class taskWidget(QGroupBox):
         #if self.mode == classifier.TASK_WIDGET_MODE_1:
             #self.layout_actions.addWidget(self.btn_redo)
             #self.layout_actions.addWidget(self.btn_done)
+        if self.mode == classifier.tasks.LEFT.value:
+            self.layout_forward.addWidget(self.tocheck)
+            if self.status == classifier.tasks.TO_DO.value:
+                self.layout_status.addWidget(self.todo)
+            elif self.status == classifier.tasks.IN_PROGRESS.value:
+                self.layout_status.addWidget(self.inpr)
+        elif self.mode == classifier.tasks.RIGHT.value:
+            self.layout_forward.addWidget(self.checked)
+            self.layout_backward.addWidget(self.redo)
+            self.layout_status.addWidget(self.toch)
+        """
 
-    def adjust_window(self):
-        self.setMouseTracking(True)
-        self.setMaximumHeight(120)
-        self.setLayout(self.layout)
 
 
-    def fill_preview(self):
-        self.preview = QLabel(self)
-        pixmap = utils.create_preview(hdf=self.main.file, identifier = self.identifier)
-        self.preview.setPixmap(pixmap)
 
-    def fill_actions(self):
-        self.emit_btn = QPushButton("Редактировать параметры снимка")
-        self.emit_btn.clicked.connect(self.on_emit)
 
-        self.edit_btn = QPushButton("Открыть окно сегментации")
-        self.edit_btn.clicked.connect(self.on_edit)
-
-        self.layout_actions.addWidget(self.emit_btn)
-        self.layout_actions.addWidget(self.edit_btn)
-
-    def on_emit(self):
-        pass
-        #if self.signal:
-        #    self.signal.emit()
-
-    def on_edit(self):
-        self.main.signal_edittask.emit(self.identifier)
-        pass
-        #print("edit")
 
     def enterEvent(self, event):
         print("enterEvent")

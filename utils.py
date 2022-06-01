@@ -126,6 +126,13 @@ def get_donetasks(path):
                 donetasks += 1
     return donetasks
 
+def get_task_polygons(hdf, index):
+    count = 0
+    for name, value in hdf[str(index)].attrs.items():
+        if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+            count += 1
+    return count
+    
 def get_startdate(path):
     startdate = os.path.getctime(path)
     return startdate

@@ -83,7 +83,7 @@ class tasks(Enum):
     RIGHT       = '__tasks_right__'
     TO_DO       = '__0__' #при создании файла проекта, при добавлении задачи
     IN_PROGRESS = '__1__' #у задачи есть хотя бы один атрибут маски
-    REVIEW      = '__2__' #нажата кнопка отправить на проверку
+    TO_CHECK    = '__2__' #нажата кнопка отправить на проверку
     DONE        = '__3__' #модератор нажал кнопку 
 
 class items(Enum):
@@ -91,8 +91,17 @@ class items(Enum):
 
     PROJECTS    = path + '/' + '__projects__'   + '/'
     IMAGES      = path + '/' + '__images__'     + '/'
+    ICONS       = path + '/' + '__icons__'      + '/'
 
     previous    = IMAGES + '/' + 'previous_tbtn.png'
+    #TASK_WIDGET
+    tocheck     = ICONS + '/' + 'cancel_tbtn.png'
+    redo        = ICONS + '/' + 'cancel_tbtn.png'
+    checked     = ICONS + '/' + 'cancel_tbtn.png'
+    status_todo = ICONS + '/' + 'previous_tbtn.png'
+    status_inpr = ICONS + '/' + 'next_tbtn.png'
+    status_toch = ICONS + '/' + 'tofirst_tbtn.png'
+
 
 class shapes(Enum):
     NONE        = 0
