@@ -145,6 +145,22 @@ def create_preview(hdf, identifier): #load froma data???
     image_resized = image_as_pixmap.scaled(100, 100)
     return image_resized
 
+def create_microimage(path, identifier): #load froma data???
+    with h5py.File(path, 'r') as hdf:
+        max_index = hdf.attrs[classifier.hdfs.TASK_COUNT.value]
+        if identifier < max_index:
+            dataset = hdf[str(identifier)]
+            image_as_numpy = dataset[()]
+            height, width, channel = image_as_numpy.shape
+            bytesPerLine = 3 * width
+            image_as_qimage = QImage(image_as_numpy, width, height, bytesPerLine, QImage.Format_RGB888)
+            image_correct_rgb = image_as_qimage.rgbSwapped()
+            image_resized = image_correct_rgb.scaled(25, 25)
+        else:
+            image_resized = QImage(25, 25, QImage.Format_RGB888)
+            image_resized.fill(Qt.GlobalColor(3))
+    return image_resized
+
 def fill_tree_with_select_classes(tree, classes_code):
     b_old = [int(x[0])-1 for x in classes_code]
     bases = [(x, y) for x, y in zip(classifier.bases.unique_id(), classifier.bases.name()) if x in b_old]

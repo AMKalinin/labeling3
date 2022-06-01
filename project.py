@@ -1,5 +1,5 @@
 from PyQt5 import QtGui, QtCore
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QRectF, QRect
 from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, QFrame, QGridLayout,
                             QPushButton, QHBoxLayout, QTabWidget, QWidget, QLabel, QDialog,
                             QPlainTextEdit, QLineEdit, QMenu,
@@ -44,6 +44,7 @@ class project(QGroupBox):
         self.setMaximumHeight(130)
 
     def init_content(self):
+        self.init_preview()
         self.init_info()
         self.init_progressbar()
         self.open = QPushButton("Открыть проект")
@@ -59,6 +60,26 @@ class project(QGroupBox):
                         + self.description + '\n'
                         + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
                         + self.startdate + ' / ' + self.lastupdate)
+    
+    def init_preview(self):
+        self.preview = QLabel(self)
+        pixmap = QPixmap(100, 100)
+        painter = QPainter(pixmap)
+        topLeftY = 0
+        width = 25
+        height = 25
+        index = 0
+        for row in range(4):
+            topLeftX = 0
+            for collumn in range(4):
+                target = QRectF(QRect(topLeftX, topLeftY, width, height))
+                image = utils.create_microimage(self.path, index)
+                painter.drawImage(target, image, QRectF(image.rect()))
+                topLeftX += width
+                index += 1
+            topLeftY += height
+        painter = None #correct destroy?
+        self.preview.setPixmap(pixmap)
 
     def init_progressbar(self):
         self.progressbar = QProgressBar()
@@ -70,6 +91,7 @@ class project(QGroupBox):
         self.layout_actions.addWidget(self.open)
         self.layout_info.addWidget(self.info)
         self.layout_info.addWidget(self.progressbar)
+        self.layout_preview.addWidget(self.preview)
     
     def connect_ui(self):
         self.open.clicked.connect(self.on_open)
