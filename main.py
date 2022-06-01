@@ -81,6 +81,7 @@ class main_window(QMainWindow):
         self.viewToolbar.next.triggered.connect(self.next_polygons)
         self.signal_edittask.connect(self.on_edittask)
         self.signal_refreshTree.connect(self.viewTree.fill)
+        self.viewTree.itemSelectionChanged.connect(self.send_selected)
         #self.signal_editdescription.connect(self.on_editdescription)
      
     def show_tab(self):      
@@ -108,6 +109,13 @@ class main_window(QMainWindow):
         self.taskDescription.setVisible(False)
         self.viewTree.setVisible(True)
         self.viewToolbar.setVisible(True)
+
+    def send_selected(self):
+        items = []
+        for item in self.viewTree.selectedItems():
+            if self.viewTree.indexOfTopLevelItem(item) == -1:
+                items.append(item)
+        self.tab.view.signal_selectedItems.emit(items)
 
     @pyqtSlot(str)
     def open_project_routine(self, project_path):

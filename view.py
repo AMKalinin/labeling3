@@ -111,6 +111,34 @@ class base_view(QGraphicsView):
                 self.shape.change_point(self.point_index, point)
                 self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
 
+    def coloredshape_frompoints(self, points, color):
+        self.shape.clear()
+        self.shape.set_points(points)
+        self.shape.set_type(classifier.shapes.POLYGON.value)
+        brush = QBrush(color, Qt.SolidPattern)
+        pen = QPen()
+        self.polygon = self.scene.addPolygon(QPolygonF(points), pen, brush)
+
+    def show_shapes(self, items):
+        self.discard()
+        for item in items:
+            points = item.text(3)
+            points = utils.pointslist_from_str(points)
+            points = utils.flist_from_pointslist(points)
+            points = utils.qpoints_from_flist(points)
+            color = Qt.GlobalColor(self.main.get_color(int(item.text(1))))
+            self.coloredshape_frompoints(points, color)
+
+    def discard(self):
+        self.shape.clear()
+        self.clear_scene()
+        self.polygon = None
+    
+    def clear_scene(self):
+        for item in self.scene.items():
+            if item.type() != 7:  #7 for pixmap
+                self.scene.removeItem(item)
+
     """
     @pyqtSlot(int)
     def show_all(self, code):
@@ -162,7 +190,7 @@ class view_edit_new(base_view):
         self.parent = parent
         self.index = current_task
         self.set_pixmap(self.index)
-
+    """
     def discard(self):
         self.shape.clear()
         self.clear_scene()
@@ -172,6 +200,7 @@ class view_edit_new(base_view):
         for item in self.scene.items():
             if item.type() != 7:  #7 for pixmap
                 self.scene.removeItem(item)
+    """
 
     def newshape_polygon(self, points=None):
         self.save_shape()
@@ -185,6 +214,7 @@ class view_edit_new(base_view):
         self.shape.set_type(classifier.shapes.POLYGON.value)
         self.polygon = self.scene.addPolygon(self.shape.polygon())
 
+    """
     def coloredshape_frompoints(self, points, color):
         self.shape.clear()
         self.shape.set_points(points)
@@ -192,6 +222,7 @@ class view_edit_new(base_view):
         brush = QBrush(color, Qt.SolidPattern)
         pen = QPen()
         self.polygon = self.scene.addPolygon(QPolygonF(points), pen, brush)
+    """
 
     def save_shape(self):
         if self.shape.points:
@@ -203,7 +234,7 @@ class view_edit_new(base_view):
             self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
         self.discard()
         self.main.signal_refreshTree.emit()
-
+    """
     def show_shapes(self, items):
         self.discard()
         for item in items:
@@ -213,6 +244,7 @@ class view_edit_new(base_view):
             points = utils.qpoints_from_flist(points)
             color = Qt.GlobalColor(self.main.get_color(int(item.text(1))))
             self.coloredshape_frompoints(points, color)
+    """
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Plus:
