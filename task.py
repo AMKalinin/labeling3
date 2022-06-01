@@ -147,6 +147,7 @@ class taskWidget(QGroupBox):
     def on_checked(self):
         self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.DONE.value
         self.main.tab.parse_tasks()
+        self.main.tab.parse_projects()
 
 
 
