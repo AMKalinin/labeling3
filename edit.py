@@ -44,7 +44,7 @@ class editWidget(QDialog):
         self.setLayout(self.layout)
 
     def init_widgets(self):
-        self.view = view.view_edit_new(parent=self, main=self.main, current_task=self.index)
+        self.view = view.editView(parent=self, main=self.main, current_task=self.index)
         self.tree = control.polygonTree(parent=self, main=self.main)
         self.tree.update(self.index)
         self.pallete = control.polygonPallete(parent=self, main=self.main)

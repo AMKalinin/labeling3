@@ -21,7 +21,7 @@ from PyQt5.QtCore import pyqtSignal, QObject
 import utils
 import time
 
-class base_view(QGraphicsView):
+class baseView(QGraphicsView):
     def __init__(self, parent, main):
         super().__init__(parent=parent)
         self.main = main
@@ -184,7 +184,7 @@ class base_view(QGraphicsView):
             self.background = self.scene.addPixmap(image_as_pixmap)
     """
 
-class view_edit_new(base_view):
+class editView(baseView):
     def __init__(self, parent, main, current_task):
         super().__init__(main=main, parent=parent)
         self.parent = parent
@@ -266,7 +266,7 @@ class view_edit_new(base_view):
     """
 
 """
-class view_edit(base_view):
+class view_edit(baseView):
     def __init__(self, parent, main, current_task=0):
         super().__init__(main=main, parent=parent)
 

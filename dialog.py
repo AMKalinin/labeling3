@@ -15,7 +15,7 @@ import utils
 import cv2
 import h5py
 
-class all_classes(QTreeWidget):
+class classesTree(QTreeWidget):
     def __init__(self):
         super().__init__()
         self.chosen = []
@@ -59,7 +59,7 @@ class all_classes(QTreeWidget):
             tree.takeTopLevelItem(base_index)
 
 
-class selected_classes(all_classes):
+class selectedClassesTree(classesTree):
     def __init__(self):
         super().__init__()
 
@@ -124,14 +124,14 @@ class newProject(QDialog):
         self.input_description = QLineEdit()
 
     def init_choose_classes(self):
-        self.all_classes = all_classes()
-        self.all_classes.setColumnCount(2)
-        self.all_classes.setHeaderLabels(['Name', 'Code'])
-        utils.fill_tree(self.all_classes)
+        self.classesTree = classesTree()
+        self.classesTree.setColumnCount(2)
+        self.classesTree.setHeaderLabels(['Name', 'Code'])
+        utils.fill_tree(self.classesTree)
 
-        self.classes = selected_classes()
-        self.classes.setColumnCount(2)
-        self.classes.setHeaderLabels(['Name', 'Code'])
+        self.selectedClassesTree = selectedClassesTree()
+        self.selectedClassesTree.setColumnCount(2)
+        self.selectedClassesTree.setHeaderLabels(['Name', 'Code'])
 
     def init_choose_images(self):
         self.images = QLabel("Выбранные изображения: ")
@@ -158,8 +158,8 @@ class newProject(QDialog):
         self.layout.addWidget(self.input_name, 0, 1)
         self.layout.addWidget(self.label_description, 1, 0)
         self.layout.addWidget(self.input_description, 1, 1)
-        self.layout.addWidget(self.all_classes, 2, 0)
-        self.layout.addWidget(self.classes, 2, 1)
+        self.layout.addWidget(self.classesTree, 2, 0)
+        self.layout.addWidget(self.selectedClassesTree, 2, 1)
         self.layout.addWidget(self.images, 3, 0, 1, 2)
         self.layout.addWidget(self.image_add, 4, 0)
         self.layout.addWidget(self.cancel, 5, 0)
@@ -174,7 +174,7 @@ class newProject(QDialog):
             with h5py.File(project, 'w-') as hdf:
                 hdf.attrs[classifier.hdfs.NAME.value] = self.input_name.text()
                 hdf.attrs[classifier.hdfs.DESCRIPTION.value] = self.input_description.text()
-                hdf.attrs[classifier.hdfs.CLASSES.value] = self.classes.chosen
+                hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedClassesTree.chosen
                 hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.images_list)
                 for image in self.images_list:
                     task = hdf.create_dataset(str(self.images_list.index(image)), data=cv2.imread(image))
@@ -194,8 +194,8 @@ class basedProject(newProject):
 
     def parse_old(self):
         with h5py.File(self.old_hdf, 'r') as hdf:
-            self.classes.chosen = [x for x in hdf.attrs[classifier.hdfs.CLASSES.value]]
-            utils.fill_tree_with_select_classes(self.classes, hdf.attrs[classifier.hdfs.CLASSES.value])
+            self.selectedClassesTree.chosen = [x for x in hdf.attrs[classifier.hdfs.CLASSES.value]]
+            utils.fill_tree_with_select_classes(self.selectedClassesTree, hdf.attrs[classifier.hdfs.CLASSES.value])
             self.input_name.setText(hdf.attrs[classifier.hdfs.NAME.value]+'(копия)')
             self.input_description.setText('Основан на: '+hdf.attrs[classifier.hdfs.NAME.value])
 
@@ -206,7 +206,7 @@ class basedProject(newProject):
             with h5py.File(project, 'w-') as hdf:
                 hdf.attrs[classifier.hdfs.NAME.value] = self.input_name.text()
                 hdf.attrs[classifier.hdfs.DESCRIPTION.value] = self.input_description.text()
-                hdf.attrs[classifier.hdfs.CLASSES.value] = self.classes.chosen
+                hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedClassesTree.chosen
                 with h5py.File(self.old_hdf, 'r') as hdf_o:
                     count = hdf_o.attrs[classifier.hdfs.TASK_COUNT.value]
                     hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.images_list) + count
@@ -218,7 +218,7 @@ class basedProject(newProject):
                         i = 0
                         for id_polygon in range(count_m):
                             cclas = utils.attrs_get_class(hdf_o[str(id)].attrs[str(id_polygon)])
-                            if cclas in self.classes.chosen:
+                            if cclas in self.selectedClassesTree.chosen:
                                 task.attrs[str(id_polygon-i)] = hdf_o[str(id)].attrs[str(id_polygon)]
                             else:
                                 i += 1

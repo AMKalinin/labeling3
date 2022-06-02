@@ -21,7 +21,7 @@ import tab
 import edit
 
 
-class main_window(QMainWindow):
+class mainWindow(QMainWindow):
     signal_parseprojects = pyqtSignal()
     signal_openproject = pyqtSignal(str)
     signal_showall = pyqtSignal(int)

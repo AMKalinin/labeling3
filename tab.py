@@ -109,11 +109,11 @@ class tab(QTabWidget):
 
     def parse_view(self):
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
-        self.view_w = view.base_view(main=self.main, parent=self.view)
+        self.view_w = view.baseView(main=self.main, parent=self.view)
         self.view.signal_selectedItems.connect(self.view_w.show_shapes)
 
     def init_view(self):
-        self.view_w = view.base_view(main=self.main, parent=self.view)
+        self.view_w = view.baseView(main=self.main, parent=self.view)
     
     def change_view(self, index):
         self.view_w.change_pixmap(index)

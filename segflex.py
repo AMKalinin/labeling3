@@ -9,7 +9,7 @@ if __name__ == '__main__':
     utils.check_create_projects_folder()
     app = QApplication(sys.argv)
     
-    window = main.main_window()
+    window = main.mainWindow()
     window.show()
     sys.exit(app.exec_())
     
