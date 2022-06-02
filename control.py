@@ -97,7 +97,7 @@ class projectControl(QGroupBox):
         self.based.clicked.connect(self.on_base)
 
     def on_new(self):
-        self.dialog = dialog.newProject()
+        self.dialog = dialog.newProject(self.main)
         self.dialog.exec_()
         
 

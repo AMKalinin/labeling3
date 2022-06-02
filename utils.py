@@ -181,6 +181,19 @@ def fill_tree_with_select_classes(tree, classes_code):
                 child = QTreeWidgetItem([item[2], str(item[1])])
                 tmp.addChild(child)
 
+def check_cv2format(name):
+    cutted_name = name[-5:]
+    extension = re.search(r'\..*', cutted_name).group(0)
+    if (extension == '.bmp' or
+        extension == '.jpeg' or
+        extension == '.jpg' or 
+        extension == '.png' or 
+        extension == '.tiff' or 
+        extension == '.tif'):
+        return True
+    return False
+
+
 """
 def update_attrs_names(hdf, name):
     #if open

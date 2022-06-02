@@ -102,8 +102,9 @@ class selected_classes(all_classes):
 
 
 class newProject(QDialog):
-    def __init__(self):
+    def __init__(self, main):
         super().__init__()
+        self.main = main
         self.setWindowTitle("Создание нового проекта")
         self.init_ui()
 
@@ -187,8 +188,7 @@ class newProject(QDialog):
 
 class basedProject(newProject):
     def __init__(self, main, old_hdf):
-        super().__init__()
-        self.main = main
+        super().__init__(main)
         self.old_hdf = old_hdf
         self.parse_old()
 
