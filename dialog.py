@@ -124,21 +124,21 @@ class newProject(QDialog):
         self.input_description = QLineEdit()
 
     def init_choose_classes(self):
-        self.classesTree = classesTree()
-        self.classesTree.setColumnCount(2)
-        self.classesTree.setHeaderLabels(['Name', 'Code'])
-        utils.fill_tree(self.classesTree)
+        self.classestree = classesTree()
+        self.classestree.setColumnCount(2)
+        self.classestree.setHeaderLabels(['Name', 'Code'])
+        utils.fill_tree(self.classestree)
 
-        self.selectedClassesTree = selectedClassesTree()
-        self.selectedClassesTree.setColumnCount(2)
-        self.selectedClassesTree.setHeaderLabels(['Name', 'Code'])
+        self.selectedclassestree = selectedClassesTree()
+        self.selectedclassestree.setColumnCount(2)
+        self.selectedclassestree.setHeaderLabels(['Name', 'Code'])
 
     def init_choose_images(self):
         self.images = QLabel("Выбранные изображения: ")
         self.images_list = []
-        self.image_add = QPushButton("Добавить изображение")
+        self.add = QPushButton("Добавить изображение")
 
-    def add_images(self):
+    def on_add(self):
         file_dialog_response = QFileDialog.getOpenFileName()[0]
         if file_dialog_response not in self.images_list:
             self.images_list.append(file_dialog_response)
@@ -146,9 +146,9 @@ class newProject(QDialog):
         self.images.setText("Выбранные изображения: " + images)
 
     def connect_ui(self):
-        self.cancel.clicked.connect(self.on_btn_cancel)
-        self.ok.clicked.connect(self.on_btn_ok)
-        self.image_add.clicked.connect(self.add_images)
+        self.cancel.clicked.connect(self.on_cancel)
+        self.ok.clicked.connect(self.on_ok)
+        self.add.clicked.connect(self.on_add)
 
     def set_layouts(self):
         self.layout = QGridLayout()
@@ -158,23 +158,23 @@ class newProject(QDialog):
         self.layout.addWidget(self.input_name, 0, 1)
         self.layout.addWidget(self.label_description, 1, 0)
         self.layout.addWidget(self.input_description, 1, 1)
-        self.layout.addWidget(self.classesTree, 2, 0)
-        self.layout.addWidget(self.selectedClassesTree, 2, 1)
+        self.layout.addWidget(self.classestree, 2, 0)
+        self.layout.addWidget(self.selectedclassestree, 2, 1)
         self.layout.addWidget(self.images, 3, 0, 1, 2)
-        self.layout.addWidget(self.image_add, 4, 0)
+        self.layout.addWidget(self.add, 4, 0)
         self.layout.addWidget(self.cancel, 5, 0)
         self.layout.addWidget(self.ok, 5, 1)
 
-    def on_btn_cancel(self):
+    def on_cancel(self):
         self.deleteLater()
 
-    def on_btn_ok(self):
+    def on_ok(self):
         project = classifier.items.PROJECTS.value + self.input_name.text() + classifier.hdfs.POSTFIX.value
         try:
             with h5py.File(project, 'w-') as hdf:
                 hdf.attrs[classifier.hdfs.NAME.value] = self.input_name.text()
                 hdf.attrs[classifier.hdfs.DESCRIPTION.value] = self.input_description.text()
-                hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedClassesTree.chosen
+                hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedclassestree.chosen
                 hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.images_list)
                 for image in self.images_list:
                     task = hdf.create_dataset(str(self.images_list.index(image)), data=cv2.imread(image))
@@ -189,25 +189,25 @@ class newProject(QDialog):
 class basedProject(newProject):
     def __init__(self, main, old_hdf):
         super().__init__(main)
-        self.old_hdf = old_hdf
-        self.parse_old()
+        self.base = old_hdf
+        self.read_base()
 
-    def parse_old(self):
-        with h5py.File(self.old_hdf, 'r') as hdf:
-            self.selectedClassesTree.chosen = [x for x in hdf.attrs[classifier.hdfs.CLASSES.value]]
-            utils.fill_tree_with_select_classes(self.selectedClassesTree, hdf.attrs[classifier.hdfs.CLASSES.value])
+    def read_base(self):
+        with h5py.File(self.base, 'r') as hdf:
+            self.selectedclassestree.chosen = [x for x in hdf.attrs[classifier.hdfs.CLASSES.value]]
+            utils.fill_tree_with_select_classes(self.selectedclassestree, hdf.attrs[classifier.hdfs.CLASSES.value])
             self.input_name.setText(hdf.attrs[classifier.hdfs.NAME.value]+'(копия)')
             self.input_description.setText('Основан на: '+hdf.attrs[classifier.hdfs.NAME.value])
 
 
-    def on_btn_ok(self):
+    def on_ok(self):
         project = classifier.items.PROJECTS.value + self.input_name.text() + classifier.hdfs.POSTFIX.value
         try:
             with h5py.File(project, 'w-') as hdf:
                 hdf.attrs[classifier.hdfs.NAME.value] = self.input_name.text()
                 hdf.attrs[classifier.hdfs.DESCRIPTION.value] = self.input_description.text()
-                hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedClassesTree.chosen
-                with h5py.File(self.old_hdf, 'r') as hdf_o:
+                hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedclassestree.chosen
+                with h5py.File(self.base, 'r') as hdf_o:
                     count = hdf_o.attrs[classifier.hdfs.TASK_COUNT.value]
                     hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.images_list) + count
                     for id in range(count):
@@ -218,7 +218,7 @@ class basedProject(newProject):
                         i = 0
                         for id_polygon in range(count_m):
                             cclas = utils.attrs_get_class(hdf_o[str(id)].attrs[str(id_polygon)])
-                            if cclas in self.selectedClassesTree.chosen:
+                            if cclas in self.selectedclassestree.chosen:
                                 task.attrs[str(id_polygon-i)] = hdf_o[str(id)].attrs[str(id_polygon)]
                             else:
                                 i += 1

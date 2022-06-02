@@ -68,7 +68,7 @@ class mainWindow(QMainWindow):
 
     def connect_ui(self):
         self._parse_projects.connect(self.tab.parse_projects)
-        self._open_project.connect(self.open_project_routine)
+        self._open_project.connect(self.on_open_project)
         self.tab.currentChanged.connect(self.show_tab)
         #self.taskDescription.btn_addtask.clicked.connect(self.add_task)
         #self.taskDescription.btn_edit_task.clicked.connect(self.on_edit_task)
@@ -118,7 +118,7 @@ class mainWindow(QMainWindow):
         self.tab.view._selectedItems.emit(items)
 
     @pyqtSlot(str)
-    def open_project_routine(self, project_path):
+    def on_open_project(self, project_path):
         if self.file:
             self.file.close()
         self.file = h5py.File(project_path, 'r+')
@@ -129,7 +129,7 @@ class mainWindow(QMainWindow):
         self.tab.parse_view()
         #self.viewTree.adjust_pallete(self.file)
         self.viewTree.fill()
-        self.projectControl.description.updateWidget()
+        self.projectControl.description.updateWidgetDescription()
         #self.projectControl.description.updateitem(self.file.attrs[classifier.hdfs.DESCRIPTION.value])
         #self.task_count = self.file.attrs[classifier.hdfs.TASK_COUNT.value]
         #self.tab.update_info()

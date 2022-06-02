@@ -38,7 +38,7 @@ class tab(QTabWidget):
         self.init_view()
 
     def init_ui(self):
-        self.init_tabs()
+        self.init_areas()
         self.init_layouts()
         self.set_layouts()
         self.place_tabs()
@@ -49,7 +49,7 @@ class tab(QTabWidget):
         self.tasksright_layout = QVBoxLayout()
         self.view_layout = QGridLayout()
 
-    def init_tabs(self):
+    def init_areas(self):
         self.projects = QScrollArea(self)
         self.tasksleft = QScrollArea(self)
         self.tasksright = QScrollArea(self)
@@ -92,7 +92,7 @@ class tab(QTabWidget):
         names = os.listdir(classifier.items.PROJECTS.value)
         for name in names:
             path = classifier.items.PROJECTS.value + name
-            widget = project.project(path=path, parent=self, main=self.main)
+            widget = project.projectWidget(path=path, parent=self, main=self.main)
             self.projects_layout.addWidget(widget)
 
     def parse_tasks(self):
@@ -116,4 +116,4 @@ class tab(QTabWidget):
         self.view_w = view.baseView(main=self.main, parent=self.view)
     
     def change_view(self, index):
-        self.view_w.change_pixmap(index)
+        self.view_w.change_background(index)

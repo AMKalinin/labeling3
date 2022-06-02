@@ -29,19 +29,18 @@ class newDescription(QDialog):
         self.setLayout(self.layout)
         self.line = QLineEdit()
         self.layout.addWidget(self.line)
-        self.line.textChanged.connect(self.parent.updateDescription)
+        self.line.textChanged.connect(self.parent.updateFileDescription)
 
 class editDescription(QListWidget):
     def __init__(self, parent, main):
         super().__init__(parent=parent)
         self.main = main
-        self.parent = parent
 
         self.setMouseTracking(True)
         #self.setMaximumSize(300, 300)
         self.addItem("Описание проекта")
         self.item = self.item(0)
-        self.itemDoubleClicked.connect(self.on_dc)
+        self.itemDoubleClicked.connect(self.on_doubleclick)
 
     def enterEvent(self, event):
         pass #подсветка при наводке
@@ -49,18 +48,18 @@ class editDescription(QListWidget):
     def leaveEvent(self, event):
         pass
 
-    def on_dc(self):
-        a = newDescription(self)
-        a.exec_()
+    def on_doubleclick(self):
+        getdescription = newDescription(self)
+        getdescription.exec_()
         self.main._parse_projects.emit()
     
-    def updateDescription(self, text):
+    def updateFileDescription(self, text):
         self.main.file.attrs[classifier.hdfs.DESCRIPTION.value] = text
-        self.updateWidget()
+        self.updateWidgetDescription()
         if not text:
             self.item.setText("Описание проекта")
     
-    def updateWidget(self):
+    def updateWidgetDescription(self):
         self.item.setText(self.main.file.attrs[classifier.hdfs.DESCRIPTION.value])
 
 
@@ -94,14 +93,14 @@ class projectControl(QGroupBox):
 
     def connect_ui(self):
         self.new.clicked.connect(self.on_new)
-        self.based.clicked.connect(self.on_base)
+        self.based.clicked.connect(self.on_based)
 
     def on_new(self):
         self.dialog = dialog.newProject(self.main)
         self.dialog.exec_()
         
 
-    def on_base(self):
+    def on_based(self):
         file_dialog_response = QFileDialog.getOpenFileName()[0]
 
         if file_dialog_response[-5:] == classifier.hdfs.POSTFIX.value:
@@ -172,7 +171,6 @@ class polygonTree(QTreeWidget):
     def __init__(self, main, parent):
         super().__init__(parent=parent)
         self.main = main
-        self.parent = parent
         self.index = 0
         self.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.setColumnCount(4)
@@ -217,14 +215,14 @@ class polygonTree(QTreeWidget):
             self.setCurrentItem(None)
         else:
             name = item.text(2)
-            self.delete_attr(name)
+            self.deleteFileAttr(name)
 
-    def delete_attr(self, name):
+    def deleteFileAttr(self, name):
         self.main.file[str(self.index)].attrs.__delitem__(name)
         self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] -=  1
-        self.update_names(name)
+        self.updateFileNames(name)
 
-    def update_names(self, deleted_name):
+    def updateFileNames(self, deleted_name):
         for name, value in self.main.file[str(self.index)].attrs.items():
             if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
                 if int(name) > int(deleted_name):
@@ -235,7 +233,7 @@ class polygonTree(QTreeWidget):
         self.main._refresh_tree.emit()
 
 
-class polygonPallete(QListWidget):
+class polygonPalette(QListWidget):
     def __init__(self, main, parent):
         super().__init__(parent=parent)
         self.main = main
@@ -338,7 +336,7 @@ class view_control(QGroupBox):
         super().__init__(parent=parent)
         self._show_all = _show_all
         self._edit_task = _edit_task
-        #self.create_pallete()
+        #self.create_Palette()
         self.init_ui()
         self.tree = polygon_classes(parent)
         self.layout.addWidget(self.tree)
@@ -378,7 +376,7 @@ class view_control(QGroupBox):
 
     
 
-    def create_pallete(self):
+    def create_Palette(self):
         color_index = 2
         self.list = QListWidget()
         for cclass in classifier.classes:
@@ -390,7 +388,7 @@ class view_control(QGroupBox):
             if color_index == 19:
                 color_index = 2
 
-    def adjust_pallete(self, hdf):
+    def adjust_Palette(self, hdf):
         color_index = 2
         self.layout.removeWidget(self.list)
         self.list.deleteLater()

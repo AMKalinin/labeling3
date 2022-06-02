@@ -47,7 +47,7 @@ class editWidget(QDialog):
         self.view = view.editView(parent=self, main=self.main, current_task=self.index)
         self.tree = control.polygonTree(parent=self, main=self.main)
         self.tree.update(self.index)
-        self.pallete = control.polygonPallete(parent=self, main=self.main)
+        self.palette = control.polygonPalette(parent=self, main=self.main)
         self.toolbar = QToolBar()
         self.add_actions()
 
@@ -67,7 +67,7 @@ class editWidget(QDialog):
         self.layout.addWidget(self.toolbar, 0, 0)
         self.layout.addWidget(self.view, 1, 0)
         self.layout.addWidget(self.tree, 1, 1)
-        self.layout.addWidget(self.pallete, 2, 0)
+        self.layout.addWidget(self.palette, 2, 0)
 
     def connect_ui(self):
         self.new_polygon.triggered.connect(self.view.newshape_polygon)
@@ -88,13 +88,13 @@ class editWidget(QDialog):
                 items.append(item)
         self._selectedItems.emit(items)
 
-    def adjust_code(self, palleteItem):
+    def adjust_code(self, paletteItem):
         #selected = self.tree.currentItem()
         #if selected:
             for item in self.tree.selectedItems():
                 if self.tree.indexOfTopLevelItem(item) == -1:
                     attr_index = item.text(2)
-                    self.main.adjust_code(self.index, attr_index, palleteItem.text())
+                    self.main.adjust_code(self.index, attr_index, paletteItem.text())
             self.main._refresh_tree.emit()
 
     def adjust_points(self, treeItem):

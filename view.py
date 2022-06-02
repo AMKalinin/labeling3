@@ -52,7 +52,7 @@ class baseView(QGraphicsView):
             self.background = self.scene.addPixmap(image_as_pixmap)
             self.index_max = self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] - 1
 
-    def change_pixmap(self,index): 
+    def change_background(self,index): 
         if self.main.file:
             self.index += index
             if self.index < 0:
@@ -64,7 +64,7 @@ class baseView(QGraphicsView):
             image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
             self.background = self.scene.addPixmap(image_as_pixmap)
 
-    def set_pixmap(self, index):
+    def set_background(self, index):
         if self.background:  
             self.scene.removeItem(self.background)
         image_as_pixmap = utils.pixmap_at_index(self.main.file, index)
@@ -85,7 +85,7 @@ class baseView(QGraphicsView):
         self.point_index = None
         self.point_status = self.shape.point_at_pos(point)
         if self.point_status: 
-            self.point_index = self.shape.index_of_closest(point)
+            self.point_index = self.shape.index_of(point)
 
 
     def mouseReleaseEvent(self, event):
@@ -98,7 +98,7 @@ class baseView(QGraphicsView):
                 print(event.button())
                 self.shape.add_point(point)
             elif event.button() == Qt.RightButton and self.point_status:
-                self.shape.del_point(self.point_index)
+                self.shape.delete_point(self.point_index)
             self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
         self.point_status = None
         self.point_index = None
@@ -187,9 +187,8 @@ class baseView(QGraphicsView):
 class editView(baseView):
     def __init__(self, parent, main, current_task):
         super().__init__(main=main, parent=parent)
-        self.parent = parent
         self.index = current_task
-        self.set_pixmap(self.index)
+        self.set_background(self.index)
     """
     def discard(self):
         self.shape.clear()
@@ -275,7 +274,7 @@ class view_edit(baseView):
         self.init_ui()
     
     def init_ui(self):
-        self.set_pixmap(self.index)
+        self.set_background(self.index)
         self.init_widgets()
         self.refresh_attrlist()
         self.connect_ui()

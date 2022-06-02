@@ -28,7 +28,7 @@ class shape():
     def __init__(self, points=None):
         #self.tell_apart_distance = 3
         self.type = classifier.shapes.NONE.value
-        self._class = None
+        #self.code = None
         if points==None:
             self.points = []
         else:
@@ -46,7 +46,7 @@ class shape():
                 return True
         return False
 
-    def closest_to_pos(self, point2):
+    def closest_to(self, point2):
         if self.points:
             closest_point = self.points[0]
             minimal_distance = self.distance(closest_point, point2)
@@ -57,30 +57,30 @@ class shape():
                     closest_point = point
             return closest_point
 
-    def index_of_closest(self, point):
-        return self.points.index(self.closest_to_pos(point))
+    def index_of(self, point):
+        return self.points.index(self.closest_to(point))
 
     def add_point(self, pos):
         if not self.points:
             self.points.append(QPointF(pos.x(), pos.y()))
         else:
             if not self.point_at_pos(pos):
-                closest_index = self.points.index(self.closest_to_pos(pos)) 
+                closest_index = self.points.index(self.closest_to(pos)) 
                 self.points.insert(closest_index, QPointF(pos.x(), pos.y()))
 
-    def del_point(self, index):
+    def delete_point(self, index):
         if self.points:
             self.points.pop(index)
 
-    def change_point(self, index, newpos):
-        self.points[index] = newpos
+    def change_point(self, index, newpoint):
+        self.points[index] = newpoint
 
     def polygon(self):
         return QPolygonF(self.points)
 
     def clear(self):
         self.points.clear()
-        self._class = None
+        #self.code = None
         self.type = classifier.shapes.NONE.value
 
     def set_points(self, points):
