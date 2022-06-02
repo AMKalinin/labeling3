@@ -182,7 +182,7 @@ class newProject(QDialog):
                     task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
         except FileExistsError:
             message = QMessageBox.about(self, "Ошибка:", "Файл с таким именем уже существует!")
-        self.main.signal_parseprojects.emit()
+        self.main._parse_projects.emit()
         self.deleteLater()
 
 
@@ -228,7 +228,7 @@ class basedProject(newProject):
                     task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
         except FileExistsError:
             message = QMessageBox.about(self, "Ошибка:", "Файл с таким именем уже существует!")
-        self.main.signal_parseprojects.emit()
+        self.main._parse_projects.emit()
         self.deleteLater()
 
 
@@ -269,7 +269,7 @@ class basedProject(newProject):
     """
 
     """
-        dialog = segflex_classes_choose.classes_choose(signal=self.signal_project_created_new, project_name=self.name, project_description=self.project_description)
+        dialog = segflex_classes_choose.classes_choose(signal=self._project_created_new, project_name=self.name, project_description=self.project_description)
         dialog.exec_()
         self.deleteLater()
     """

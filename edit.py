@@ -20,8 +20,8 @@ import cv2
 import control
 
 class editWidget(QDialog):
-    #signal_refreshTree = pyqtSignal()
-    signal_selectedItems = pyqtSignal(list)
+    #_refresh_tree = pyqtSignal()
+    _selectedItems = pyqtSignal(list)
     def __init__(self, parent, main, index):
         super().__init__(parent=parent)
         self.main = main
@@ -74,19 +74,19 @@ class editWidget(QDialog):
         self.save.triggered.connect(self.view.save_shape)
         self.discard.triggered.connect(self.view.discard)
         self.delete.triggered.connect(self.tree.delete_item)
-        self.main.signal_refreshTree.connect(self.tree.fill)
+        self.main._refresh_tree.connect(self.tree.fill)
         self.tree.itemDoubleClicked.connect(self.adjust_points)
         self.tree.itemSelectionChanged.connect(self.send_selected)
-        self.signal_selectedItems.connect(self.view.show_shapes)
+        self._selectedItems.connect(self.view.show_shapes)
         
-        #self.signal_adjustCode.connect(self.adjust_code)
+        #self._adjustCode.connect(self.adjust_code)
 
     def send_selected(self):
         items = []
         for item in self.tree.selectedItems():
             if self.tree.indexOfTopLevelItem(item) == -1:
                 items.append(item)
-        self.signal_selectedItems.emit(items)
+        self._selectedItems.emit(items)
 
     def adjust_code(self, palleteItem):
         #selected = self.tree.currentItem()
@@ -95,7 +95,7 @@ class editWidget(QDialog):
                 if self.tree.indexOfTopLevelItem(item) == -1:
                     attr_index = item.text(2)
                     self.main.adjust_code(self.index, attr_index, palleteItem.text())
-            self.main.signal_refreshTree.emit()
+            self.main._refresh_tree.emit()
 
     def adjust_points(self, treeItem):
         points = treeItem.text(3)

@@ -22,7 +22,7 @@ import re
 import cv2
 
 class viewFrame(QWidget):
-    signal_selectedItems = pyqtSignal(list)
+    _selectedItems = pyqtSignal(list)
     def __init__(self, parent):
         super().__init__(parent=parent)
 
@@ -54,7 +54,7 @@ class tab(QTabWidget):
         self.tasksleft = QScrollArea(self)
         self.tasksright = QScrollArea(self)
         self.view = viewFrame(self)
-        #self.view.signal_selectedItems = pyqtSignal(list)
+        #self.view._selectedItems = pyqtSignal(list)
 
         self.projects.setWidgetResizable(True)
         self.tasksleft.setWidgetResizable(True)
@@ -110,7 +110,7 @@ class tab(QTabWidget):
     def parse_view(self):
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
         self.view_w = view.baseView(main=self.main, parent=self.view)
-        self.view.signal_selectedItems.connect(self.view_w.show_shapes)
+        self.view._selectedItems.connect(self.view_w.show_shapes)
 
     def init_view(self):
         self.view_w = view.baseView(main=self.main, parent=self.view)

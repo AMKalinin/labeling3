@@ -52,7 +52,7 @@ class editDescription(QListWidget):
     def on_dc(self):
         a = newDescription(self)
         a.exec_()
-        self.main.signal_parseprojects.emit()
+        self.main._parse_projects.emit()
     
     def updateDescription(self, text):
         self.main.file.attrs[classifier.hdfs.DESCRIPTION.value] = text
@@ -232,7 +232,7 @@ class polygonTree(QTreeWidget):
                     name = int(name)
                     name -= 1
                     self.main.file[str(self.index)].attrs[str(name)] = value
-        self.main.signal_refreshTree.emit()
+        self.main._refresh_tree.emit()
 
 
 class polygonPallete(QListWidget):
@@ -247,7 +247,7 @@ class polygonPallete(QListWidget):
         self.itemClicked.connect(self.adjust_code)
 
     def fill(self):
-        for triple in self.main.codenamecolor_list:
+        for triple in self.main.codenamecolor:
             pixmap = QPixmap(50,50)
             pixmap.fill(Qt.GlobalColor(triple[2]))
             self.addItem(QListWidgetItem(QIcon(pixmap), str(triple[0])))
@@ -297,7 +297,7 @@ class project_description_new(QGroupBox):
         self.task_count = ' проект не открыт'
 
         self.btn_addtask = QPushButton("Добавить задачу")
-        self.btn_edittask = QPushButton("edit task")
+        self.btn_edit_task = QPushButton("edit task")
 
     def init_menu(self):
         self.menu = QListWidget()
@@ -321,7 +321,7 @@ class project_description_new(QGroupBox):
 
         self.layout.addWidget(self.menu)
         self.layout.addWidget(self.btn_addtask)
-        self.layout.addWidget(self.btn_edittask)
+        self.layout.addWidget(self.btn_edit_task)
 
         self.setLayout(self.layout)
 
@@ -334,10 +334,10 @@ class project_description_new(QGroupBox):
 
 
 class view_control(QGroupBox):
-    def __init__(self, signal_showall, signal_edittask, parent=None):
+    def __init__(self, _show_all, _edit_task, parent=None):
         super().__init__(parent=parent)
-        self.signal_showall = signal_showall
-        self.signal_edittask = signal_edittask
+        self._show_all = _show_all
+        self._edit_task = _edit_task
         #self.create_pallete()
         self.init_ui()
         self.tree = polygon_classes(parent)
@@ -348,33 +348,33 @@ class view_control(QGroupBox):
         
         self.btn_previous = QPushButton("<<")
         self.btn_next = QPushButton(">>")
-        self.btn_showall = QPushButton("show all")
-        self.btn_showall.clicked.connect(self.on_showall)
+        self.btn_show_all = QPushButton("show all")
+        self.btn_show_all.clicked.connect(self.on_show_all)
         self.btn_hideall = QPushButton("hide all")
         self.btn_hideall.clicked.connect(self.on_hideall)
-        self.btn_edittask = QPushButton("edit task")
-        self.btn_edittask.clicked.connect(self.on_edittask)
+        self.btn_edit_task = QPushButton("edit task")
+        self.btn_edit_task.clicked.connect(self.on_edit_task)
         
 
         self.layout = QVBoxLayout()
         
         self.layout.addWidget(self.btn_previous)
         self.layout.addWidget(self.btn_next)
-        self.layout.addWidget(self.btn_showall)
+        self.layout.addWidget(self.btn_show_all)
         self.layout.addWidget(self.btn_hideall)
-        self.layout.addWidget(self.btn_edittask)
+        self.layout.addWidget(self.btn_edit_task)
         self.layout.addWidget(self.list)
        
         self.setLayout(self.layout)
     
-    def on_showall(self):
-        self.signal_showall.emit(1)
+    def on_show_all(self):
+        self._show_all.emit(1)
 
     def on_hideall(self):
-        self.signal_showall.emit(-1)
+        self._show_all.emit(-1)
 
-    def on_edittask(self):
-        self.signal_edittask.emit(-1)
+    def on_edit_task(self):
+        self._edit_task.emit(-1)
 
     
 

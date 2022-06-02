@@ -133,7 +133,7 @@ class taskWidget(QGroupBox):
         pass
 
     def on_edit(self):
-        self.main.signal_edittask.emit(self.identifier)
+        self.main._edit_task.emit(self.identifier)
         self.main.tab.parse_tasks()
 
     def on_tocheck(self):
@@ -389,7 +389,7 @@ class task_widget(QGroupBox):
 
 
     def emit_delete_signal(self):
-        #self.Signal_OneParameter.emit("date_str")
+        #self._OneParameter.emit("date_str")
         with h5py.File(self.project_path, 'r+') as hdf:
             group = hdf[classifier.HDF_GROUP_SRCS_NAME]                
             task = group[str(self.identifier)]

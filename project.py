@@ -97,4 +97,4 @@ class project(QGroupBox):
         self.open.clicked.connect(self.on_open)
 
     def on_open(self):
-        self.main.signal_openproject.emit(self.path)
+        self.main._open_project.emit(self.path)

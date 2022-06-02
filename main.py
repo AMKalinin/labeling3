@@ -22,17 +22,17 @@ import edit
 
 
 class mainWindow(QMainWindow):
-    signal_parseprojects = pyqtSignal()
-    signal_openproject = pyqtSignal(str)
-    signal_showall = pyqtSignal(int)
-    signal_edittask = pyqtSignal(int)
-    signal_editdescription = pyqtSignal(str)
-    signal_refreshTree = pyqtSignal()
+    _parse_projects = pyqtSignal()
+    _open_project = pyqtSignal(str)
+    _show_all = pyqtSignal(int)
+    _edit_task = pyqtSignal(int)
+    _edit_description = pyqtSignal(str)
+    _refresh_tree = pyqtSignal()
     def __init__(self):
         QMainWindow.__init__(self, flags=QtCore.Qt.Window)
         self.file = None
         self.task_count = 0
-        self.codenamecolor_list = []
+        self.codenamecolor = []
         self.init_ui()
         
     def init_ui(self):
@@ -67,22 +67,22 @@ class mainWindow(QMainWindow):
         self.show_tab1()
 
     def connect_ui(self):
-        self.signal_parseprojects.connect(self.tab.parse_projects)
-        self.signal_openproject.connect(self.open_project_routine)
+        self._parse_projects.connect(self.tab.parse_projects)
+        self._open_project.connect(self.open_project_routine)
         self.tab.currentChanged.connect(self.show_tab)
         #self.taskDescription.btn_addtask.clicked.connect(self.add_task)
-        #self.taskDescription.btn_edittask.clicked.connect(self.on_edittask)
+        #self.taskDescription.btn_edit_task.clicked.connect(self.on_edit_task)
         #self.viewTree.btn_previous.clicked.connect(self.previous_view)
         #self.viewTree.btn_next.clicked.connect(self.next_view)
-        #self.viewTree.btn_edittask.clicked.connect(self.on_edittask)
+        #self.viewTree.btn_edit_task.clicked.connect(self.on_edit_task)
         self.viewToolbar.previous.triggered.connect(self.previous_view)
         self.viewToolbar.previous.triggered.connect(self.previous_polygons)
         self.viewToolbar.next.triggered.connect(self.next_view)
         self.viewToolbar.next.triggered.connect(self.next_polygons)
-        self.signal_edittask.connect(self.on_edittask)
-        self.signal_refreshTree.connect(self.viewTree.fill)
+        self._edit_task.connect(self.on_edit_task)
+        self._refresh_tree.connect(self.viewTree.fill)
         self.viewTree.itemSelectionChanged.connect(self.send_selected)
-        #self.signal_editdescription.connect(self.on_editdescription)
+        #self._edit_description.connect(self.on_edit_description)
      
     def show_tab(self):      
         if self.tab.currentWidget() == self.tab.split:
@@ -115,7 +115,7 @@ class mainWindow(QMainWindow):
         for item in self.viewTree.selectedItems():
             if self.viewTree.indexOfTopLevelItem(item) == -1:
                 items.append(item)
-        self.tab.view.signal_selectedItems.emit(items)
+        self.tab.view._selectedItems.emit(items)
 
     @pyqtSlot(str)
     def open_project_routine(self, project_path):
@@ -159,7 +159,7 @@ class mainWindow(QMainWindow):
         #"""
 
     @pyqtSlot(int)
-    def on_edittask(self, index=-1):
+    def on_edit_task(self, index=-1):
         current_task = self.tab.view_w.current_task()
         if index != -1:
             current_task = index
@@ -168,22 +168,22 @@ class mainWindow(QMainWindow):
         self.edit.exec_()
 
     @pyqtSlot(str)
-    def on_editdescription(self, newdescription):
+    def on_edit_description(self, newdescription):
         if self.file: #корректно проверяю открыт ли hdf????
             self.file.attrs[classifier.hdfs.DESCRIPTION.value] = newdescription
 
     def update_codenamecolor(self):
-        self.codenamecolor_list.clear()
+        self.codenamecolor.clear()
         codes = classifier.classes.code()
         names = classifier.classes.name()
         colors= classifier.classes.color()
         for code, name, color in zip(codes, names, colors):
             if str(code) in self.file.attrs[classifier.hdfs.CLASSES.value]:
-                self.codenamecolor_list.append((code, name, color))
+                self.codenamecolor.append((code, name, color))
 
-    def on_showall(self):
+    def on_show_all(self):
         print("showall")
-        self.signal_showall.emit(1)
+        self._show_all.emit(1)
 
     def previous_view(self):
         self.tab.change_view(index=-1)
@@ -198,17 +198,17 @@ class mainWindow(QMainWindow):
         self.viewTree.update(index=+1)
 
     def get_name(self, code):
-        for triple in self.codenamecolor_list:
+        for triple in self.codenamecolor:
             if triple[0] == code:
                 return triple[1]
 
     def get_code(self, name):
-        for triple in self.codenamecolor_list:
+        for triple in self.codenamecolor:
             if triple[1] == name:
                 return triple[0]
 
     def get_color(self, code):
-        for triple in self.codenamecolor_list:
+        for triple in self.codenamecolor:
             if triple[0] == code:
                 return triple[2]
         #if triple[0] == '000':

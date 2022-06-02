@@ -30,8 +30,8 @@ class baseView(QGraphicsView):
         self.index = 0
         if not isinstance(parent, QDialog):
             parent.layout().addWidget(self)
-        #self.main.signal_showall.connect(self.show_all)
-        #self.main.signal_showall.connect(self.hide_all)
+        #self.main._show_all.connect(self.show_all)
+        #self.main._show_all.connect(self.hide_all)
 
         self.adjust_window()
         self.init_background()
@@ -233,7 +233,7 @@ class editView(baseView):
             self.main.file[str(self.index)].attrs[str(name)] = str(s_type) + ';' + code + ';' + str(points)
             self.main.file[str(self.index)].attrs[classifier.tasks.COUNT.value] +=  1
         self.discard()
-        self.main.signal_refreshTree.emit()
+        self.main._refresh_tree.emit()
     """
     def show_shapes(self, items):
         self.discard()
@@ -425,7 +425,7 @@ class view_edit(baseView):
 
 
     def adjust_pallete(self):
-        for triple in self.main.codenamecolor_list:
+        for triple in self.main.codenamecolor:
             pixmap = QPixmap(50,50)
             pixmap.fill(Qt.GlobalColor(triple[2]))
             self.pallete.addItem(QListWidgetItem(QIcon(pixmap), str(triple[0])))
