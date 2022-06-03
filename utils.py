@@ -196,14 +196,15 @@ def check_cv2format(name):
     return False
 
 def load_fonts():
-    if os.path.exists(classifier.FONTS_FOLDER_FULL_NAME):
-        fonts_list = os.listdir(classifier.FONTS_FOLDER_FULL_NAME)
-        for fonts_short_name in fonts_list:
-            fonts_full_name = classifier.FONTS_FOLDER_FULL_NAME + '/' + fonts_short_name
-            QFontDatabase.addApplicationFont(fonts_full_name)
+    fonts_path = classifier.items.FONTS.value
+    if os.path.exists(fonts_path):
+        fonts_list = os.listdir(fonts_path)
+        for name in fonts_list:
+            full_name = fonts_path + name
+            QFontDatabase.addApplicationFont(full_name)
 
 def load_style(app):
-    with open('my_style.qss', 'r') as f:
+    with open('style.qss', 'r') as f:
         style = f.read()
         app.setStyleSheet(style)
 

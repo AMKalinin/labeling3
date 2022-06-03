@@ -92,6 +92,7 @@ class items(Enum):
     PROJECTS    = path + '/' + '__projects__'   + '/'
     IMAGES      = path + '/' + '__images__'     + '/'
     ICONS       = path + '/' + '__icons__'      + '/'
+    FONTS       = path + '/' + '__fonts__'      + '/'
 
     previous    = IMAGES + '/' + 'previous_tbtn.png'
     #TASK_WIDGET
@@ -102,8 +103,6 @@ class items(Enum):
     status_inpr = ICONS + '/' + 'next_tbtn.png'
     status_toch = ICONS + '/' + 'tofirst_tbtn.png'
 
-FONTS_FOLDER_NAME = '__fonts__'
-FONTS_FOLDER_FULL_NAME = os.getcwd() + '/' + FONTS_FOLDER_NAME
 
 
 class shapes(Enum):
