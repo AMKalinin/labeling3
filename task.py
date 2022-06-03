@@ -12,16 +12,16 @@ import h5py
 import utils
 
 class taskWidget(QGroupBox):
-    def __init__(self, parent, main, identifier, mode):
+    def __init__(self, parent, main, index, mode):
         super().__init__(parent = parent)
         self.main = main
-        self.identifier = identifier
+        self.index = index
         self.mode = mode
         self.init_ui()
 
     def init_ui(self):
         self.check_status()
-        self.status = self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value]
+        self.status = self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value]
         self.adjust_window()
         self.create_layouts()
         self.order_layouts()
@@ -67,7 +67,7 @@ class taskWidget(QGroupBox):
 
     def init_preview(self):
         self.preview = QLabel(self)
-        pixmap = utils.create_preview(hdf=self.main.file, identifier = self.identifier)
+        pixmap = utils.create_preview(hdf=self.main.file, identifier = self.index)
         self.preview.setPixmap(pixmap)
 
     def init_actions(self):
@@ -122,30 +122,30 @@ class taskWidget(QGroupBox):
         self.checked.clicked.connect(self.on_checked)
 
     def check_status(self):
-        count = utils.get_task_polygons(self.main.file, self.identifier)
+        count = utils.get_task_polygons(self.main.file, self.index)
         if (count != 0 and
-            self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] != classifier.tasks.TO_CHECK.value and
-            self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] != classifier.tasks.DONE.value):
-            self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.IN_PROGRESS.value
+            self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] != classifier.tasks.TO_CHECK.value and
+            self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] != classifier.tasks.DONE.value):
+            self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.IN_PROGRESS.value
 
 
     def on_attrs(self):
         pass
 
     def on_edit(self):
-        self.main._edit_task.emit(self.identifier)
+        self.main._edit_task.emit(self.index)
         self.main.tab.parse_tasks()
 
     def on_tocheck(self):
-        self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_CHECK.value
+        self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_CHECK.value
         self.main.tab.parse_tasks()
 
     def on_redo(self):
-        self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.IN_PROGRESS.value
+        self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.IN_PROGRESS.value
         self.main.tab.parse_tasks()
 
     def on_checked(self):
-        self.main.file[str(self.identifier)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.DONE.value
+        self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.DONE.value
         self.main.tab.parse_tasks()
         self.main.tab.parse_projects()
 
@@ -206,7 +206,7 @@ class task_widget(QGroupBox):
     def __init__(self, path, identifier, mode, signal):
         super().__init__()
         self.project_path = path
-        self.identifier = identifier
+        self.index = identifier
         self.mode = mode
         self.signal = signal
         self.unit_ui()
@@ -339,7 +339,7 @@ class task_widget(QGroupBox):
     def create_previw(self): 
         with h5py.File(self.project_path, 'r') as hdf:
             group_srcs = hdf[classifier.HDF_GROUP_SRCS_NAME]                
-            dataset = group_srcs[str(self.identifier)]
+            dataset = group_srcs[str(self.index)]
             image_as_numpy = dataset[()]
             height, width, channel = image_as_numpy.shape
             bytesPerLine = 3 * width
@@ -353,8 +353,8 @@ class task_widget(QGroupBox):
     def on_delete_task(self):
         with h5py.File(self.project_path, 'r+') as hdf:
             group = hdf[classifier.HDF_GROUP_SRCS_NAME]
-            del group[str(self.identifier)]
-            for index in range(self.identifier, hdf.attrs[classifier.HDF_FILE_TASK_COUNT] - 1):
+            del group[str(self.index)]
+            for index in range(self.index, hdf.attrs[classifier.HDF_FILE_TASK_COUNT] - 1):
                 group[str(index)] = group[str(index + 1)]
                 del group[str(index + 1)]
             hdf.attrs[classifier.HDF_FILE_TASK_COUNT] -= 1
@@ -364,21 +364,21 @@ class task_widget(QGroupBox):
     def on_redo(self):
         with h5py.File(self.project_path, 'r+') as hdf:
             group = hdf[classifier.HDF_GROUP_SRCS_NAME]                
-            task = group[str(self.identifier)]
+            task = group[str(self.index)]
             task.attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_1
         self.signal.emit(self.project_path)
 
     def on_done(self):
         with h5py.File(self.project_path, 'r+') as hdf:
             group = hdf[classifier.HDF_GROUP_SRCS_NAME]                
-            task = group[str(self.identifier)]
+            task = group[str(self.index)]
             task.attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_3
         self.signal.emit(self.project_path)
 
     def on_tocheck(self):
         with h5py.File(self.project_path, 'r+') as hdf:
             group = hdf[classifier.HDF_GROUP_SRCS_NAME]                
-            task = group[str(self.identifier)]
+            task = group[str(self.index)]
             task.attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_2
         self.signal.emit(self.project_path)
 
@@ -392,7 +392,7 @@ class task_widget(QGroupBox):
         #self._OneParameter.emit("date_str")
         with h5py.File(self.project_path, 'r+') as hdf:
             group = hdf[classifier.HDF_GROUP_SRCS_NAME]                
-            task = group[str(self.identifier)]
+            task = group[str(self.index)]
             task.attrs[classifier.HDF_TASK_STATUS] = classifier.HDF_TASK_STATUS_2
         self.deleteLater()
 

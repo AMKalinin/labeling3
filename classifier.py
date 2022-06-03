@@ -102,6 +102,9 @@ class items(Enum):
     status_inpr = ICONS + '/' + 'next_tbtn.png'
     status_toch = ICONS + '/' + 'tofirst_tbtn.png'
 
+FONTS_FOLDER_NAME = '__fonts__'
+FONTS_FOLDER_FULL_NAME = os.getcwd() + '/' + FONTS_FOLDER_NAME
+
 
 class shapes(Enum):
     NONE        = 0

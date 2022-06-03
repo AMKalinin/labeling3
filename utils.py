@@ -17,6 +17,8 @@ import classifier
 import re
 from ast import literal_eval as make_tuple
 from PyQt5.QtCore import pyqtSignal, QObject
+from PyQt5.QtGui import  QFontDatabase
+
 
 def pixmap_default():
     return QPixmap("img_default.jpg")
@@ -192,6 +194,18 @@ def check_cv2format(name):
         extension == '.tif'):
         return True
     return False
+
+def load_fonts():
+    if os.path.exists(classifier.FONTS_FOLDER_FULL_NAME):
+        fonts_list = os.listdir(classifier.FONTS_FOLDER_FULL_NAME)
+        for fonts_short_name in fonts_list:
+            fonts_full_name = classifier.FONTS_FOLDER_FULL_NAME + '/' + fonts_short_name
+            QFontDatabase.addApplicationFont(fonts_full_name)
+
+def load_style(app):
+    with open('my_style.qss', 'r') as f:
+        style = f.read()
+        app.setStyleSheet(style)
 
 
 """
