@@ -4,3 +4,5 @@
 @import "button_default.qss";
 @import "progressbar.qss";
 @import "gbox_control.qss";
+@import "label_aerial.qss";
+@import "lineedit.qss";

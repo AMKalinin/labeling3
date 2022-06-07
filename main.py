@@ -220,4 +220,8 @@ class mainWindow(QMainWindow):
         attr = re.sub(r';[0-9][0-9][0-9];', ';' + newcode + ';', attr)
         self.file[str(taskindex)].attrs[str(itemindex)] = attr
 
+
+    def send_task_index(self, index):
+        self.taskDescription.update_aerial(index)
+
     

@@ -134,7 +134,8 @@ def get_donetasks(path):
 def get_task_polygons(hdf, index):
     count = 0
     for name, value in hdf[str(index)].attrs.items():
-        if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+        if ispoints(name):
+        #if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
             count += 1
     return count
     
@@ -221,6 +222,21 @@ def endline_long_sting(string, n):
             cutstr = string[i * n: i * (n + 1)] + '\n'
             newstr += cutstr
     return newstr
+
+def ispoints(attr):
+    if (    attr != classifier.tasks.COUNT.value and 
+            attr != classifier.tasks.STATUS.value and 
+            attr != classifier.aerial.SOURCE.value and
+            attr != classifier.aerial.ALTITUDE.value and
+            attr != classifier.aerial.LATITUDE.value and
+            attr != classifier.aerial.LONGITUDE.value and
+            attr != classifier.aerial.SUN.value and
+            attr != classifier.aerial.SPATIAL.value and
+            attr != classifier.aerial.SIZE.value and
+            attr != classifier.aerial.DATE.value and
+            attr != classifier.aerial.TIME.value  ):
+            return True
+    return False
 
 
 def load_style(app):

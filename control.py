@@ -54,7 +54,6 @@ class testDescription(QLabel):
             self.setText("Описание проекта: ")
     
     def updateWidgetDescription(self):
-        #description = utils.endline_long_sting(self.main.file.attrs[classifier.hdfs.DESCRIPTION.value], 20)
         self.setText("Описание проекта: " + '\n' + self.main.file.attrs[classifier.hdfs.DESCRIPTION.value])
 
     def mousePressEvent(self, event):
@@ -71,6 +70,89 @@ class testDescription(QLabel):
     
     def leaveEvent(self, event):
         with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_unhover.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)    
+
+class newAerialAttr(QDialog):
+    def __init__(self, parent):
+        super().__init__(parent=parent)
+
+        self.parent = parent
+        self.setWindowTitle("Введите новое значение параметра:")
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
+        self.line = QLineEdit()
+        self.layout.addWidget(self.line)
+        self.line.textChanged.connect(self.parent.updateFileDescription)
+
+class aerialAttr(QLabel):
+    def __init__(self, parent, main, line):
+        super().__init__(parent=parent)
+        self.main = main
+        self.line = line
+        self.parent = parent
+        self.setMouseTracking(True)
+        self.setWordWrap(True)
+        self.setObjectName("aerial_attr")
+    
+    def updateFileDescription(self, text):
+        if self.line == classifier.aerial.SOURCE.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.SOURCE.value] = text
+        elif self.line == classifier.aerial.ALTITUDE.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.ALTITUDE.value] = text
+        elif self.line == classifier.aerial.LATITUDE.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.LATITUDE.value] = text
+        elif self.line == classifier.aerial.LONGITUDE.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.LONGITUDE.value] = text
+        elif self.line == classifier.aerial.SUN.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.SUN.value] = text
+        elif self.line == classifier.aerial.SPATIAL.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.SPATIAL.value] = text
+        elif self.line == classifier.aerial.SIZE.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.SIZE.value] = text
+        elif self.line == classifier.aerial.DATE.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.DATE.value] = text
+        elif self.line == classifier.aerial.TIME.value:
+            self.main.file[str(self.parent.index)].attrs[classifier.aerial.TIME.value] = text
+        self.updateWidgetDescription()
+        if not text:
+            self.setText("")
+    
+    def updateWidgetDescription(self):
+        if self.line == classifier.aerial.SOURCE.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.SOURCE.value])
+        elif self.line == classifier.aerial.ALTITUDE.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.ALTITUDE.value])
+        elif self.line == classifier.aerial.LATITUDE.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.LATITUDE.value])
+        elif self.line == classifier.aerial.LONGITUDE.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.LONGITUDE.value])
+        elif self.line == classifier.aerial.SUN.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.SUN.value])
+        elif self.line == classifier.aerial.SPATIAL.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.SPATIAL.value])
+        elif self.line == classifier.aerial.SIZE.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.SIZE.value])
+        elif self.line == classifier.aerial.DATE.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.DATE.value])
+        elif self.line == classifier.aerial.TIME.value:
+            self.setText(self.main.file[str(self.parent.index)].attrs[classifier.aerial.TIME.value])
+
+    def mousePressEvent(self, event):
+        if self.main.file:
+            if self.parent.index != None:
+                getdescription = newAerialAttr(self)
+                getdescription.exec_()
+            #self.main._parse_projects.emit()
+
+    def enterEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/label_aerial_hover.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)
+
+    
+    def leaveEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/label_aerial.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)    
 
@@ -175,11 +257,27 @@ class taskDescription(QWidget):
     def __init__(self, parent):
         super().__init__(parent=parent)
         self.parent = parent
+        self.main = parent
+        self.index = None
         
         self.adjust_window()
         self.set_layouts()
         self.init_widgets()
         self.fill_layouts()
+
+    def update_aerial(self, index):
+        self.index = index
+        self.mytitle.setText("Параметры снимка: #" + str(index))
+        self.source_l.updateWidgetDescription()
+        self.altitude_l.updateWidgetDescription()
+        self.latitude_l.updateWidgetDescription()
+        self.longitude_l.updateWidgetDescription()
+        self.sun_l.updateWidgetDescription()
+        self.spatial_l.updateWidgetDescription()
+        self.size_l.updateWidgetDescription()
+        self.date_l.updateWidgetDescription()
+        self.time_l.updateWidgetDescription()
+
     
     def adjust_window(self):
         pass    
@@ -193,40 +291,57 @@ class taskDescription(QWidget):
         self.layout.addLayout(self.right, 1, 1)
 
     def init_widgets(self):
-        self.save = QPushButton("Сохранить")
-        self.discard = QPushButton("Отменить редактирование")
+        #self.save = QPushButton("Сохранить")
+        #self.discard = QPushButton("Отменить редактирование")
+        self.mytitle = QLabel("Параметры снимка:")
 
-        self.line0 = QLineEdit()
-        self.line1 = QLineEdit()
-        self.line2 = QLineEdit()
-        self.line3 = QLineEdit()
-        self.line4 = QLineEdit()
-        self.line5 = QLineEdit()
-        self.line6 = QLineEdit()
-        self.line7 = QLineEdit()
+        self.source_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.SOURCE.value)
+        self.altitude_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.ALTITUDE.value)
+        self.latitude_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.LATITUDE.value)
+        self.longitude_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.LONGITUDE.value)
+        self.sun_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.SUN.value)
+        self.spatial_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.SPATIAL.value)
+        self.size_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.SIZE.value)
+        self.date_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.DATE.value)
+        self.time_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.TIME.value)
+
+        self.source     = QLabel('Летательный аппарат: ')
+        self.altitude   = QLabel('Высота        (км): ')
+        self.latitude   = QLabel('Широта        (верхний левый пиксель): ')
+        self.longitude  = QLabel('Долгота       (верхний левый пиксель): ')
+        self.sun        = QLabel('Азимут солнца: ')
+        self.spatial    = QLabel('Разрешение    (метр:пиксель): ')
+        self.size       = QLabel('Размер        (ширина:высота): ')
+        self.date       = QLabel('Дата: ')
+        self.time       = QLabel('Время: ')
 
     def fill_layouts(self):
-        self.left.addWidget(QLabel('0'))
-        self.left.addWidget(QLabel('1'))
-        self.left.addWidget(QLabel('2'))
-        self.left.addWidget(QLabel('3'))
-        self.left.addWidget(QLabel('4'))
-        self.left.addWidget(QLabel('5'))
-        self.left.addWidget(QLabel('6'))
-        self.left.addWidget(QLabel('7'))
 
-        self.right.addWidget(self.line0)
-        self.right.addWidget(self.line1)
-        self.right.addWidget(self.line2)
-        self.right.addWidget(self.line3)
-        self.right.addWidget(self.line4)
-        self.right.addWidget(self.line5)
-        self.right.addWidget(self.line6)
-        self.right.addWidget(self.line7)
+        self.left.addWidget(self.source)
+        self.left.addWidget(self.altitude)
+        self.left.addWidget(self.latitude)
+        self.left.addWidget(self.longitude)
+        self.left.addWidget(self.sun)
+        self.left.addWidget(self.spatial)
+        self.left.addWidget(self.size)
+        self.left.addWidget(self.date)
+        self.left.addWidget(self.time)
 
-        self.layout.addWidget(self.save, 2, 1)
-        self.layout.addWidget(self.discard, 2, 0)
+        self.right.addWidget(self.source_l)
+        self.right.addWidget(self.altitude_l)
+        self.right.addWidget(self.latitude_l)
+        self.right.addWidget(self.longitude_l)
+        self.right.addWidget(self.sun_l)
+        self.right.addWidget(self.spatial_l)
+        self.right.addWidget(self.size_l)
+        self.right.addWidget(self.date_l)
+        self.right.addWidget(self.time_l)
+
         self.layout.addWidget(QLabel("Параметры снимка:"), 0, 0)
+
+        #self.layout.addWidget(self.save, 2, 1)
+        #self.layout.addWidget(self.discard, 2, 0)
+        self.layout.addWidget(self.mytitle, 0, 0)
 
 
 class polygonTree(QTreeWidget):
@@ -255,7 +370,8 @@ class polygonTree(QTreeWidget):
         self.addTopLevelItem(QTreeWidgetItem(['ВЫБРАТЬ КЛАСС', '000', '', '']))
 
         for name, value in self.main.file[str(self.index)].attrs.items():
-            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+            if utils.ispoints(name):
+            #if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
                 attr_class = utils.attrs_get_class(value)
                 attr_points = utils.attrs_get_points(value)
                 attr_color = self.main.get_color(int(attr_class))
@@ -286,7 +402,8 @@ class polygonTree(QTreeWidget):
 
     def updateFileNames(self, deleted_name):
         for name, value in self.main.file[str(self.index)].attrs.items():
-            if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+            if utils.ispoints(name):
+            #if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
                 if int(name) > int(deleted_name):
                     self.main.file[str(self.index)].attrs.__delitem__(name)
                     name = int(name)

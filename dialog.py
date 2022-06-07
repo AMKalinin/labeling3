@@ -180,11 +180,19 @@ class newProject(QDialog):
                     task = hdf.create_dataset(str(self.images_list.index(image)), data=cv2.imread(image))
                     task.attrs[classifier.tasks.COUNT.value] = 0
                     task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
+                    task.attrs[classifier.aerial.SOURCE.value] = 'не задано'
+                    task.attrs[classifier.aerial.ALTITUDE.value] = 'не задано'
+                    task.attrs[classifier.aerial.LATITUDE.value] = 'не задано'
+                    task.attrs[classifier.aerial.LONGITUDE.value] = 'не задано'
+                    task.attrs[classifier.aerial.SUN.value] = 'не задано'
+                    task.attrs[classifier.aerial.SPATIAL.value] = 'не задано'
+                    task.attrs[classifier.aerial.SIZE.value] = 'не задано'
+                    task.attrs[classifier.aerial.DATE.value] = 'не задано'
+                    task.attrs[classifier.aerial.TIME.value] = 'не задано'
         except FileExistsError:
             message = QMessageBox.about(self, "Ошибка:", "Файл с таким именем уже существует!")
         self.main._parse_projects.emit()
         self.deleteLater()
-
 
 class basedProject(newProject):
     def __init__(self, main, old_hdf):

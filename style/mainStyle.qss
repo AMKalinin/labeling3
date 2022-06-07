@@ -112,3 +112,10 @@ QLabel#description_label
 }
 
 
+QLabel#aerial_attr {
+    min-width: 250px;    min-height: 20px;
+    max-width: 250px;   max-height: 20px; 
+    background-color: #F6F8FA;  
+}
+QLineEdit {
+    background-color: #F6F8FA;   }

@@ -23,7 +23,7 @@ class bases(methods):
     water           = 0, '', '', '', 'Вода'
     green           = 1, '', '', '', 'Растительность'
     surface         = 2, '', '', '', 'Площадные объекты'
-    infrastructure  = 3, '', '', '', 'Объекты и сооружения' 
+    infrastructure  = 3, '', '', '', 'Объекты и сооружения'
 
 
 class classes(methods):
@@ -103,10 +103,21 @@ class items(Enum):
     status_inpr = ICONS + '/' + 'next_tbtn.png'
     status_toch = ICONS + '/' + 'tofirst_tbtn.png'
 
-
-
 class shapes(Enum):
     NONE        = 0
     POLYGON     = 1
     RECTANGLE   = 2
     ELLIPSE     = 3
+
+class aerial(Enum):
+    SOURCE      = '__aerial_device(txt)__'
+    ALTITUDE    = '__altitude(km)__'
+    LATITUDE    = '__latitude_top_left_point(xx:yy:zz)__'
+    LONGITUDE   = '__longitude_top_left_point(xx:yy:zz)__'
+    SUN         = '__sun_azimuth(xx:yy:zz)__'
+
+    SPATIAL     = '__resolution(metres:pixel)__'
+    SIZE        = '__pixels(width:height)__'
+
+    DATE        = '__date_stamp(dd:mm:yy)__'
+    TIME        = '__time_stamp(hh:mm)__'

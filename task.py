@@ -130,7 +130,7 @@ class taskWidget(QGroupBox):
 
 
     def on_attrs(self):
-        pass
+        self.main.send_task_index(self.index)
 
     def on_edit(self):
         self.main._edit_task.emit(self.index)
