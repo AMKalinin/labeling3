@@ -9,6 +9,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
 from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon
 from PyQt5 import QtWidgets, QtGui, QtCore
 import os
+import datetime
 import h5py
 import numpy as np
 import cv2
@@ -18,6 +19,8 @@ import re
 from ast import literal_eval as make_tuple
 from PyQt5.QtCore import pyqtSignal, QObject
 from PyQt5.QtGui import  QFontDatabase
+from qssimport import stylesheet
+import pathlib
 
 
 def pixmap_default():
@@ -136,7 +139,7 @@ def get_task_polygons(hdf, index):
     return count
     
 def get_startdate(path):
-    startdate = os.path.getctime(path)
+    startdate = os.path.getctime(path)# getctime for windows only
     return startdate
 
 def get_lastupdate(path):
@@ -167,7 +170,8 @@ def create_microimage(path, identifier): #load froma data???
             image_resized = image_correct_rgb.scaled(25, 25)
         else:
             image_resized = QImage(25, 25, QImage.Format_RGB888)
-            image_resized.fill(Qt.GlobalColor(3))
+            #image_resized.fill(Qt.GlobalColor(3))
+            image_resized.fill(QColor('#E7E7E9'))
     return image_resized
 
 def fill_tree_with_select_classes(tree, classes_code):
@@ -203,10 +207,31 @@ def load_fonts():
             full_name = fonts_path + name
             QFontDatabase.addApplicationFont(full_name)
 
+def cut_long_string(string, n):
+    if len(string) > n:
+        return string[:n] + '...'
+    return string
+
+def endline_long_sting(string, n):
+    strlen = len(string)
+    n_in_string = strlen // n
+    newstr = ''
+    if strlen > n:
+        for i in range(n_in_string):
+            cutstr = string[i * n: i * (n + 1)] + '\n'
+            newstr += cutstr
+    return newstr
+
+
 def load_style(app):
-    with open('style.qss', 'r') as f:
-        style = f.read()
-        app.setStyleSheet(style)
+        #print(dir(stylesheet))
+        style = stylesheet.StyleSheet(base_dir='/home/iakhmetev/Документы/8.3_version_3_data_labeling/style',
+                                        import_def_file='imports.qss')
+                                        #main_stylesheet='myStyle.qss')
+        app.setStyleSheet(style.load_stylesheet())
+    #with open('style.qss', 'r') as f:
+    #    style = f.read()
+    #    app.setStyleSheet(style)
 
 
 """

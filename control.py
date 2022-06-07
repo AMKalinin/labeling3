@@ -19,6 +19,61 @@ import time
 import re
 import cv2
 
+class requirements(QLabel):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.setWordWrap(True)
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/requirements.txt", 'r') as f:
+            text = f.read()
+        self.setText(text)
+
+
+class newestDescription(QDialog):
+    def __init__(self, parent):
+        super().__init__(parent=parent)
+
+        self.parent = parent
+        self.setWindowTitle("Введите новое описание проекта:")
+        self.layout = QHBoxLayout()
+        self.setLayout(self.layout)
+        self.line = QLineEdit()
+        self.layout.addWidget(self.line)
+        self.line.textChanged.connect(self.parent.updateFileDescription)
+
+class testDescription(QLabel):
+    def __init__(self, parent, main):
+        super().__init__(parent=parent)
+        self.main = main
+        self.setMouseTracking(True)
+        self.setWordWrap(True)
+    
+    def updateFileDescription(self, text):
+        self.main.file.attrs[classifier.hdfs.DESCRIPTION.value] = text
+        self.updateWidgetDescription()
+        if not text:
+            self.setText("Описание проекта: ")
+    
+    def updateWidgetDescription(self):
+        #description = utils.endline_long_sting(self.main.file.attrs[classifier.hdfs.DESCRIPTION.value], 20)
+        self.setText("Описание проекта: " + '\n' + self.main.file.attrs[classifier.hdfs.DESCRIPTION.value])
+
+    def mousePressEvent(self, event):
+        if self.main.file:
+            getdescription = newestDescription(self)
+            getdescription.exec_()
+            self.main._parse_projects.emit()
+
+    def enterEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_hover.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)
+
+    
+    def leaveEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_unhover.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)    
+
 class newDescription(QDialog):
     def __init__(self, parent):
         super().__init__(parent=parent)
@@ -68,6 +123,7 @@ class projectControl(QGroupBox):
         super().__init__(parent=parent)
         self.main = parent
         self.init_ui()
+        self.setObjectName('project_control_box')
 
     def init_ui(self):
         self.init_content()
@@ -81,15 +137,21 @@ class projectControl(QGroupBox):
 
     def fill_layouts(self):
         self.layout.addWidget(self.new)
-        self.layout.addWidget(self.add)
+        #self.layout.addWidget(self.add)
         self.layout.addWidget(self.based)
         self.layout.addWidget(self.description)
+        self.layout.addWidget(self.requirements)
 
     def init_content(self):
         self.new = QPushButton("Создать новый файл проекта")
         self.add = QPushButton("Добавить проект из ...")
         self.based = QPushButton("Создать проект на основе существующего")
-        self.description = editDescription(parent=self, main=self.main)
+        #self.description = editDescription(parent=self, main=self.main)
+        self.description = testDescription(parent=self, main=self.main)
+        self.description.setText("Описание проекта: ")
+        self.description.setObjectName("description_label")
+        #self.description.setStyleSheet("QLabel#description_label{text-align:top;}")
+        self.requirements = requirements()
 
     def connect_ui(self):
         self.new.clicked.connect(self.on_new)

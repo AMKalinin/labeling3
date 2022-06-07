@@ -1,0 +1,15 @@
+QGroupBox#project_control_box
+{
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 900px; 
+}
+
+QLabel#description_label
+{
+    text-align: top right;
+    /* text-decoration: underline; */
+
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 300px; 
+}
+

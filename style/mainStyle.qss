@@ -1,0 +1,114 @@
+* {
+    font-style: normal;
+    font-size: 14px;
+    font-family: "Nunito Sans"; 
+    background-color: #E7E7E9;   }
+/* кнопка button_danger */
+QPushButton#button_danger
+{
+    background-color: #F6F8FA;
+    border: 2px solid #D5D8DA;
+    color: #D1303B;  /* ?????? */
+}
+
+/* кнопка при наведение мыши */
+QPushButton:hover#button_danger
+{
+    border-color: #EAA7AD;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed#button_danger
+{
+    background-color:  #D42A45;
+    border-color: #901125;
+    color: #FFFFFF;
+}
+/* button_primary */
+QPushButton#button_primary
+{
+    background-color: #2DA44E;
+    border: 2px solid #2A9147;
+    border-radius: 5px;
+    color: #FFFFFF;
+    min-width: 100px;    min-height: 25px;
+    max-width: 150px;   max-height: 30px;
+}
+
+/* кнопка при наведение мыши */
+QPushButton:hover#button_primary
+{
+    border: 2px solid #ABDBB9;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed#button_primary
+{
+    background-color:  #298E46;
+    border: 2px solid #277E41;
+}
+
+/* test import*/ 
+/* button_default */
+QPushButton
+{
+    background-color: #F6F8FA;
+    border: 2px solid #D5D8DA;
+    border-radius: 5px;
+    min-width: 250px;    min-height: 25px;
+    max-width: 350px;   max-height: 30px;
+}
+
+/* кнопка при наведении мыши */
+QPushButton:hover
+{
+    border: 2px solid #B4D2F3;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed
+{
+    background-color:  #EEEFF2;
+    border: 2px solid #CFD0D3;
+}
+
+QProgressBar
+{
+    border: 1px solid #aaaaaa;
+    background: white;
+    border-radius: 5px;
+    text-align:center;
+    min-height: 16px;
+    max-height: 16px;
+    color: white;
+}
+
+QProgressBar::chunk
+{
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0,
+                                stop:0 #53B96A,
+                                stop:0.25 #53B96A,
+                                stop:0.250001 #28A745,
+                                stop:0.5 #28A745,
+                                stop:0.500001 #53B96A,
+                                stop:0.75 #53B96A,
+                                stop:0.750001 #28A745,
+                                stop:1 #28A745);
+    width: 20px;
+}
+QGroupBox#project_control_box
+{
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 900px; 
+}
+
+QLabel#description_label
+{
+    text-align: top right;
+    /* text-decoration: underline; */
+
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 300px; 
+}
+
+

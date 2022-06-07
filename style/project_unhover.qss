@@ -1,0 +1,5 @@
+QGroupBox {
+    background-color: #E7E7E9;   }
+
+QLabel {
+    background-color: #E7E7E9;   }

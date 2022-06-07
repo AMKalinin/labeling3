@@ -1,0 +1,25 @@
+/* button_primary */
+QPushButton#button_primary
+{
+    background-color: #2DA44E;
+    border: 2px solid #2A9147;
+    border-radius: 5px;
+    color: #FFFFFF;
+    min-width: 100px;    min-height: 25px;
+    max-width: 150px;   max-height: 30px;
+}
+
+/* кнопка при наведение мыши */
+QPushButton:hover#button_primary
+{
+    border: 2px solid #ABDBB9;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed#button_primary
+{
+    background-color:  #298E46;
+    border: 2px solid #277E41;
+}
+
+/* test import*/ 

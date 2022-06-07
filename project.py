@@ -14,12 +14,17 @@ import re
 import h5py
 import cv2
 
+class qsslabel(QLabel):
+    def __init__(self, parent=None):
+        super().__init__()
+
 class projectWidget(QGroupBox):
     def __init__(self, path, parent, main):
         super().__init__(parent=parent)
         self.main = main
         self.path = path
         self.init_ui()
+        self.setMouseTracking(True)
 
     def init_ui(self):
         self.set_layouts()
@@ -47,22 +52,32 @@ class projectWidget(QGroupBox):
         self.init_preview()
         self.init_info()
         self.init_progressbar()
-        self.open = QPushButton("Открыть проект")
+        self.open = QPushButton("Открыть")
+        self.open.setObjectName('button_primary')
+        self.delete = QPushButton("Удалить")
+        self.delete.setObjectName('button_danger')
 
     def init_info(self):
         self.name = utils.get_name(self.path)
+        self.setTitle('Имя: ' + self.name)
         self.description = utils.get_description(self.path)
+        self.description = utils.cut_long_string(self.description, 30)
         self.alltasks = utils.get_alltasks(self.path)
         self.donetasks = utils.get_donetasks(self.path)
-        self.startdate = time.ctime(utils.get_startdate(self.path))
+        #self.startdate = time.ctime(utils.get_startdate(self.path))
         self.lastupdate = time.ctime(utils.get_lastupdate(self.path))
-        self.info = QLabel(self.name + '\n' 
-                        + self.description + '\n'
-                        + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
-                        + self.startdate + ' / ' + self.lastupdate)
+        #self.info = qsslabel(self.name + '\n' 
+        #                + self.description + '\n'
+        #                + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
+        #                + self.startdate + ' / ' + self.lastupdate)
+        self.info = qsslabel()
+        self.info.setText(#self.name + '\n'
+                        'Описание: ' + self.description + '\n'
+                        + 'Выполнено задач: ' + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
+                        + 'Последнее изменение: '  + self.lastupdate)
     
     def init_preview(self):
-        self.preview = QLabel(self)
+        self.preview = qsslabel(self)
         pixmap = QPixmap(100, 100)
         painter = QPainter(pixmap)
         topLeftY = 0
@@ -89,6 +104,7 @@ class projectWidget(QGroupBox):
 
     def fill_layouts(self):
         self.layout_actions.addWidget(self.open)
+        #self.layout_actions.addWidget(self.delete)
         self.layout_info.addWidget(self.info)
         self.layout_info.addWidget(self.progressbar)
         self.layout_preview.addWidget(self.preview)
@@ -98,3 +114,15 @@ class projectWidget(QGroupBox):
 
     def on_open(self):
         self.main._open_project.emit(self.path)
+
+    def enterEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_hover.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)
+
+    
+    def leaveEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_unhover.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)
+

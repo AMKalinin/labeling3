@@ -1,0 +1,21 @@
+/* кнопка button_danger */
+QPushButton#button_danger
+{
+    background-color: #F6F8FA;
+    border: 2px solid #D5D8DA;
+    color: #D1303B;  /* ?????? */
+}
+
+/* кнопка при наведение мыши */
+QPushButton:hover#button_danger
+{
+    border-color: #EAA7AD;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed#button_danger
+{
+    background-color:  #D42A45;
+    border-color: #901125;
+    color: #FFFFFF;
+}

@@ -1,5 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication
+from qssimport import stylesheet
 
 import main
 import utils
@@ -11,6 +12,7 @@ if __name__ == '__main__':
 
     utils.load_fonts()
     utils.load_style(app)
+    #app.setStyle('Windows')
     
     window = main.mainWindow()
     window.show()
