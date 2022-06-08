@@ -9,6 +9,7 @@
 #h5py
 #CV2
 #regex
+#qssimport
 
 ### 3. Usage
 python ./segflex.py
