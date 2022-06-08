@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="Проверка.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   inkscape:export-ydpi="98"
+   inkscape:export-xdpi="98"
+   inkscape:export-filename="C:\Users\simal\Desktop\Icons\Проверка.png"
+   id="svg1483"
+   version="1.1"
+   viewBox="0 0 211.66666 291.04167"
+   height="1100"
+   width="800">
+  <defs
+     id="defs1477">
+    <rect
+       id="rect2050"
+       height="33.501473"
+       width="152.61783"
+       y="121.90814"
+       x="34.742269" />
+  </defs>
+  <sodipodi:namedview
+     inkscape:window-maximized="0"
+     inkscape:window-y="23"
+     inkscape:window-x="93"
+     inkscape:window-height="967"
+     inkscape:window-width="1513"
+     units="px"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="531.82387"
+     inkscape:cx="308.04704"
+     inkscape:zoom="0.603125"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata1480">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Слой 1">
+    <rect
+       y="111.04939"
+       x="6.576786"
+       height="46.113098"
+       width="199.57143"
+       id="rect2046"
+       style="fill:#e6e64d;fill-opacity:1;stroke:#e6e64d;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stroke-opacity:1" />
+    <text
+       inkscape:export-ydpi="98"
+       inkscape:export-xdpi="98"
+       transform="translate(-6.2039766,-0.93059649)"
+       y="0"
+       x="73.13662"
+       style="font-size:25.4px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect2050);stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;"
+       id="text2048"
+       xml:space="preserve"><tspan
+         x="41.944923"
+         y="145.08139"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:Nunito;-inkscape-font-specification:Nunito;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">ПРОВЕРКА</tspan></tspan></text>
+  </g>
+</svg>
