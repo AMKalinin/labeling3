@@ -79,7 +79,7 @@ class baseView(QGraphicsView):
             self.scale(1.5, 1.5)
         elif event.key() == Qt.Key_Minus:
             self.scale(0.5, 0.5)
-
+    """
     def mousePressEvent(self, event):
         point = self.mapToScene(QPoint(event.x(), event.y()))
         self.point_index = None
@@ -87,7 +87,7 @@ class baseView(QGraphicsView):
         if self.point_status: 
             self.point_index = self.shape.index_of(point)
 
-
+    
     def mouseReleaseEvent(self, event):
         point = self.mapToScene(QPoint(event.x(), event.y()))
         if self.polygon:
@@ -110,6 +110,7 @@ class baseView(QGraphicsView):
                 self.scene.removeItem(self.polygon)
                 self.shape.change_point(self.point_index, point)
                 self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+    """
 
     def coloredshape_frompoints(self, points, color):
         self.shape.clear()
@@ -189,6 +190,37 @@ class editView(baseView):
         super().__init__(main=main, parent=parent)
         self.index = current_task
         self.set_background(self.index)
+
+    def mousePressEvent(self, event):
+        point = self.mapToScene(QPoint(event.x(), event.y()))
+        self.point_index = None
+        self.point_status = self.shape.point_at_pos(point)
+        if self.point_status: 
+            self.point_index = self.shape.index_of(point)
+
+
+    def mouseReleaseEvent(self, event):
+        point = self.mapToScene(QPoint(event.x(), event.y()))
+        if self.polygon:
+            self.scene.removeItem(self.polygon)
+        if self.shape.type == classifier.shapes.POLYGON.value:
+            point = self.mapToScene(QPoint(event.x(), event.y()))
+            if event.button() == Qt.LeftButton:
+                print(event.button())
+                self.shape.add_point(point)
+            elif event.button() == Qt.RightButton and self.point_status:
+                self.shape.delete_point(self.point_index)
+            self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+        self.point_status = None
+        self.point_index = None
+
+    def mouseMoveEvent(self, event):
+        point = self.mapToScene(QPoint(event.x(), event.y()))
+        if self.point_index != None:
+            if self.point_status:  
+                self.scene.removeItem(self.polygon)
+                self.shape.change_point(self.point_index, point)
+                self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
     """
     def discard(self):
         self.shape.clear()
