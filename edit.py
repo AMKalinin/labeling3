@@ -37,8 +37,10 @@ class editWidget(QDialog):
         self.connect_ui()
 
     def adjust_window(self):
-        size = QSize(1366, 768)
-        self.setMinimumSize(size)
+        #size = QSize(1366, 768)
+        #self.setMinimumSize(size)
+        self.setMaximumSize(self.main.screen.size())
+        self.setMinimumSize(self.main.screen.size())
         self.setWindowTitle("Окно редактирования полигонов")
         self.layout = QGridLayout()
         self.setLayout(self.layout)
@@ -52,10 +54,10 @@ class editWidget(QDialog):
         self.add_actions()
 
     def add_actions(self):
-        self.new_polygon = self.toolbar.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to first image in project')
-        self.save = self.toolbar.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to last image in project')
-        self.discard = self.toolbar.addAction(QIcon('__icons__/previous_tbtn.png'), 'go to previous image in project')
-        self.delete = self.toolbar.addAction(QIcon('__icons__/next_tbtn.png'), 'go to next image in project')
+        self.new_polygon = self.toolbar.addAction(QIcon(classifier.items.new.value), 'go to first image in project')
+        self.save = self.toolbar.addAction(QIcon(classifier.items.save.value), 'go to last image in project')
+        self.discard = self.toolbar.addAction(QIcon(classifier.items.discard.value), 'go to previous image in project')
+        self.delete = self.toolbar.addAction(QIcon(classifier.items.delshape.value), 'go to next image in project')
 
         #self.add = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'add new image to project')
         #self.delete = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'delete image from project')

@@ -63,13 +63,13 @@ class testDescription(QLabel):
             self.main._parse_projects.emit()
 
     def enterEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_hover.qss", 'r') as f:
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_hover.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
 
     
     def leaveEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_unhover.qss", 'r') as f:
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_widget.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)    
 
@@ -264,6 +264,10 @@ class taskDescription(QWidget):
         self.set_layouts()
         self.init_widgets()
         self.fill_layouts()
+    
+        #with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/label_solo.qss", 'r') as f:
+        #    stylesheet = f.read()
+        #self.setStyleSheet(stylesheet)
 
     def update_aerial(self, index):
         self.index = index
@@ -293,7 +297,7 @@ class taskDescription(QWidget):
     def init_widgets(self):
         #self.save = QPushButton("Сохранить")
         #self.discard = QPushButton("Отменить редактирование")
-        self.mytitle = QLabel("Параметры снимка:")
+        
 
         self.source_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.SOURCE.value)
         self.altitude_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.ALTITUDE.value)
@@ -305,6 +309,7 @@ class taskDescription(QWidget):
         self.date_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.DATE.value)
         self.time_l = aerialAttr(parent=self, main=self.main, line=classifier.aerial.TIME.value)
 
+        self.mytitle    = QLabel("Параметры снимка:")
         self.source     = QLabel('Летательный аппарат: ')
         self.altitude   = QLabel('Высота        (км): ')
         self.latitude   = QLabel('Широта        (верхний левый пиксель): ')
@@ -314,6 +319,17 @@ class taskDescription(QWidget):
         self.size       = QLabel('Размер        (ширина:высота): ')
         self.date       = QLabel('Дата: ')
         self.time       = QLabel('Время: ')
+
+        self.mytitle.setObjectName('solo')
+        self.source.setObjectName('solo')
+        self.altitude.setObjectName('solo')
+        self.latitude.setObjectName('solo')
+        self.longitude.setObjectName('solo')
+        self.sun.setObjectName('solo')
+        self.spatial.setObjectName('solo')
+        self.size.setObjectName('solo')
+        self.date.setObjectName('solo')
+        self.time.setObjectName('solo')
 
     def fill_layouts(self):
 
@@ -442,14 +458,15 @@ class viewToolbar(QToolBar):
         self.add_actions()
 
     def add_actions(self):
-        self.first = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to first image in project')
-        self.previous = self.addAction(QIcon('__icons__/previous_tbtn.png'), 'go to previous image in project')
-        self.next = self.addAction(QIcon('__icons__/next_tbtn.png'), 'go to next image in project')
-        self.last = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'go to last image in project')
-        self.add = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'add new image to project')
-        self.delete = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'delete image from project')
-        self.showall = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'set all polygons in list as selected')
-        self.hideall = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'set all polygons in list as deselected')
+        #print(classifier.items.first.value)
+        self.first = self.addAction(QIcon(classifier.items.first.value), 'go to first image in project')
+        self.previous = self.addAction(QIcon(classifier.items.previous.value), 'go to previous image in project')
+        self.next = self.addAction(QIcon(classifier.items.next.value), 'go to next image in project')
+        self.last = self.addAction(QIcon(classifier.items.last.value), 'go to last image in project')
+        self.showall = self.addAction(QIcon(classifier.items.showall.value), 'set all polygons in list as selected')
+        self.hideall = self.addAction(QIcon(classifier.items.hideall.value), 'set all polygons in list as deselected')
+        self.add = self.addAction(QIcon(classifier.items.add.value), 'add new image to project')
+        self.delete = self.addAction(QIcon(classifier.items.delete.value), 'delete image from project')
 
 
 

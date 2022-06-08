@@ -18,6 +18,7 @@ class taskWidget(QGroupBox):
         self.index = index
         self.mode = mode
         self.init_ui()
+        self.setMouseTracking(True)
 
     def init_ui(self):
         self.check_status()
@@ -149,6 +150,17 @@ class taskWidget(QGroupBox):
         self.main.tab.parse_tasks()
         self.main.tab.parse_projects()
 
+    def enterEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_hover.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)
+
+    
+    def leaveEvent(self, event):
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_widget.qss", 'r') as f:
+            stylesheet = f.read()
+        self.setStyleSheet(stylesheet)
+
 
 
 
@@ -191,14 +203,6 @@ class taskWidget(QGroupBox):
 
 
 
-
-
-
-    def enterEvent(self, event):
-        print("enterEvent")
-    
-    def leaveEvent(self, event):
-        print("leaveEvent")
 
 """
 #LEGACY CODE BELOW THIS LINE 

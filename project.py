@@ -14,10 +14,6 @@ import re
 import h5py
 import cv2
 
-class qsslabel(QLabel):
-    def __init__(self, parent=None):
-        super().__init__()
-
 class projectWidget(QGroupBox):
     def __init__(self, path, parent, main):
         super().__init__(parent=parent)
@@ -25,6 +21,7 @@ class projectWidget(QGroupBox):
         self.path = path
         self.init_ui()
         self.setMouseTracking(True)
+        #self.setObjectName("widget")
 
     def init_ui(self):
         self.set_layouts()
@@ -70,14 +67,15 @@ class projectWidget(QGroupBox):
         #                + self.description + '\n'
         #                + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
         #                + self.startdate + ' / ' + self.lastupdate)
-        self.info = qsslabel()
+        self.info = QLabel(self)
         self.info.setText(#self.name + '\n'
                         'Описание: ' + self.description + '\n'
                         + 'Выполнено задач: ' + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
                         + 'Последнее изменение: '  + self.lastupdate)
+        #self.info.setObjectName("widget")
     
     def init_preview(self):
-        self.preview = qsslabel(self)
+        self.preview = QLabel(self)
         pixmap = QPixmap(100, 100)
         painter = QPainter(pixmap)
         topLeftY = 0
@@ -114,15 +112,15 @@ class projectWidget(QGroupBox):
 
     def on_open(self):
         self.main._open_project.emit(self.path)
-
+    
     def enterEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_hover.qss", 'r') as f:
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_hover.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
 
     
     def leaveEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/project_unhover.qss", 'r') as f:
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_widget.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
-
+    

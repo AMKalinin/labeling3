@@ -94,14 +94,39 @@ class items(Enum):
     ICONS       = path + '/' + '__icons__'      + '/'
     FONTS       = path + '/' + '__fonts__'      + '/'
 
-    previous    = IMAGES + '/' + 'previous_tbtn.png'
     #TASK_WIDGET
-    tocheck     = ICONS + '/' + 'cancel_tbtn.png'
-    redo        = ICONS + '/' + 'cancel_tbtn.png'
-    checked     = ICONS + '/' + 'cancel_tbtn.png'
-    status_todo = ICONS + '/' + 'previous_tbtn.png'
-    status_inpr = ICONS + '/' + 'next_tbtn.png'
-    status_toch = ICONS + '/' + 'tofirst_tbtn.png'
+    #tocheck     = ICONS + '/' + 'cancel_tbtn.png'
+    #redo        = ICONS + '/' + 'cancel_tbtn.png'
+    #checked     = ICONS + '/' + 'cancel_tbtn.png'
+    #status_todo = ICONS + '/' + 'previous_tbtn.png'
+    #status_inpr = ICONS + '/' + 'next_tbtn.png'
+    #status_toch = ICONS + '/' + 'tofirst_tbtn.png'
+
+    tocheck     = ICONS  + 'next_tbtn.png'
+    redo        = ICONS  + 'previous_tbtn.png'
+    checked     = ICONS  + 'Проверена ОК.png'
+    status_todo = ICONS  + 'Не начата.png'
+    status_inpr = ICONS  + 'В работе.png'
+    status_toch = ICONS  + 'Проверка.png'
+
+    first       = ICONS  + 'Перейти к первой задаче.png'
+    previous    = ICONS  + 'Перейти к предыдущей задаче.png'
+    next        = ICONS  + 'Перейти к следующей задаче.png'
+    last        = ICONS  + 'Перейти к последней задаче.png'
+
+    add         = ICONS  + 'Добавить новую задачу.png'
+    delete      = ICONS  + 'Удалить задачу.png'
+    showall     = ICONS  + 'Показать все полигоны.png'
+    hideall     = ICONS  + 'Спрятать все полигоны.png'
+
+    new         = ICONS  + 'Новый полигон_1.png'
+    save        = ICONS  + 'Сохранить.png'
+    discard     = ICONS  + 'Сбросить нарисованное.png'
+    delshape    = ICONS  + 'Удалить.png'
+
+
+
+    #
 
 class shapes(Enum):
     NONE        = 0

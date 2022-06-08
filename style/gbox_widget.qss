@@ -1,0 +1,18 @@
+QGroupBox
+{
+    background-color: #F6F8FA;
+    /*
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 900px; */
+}
+
+QLabel
+{
+    background-color: #F6F8FA;
+    /* text-align: top right; */
+    /* text-decoration: underline; */
+    /*
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 300px; */
+}
+

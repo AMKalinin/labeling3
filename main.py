@@ -28,8 +28,9 @@ class mainWindow(QMainWindow):
     _edit_task = pyqtSignal(int)
     _edit_description = pyqtSignal(str)
     _refresh_tree = pyqtSignal()
-    def __init__(self):
+    def __init__(self, screen):
         QMainWindow.__init__(self, flags=QtCore.Qt.Window)
+        self.screen = screen
         self.file = None
         self.task_count = 0
         self.codenamecolor = []
@@ -45,8 +46,10 @@ class mainWindow(QMainWindow):
         self.main_frame = QFrame()
         self.setCentralWidget(self.main_frame)
         self.setWindowTitle("Segmentation app. 1.0::MVP")
-        size = QSize(1366, 768)
-        self.setMinimumSize(size)
+        #print(self.screen)
+        #size = QSize(1366, 768)
+        self.setMaximumSize(self.screen.size())
+        self.setMinimumSize(self.screen.size())
         self.main_layout = QGridLayout()
         self.main_frame.setLayout(self.main_layout)
 

@@ -96,6 +96,25 @@ QProgressBar::chunk
                                 stop:1 #28A745);
     width: 20px;
 }
+QGroupBox
+{
+    background-color: #F6F8FA;
+    /*
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 900px; */
+}
+
+QLabel
+{
+    background-color: #F6F8FA;
+    /* text-align: top right; */
+    /* text-decoration: underline; */
+    /*
+    min-width: 350px;    min-height: 250px;
+    max-width: 450px;   max-height: 300px; */
+}
+
+
 QGroupBox#project_control_box
 {
     min-width: 350px;    min-height: 250px;
@@ -104,6 +123,7 @@ QGroupBox#project_control_box
 
 QLabel#description_label
 {
+    background-color: #F6F8FA;  
     text-align: top right;
     /* text-decoration: underline; */
 
@@ -117,5 +137,7 @@ QLabel#aerial_attr {
     max-width: 250px;   max-height: 20px; 
     background-color: #F6F8FA;  
 }
+QLabel#solo {
+    background-color: #E7E7E9;   }
 QLineEdit {
     background-color: #F6F8FA;   }
