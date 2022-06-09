@@ -7,45 +7,45 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="800"
-   height="1100"
-   viewBox="0 0 211.66666 291.04167"
-   version="1.1"
-   id="svg1483"
-   inkscape:export-filename="C:\Users\simal\Desktop\Icons\В работе.png"
-   inkscape:export-xdpi="98"
-   inkscape:export-ydpi="98"
+   sodipodi:docname="В работе.svg"
    inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   sodipodi:docname="В работе.svg">
+   inkscape:export-ydpi="98"
+   inkscape:export-xdpi="98"
+   inkscape:export-filename="D:\Документы\Илья\Работа\Icons\В работе.png"
+   id="svg1483"
+   version="1.1"
+   viewBox="0 0 211.66666 291.04167"
+   height="1100"
+   width="800">
   <defs
      id="defs1477">
     <rect
-       x="34.742269"
-       y="121.90814"
-       width="152.61783"
+       id="rect2050"
        height="33.501473"
-       id="rect2050" />
+       width="152.61783"
+       y="121.90814"
+       x="34.742269" />
   </defs>
   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="0.603125"
-     inkscape:cx="308.04704"
-     inkscape:cy="531.82387"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     inkscape:document-rotation="0"
-     showgrid="false"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:window-height="1017"
+     inkscape:window-width="1920"
      units="px"
-     inkscape:window-width="1513"
-     inkscape:window-height="967"
-     inkscape:window-x="93"
-     inkscape:window-y="23"
-     inkscape:window-maximized="0" />
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="563.89894"
+     inkscape:cx="379.12148"
+     inkscape:zoom="1.20625"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
   <metadata
      id="metadata1480">
     <rdf:RDF>
@@ -59,27 +59,27 @@
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:label="Слой 1"
+     id="layer1"
      inkscape:groupmode="layer"
-     id="layer1">
+     inkscape:label="Слой 1">
     <rect
-       style="fill:#5870e6;fill-opacity:1;stroke:#5870e6;stroke-width:4;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;paint-order:stroke markers fill;stroke-opacity:1"
+       y="121.28137"
+       x="55.908222"
+       height="18.235231"
+       width="98.235229"
        id="rect2046"
-       width="199.57143"
-       height="46.113098"
-       x="6.576786"
-       y="111.04939" />
+       style="fill:#5870e6;fill-opacity:1;stroke:#5870e6;stroke-width:1.76477;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke markers fill" />
     <text
-       xml:space="preserve"
-       id="text2048"
-       style="font-size:25.4px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect2050);stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;"
-       x="73.13662"
-       y="0"
-       transform="translate(-6.2039766,-0.93059649)"
+       inkscape:export-ydpi="98"
        inkscape:export-xdpi="98"
-       inkscape:export-ydpi="98"><tspan
-         x="46.95547"
-         y="145.08139"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.4px;font-family:Nunito;-inkscape-font-specification:Nunito;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">В РАБОТЕ</tspan></tspan></text>
+       transform="translate(-6.2039766,-0.93059649)"
+       y="0"
+       x="73.13662"
+       style="font-size:16.9333px;line-height:1.25;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';white-space:pre;shape-inside:url(#rect2050);stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;"
+       id="text2048"
+       xml:space="preserve"><tspan
+         x="68.320657"
+         y="137.35697"><tspan
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:16.9333px;font-family:Nunito;-inkscape-font-specification:Nunito;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1">В РАБОТЕ</tspan></tspan></text>
   </g>
 </svg>

@@ -7,7 +7,7 @@ QGroupBox#project_control_box
 QLabel#description_label
 {
     background-color: #F6F8FA;  
-    text-align: top right;
+    qproperty-alignment: AlignTop;
     /* text-decoration: underline; */
 
     min-width: 350px;    min-height: 250px;

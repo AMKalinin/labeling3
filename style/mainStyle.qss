@@ -1,5 +1,6 @@
 * {
     font-style: normal;
+    text-align: bottom;
     font-size: 14px;
     font-family: "Nunito Sans"; 
     background-color: #E7E7E9;   }
@@ -100,7 +101,7 @@ QGroupBox
 {
     background-color: #F6F8FA;
     /*
-    min-width: 350px;    min-height: 250px;
+    min-width: 250px;    min-height: 250px;
     max-width: 450px;   max-height: 900px; */
 }
 
@@ -124,7 +125,7 @@ QGroupBox#project_control_box
 QLabel#description_label
 {
     background-color: #F6F8FA;  
-    text-align: top right;
+    qproperty-alignment: AlignTop;
     /* text-decoration: underline; */
 
     min-width: 350px;    min-height: 250px;

@@ -35,7 +35,7 @@ class taskWidget(QGroupBox):
     def adjust_window(self):
         self.layout = QHBoxLayout()
         self.setMouseTracking(True)
-        self.setMaximumHeight(120)
+        self.setMaximumHeight(130)
         self.setLayout(self.layout)
 
     def create_layouts(self):
@@ -44,12 +44,12 @@ class taskWidget(QGroupBox):
         self.layout_backward = QVBoxLayout()
         self.layout_forward = QVBoxLayout()
         #self.layout_controls = QVBoxLayout()
-        self.layout_status = QVBoxLayout()
+        #self.layout_status = QVBoxLayout()
 
     def order_layouts(self):
         self.layout.addLayout(self.layout_backward)
         self.layout.addLayout(self.layout_preview)
-        self.layout.addLayout(self.layout_status)
+        #self.layout.addLayout(self.layout_status)
         self.layout.addLayout(self.layout_actions)
         self.layout.addLayout(self.layout_forward)
 
@@ -72,6 +72,10 @@ class taskWidget(QGroupBox):
         self.preview.setPixmap(pixmap)
 
     def init_actions(self):
+        self.attrs = QPushButton("Редактировать параметры снимка")
+        self.edit = QPushButton("Открыть окно сегментации")
+        size = self.attrs.size()
+
         tocheck = QIcon(QPixmap(classifier.items.tocheck.value))
         redo = QIcon(QPixmap(classifier.items.redo.value))
         checked = QIcon(QPixmap(classifier.items.checked.value))
@@ -79,6 +83,9 @@ class taskWidget(QGroupBox):
         todo = QPixmap(classifier.items.status_todo.value)
         inpr = QPixmap(classifier.items.status_inpr.value)
         toch = QPixmap(classifier.items.status_toch.value)
+        todo = todo.scaled(350, 30,  Qt.KeepAspectRatio)
+        inpr = inpr.scaled(350, 30,  Qt.KeepAspectRatio)
+        toch = toch.scaled(350, 30,  Qt.KeepAspectRatio)
 
         self.tocheck = QToolButton()
         self.redo = QToolButton()
@@ -96,8 +103,8 @@ class taskWidget(QGroupBox):
         self.inpr.setPixmap(inpr)
         self.toch.setPixmap(toch)
 
-        self.attrs = QPushButton("Редактировать параметры снимка")
-        self.edit = QPushButton("Открыть окно сегментации")
+
+
 
     def place_widgets(self):
         self.layout_preview.addWidget(self.preview)
@@ -107,13 +114,16 @@ class taskWidget(QGroupBox):
         if self.mode == classifier.tasks.LEFT.value:
             self.layout_forward.addWidget(self.tocheck)
             if self.status == classifier.tasks.TO_DO.value:
-                self.layout_status.addWidget(self.todo)
+                self.layout_actions.addWidget(self.todo)
+                #self.layout_status.addWidget(self.todo)
             elif self.status == classifier.tasks.IN_PROGRESS.value:
-                self.layout_status.addWidget(self.inpr)
+                #self.layout_status.addWidget(self.inpr)
+                self.layout_actions.addWidget(self.inpr)
         elif self.mode == classifier.tasks.RIGHT.value:
             self.layout_forward.addWidget(self.checked)
             self.layout_backward.addWidget(self.redo)
-            self.layout_status.addWidget(self.toch)
+            self.layout_actions.addWidget(self.toch)
+            #self.layout_status.addWidget(self.toch)
 
     def connect_ui(self):
         self.attrs.clicked.connect(self.on_attrs)

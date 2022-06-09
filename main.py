@@ -46,7 +46,7 @@ class mainWindow(QMainWindow):
         self.main_frame = QFrame()
         self.setCentralWidget(self.main_frame)
         self.setWindowTitle("Segmentation app. 1.0::MVP")
-        self.screen.setHeight(self.screen.height() - 30)
+        self.screen.setHeight(self.screen.height() - 50)
         #self.screen.setWidth(self.screen.width() - 10)
         #print(self.screen)
         #size = QSize(1366, 768)
