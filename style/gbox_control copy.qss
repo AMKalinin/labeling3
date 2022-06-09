@@ -14,22 +14,3 @@ QLabel#description_label
     max-width: 450px;   max-height: 300px; 
 }
 
-taskDescription
-{
-    min-width: 500px;    min-height: 250px;
-    max-width: 500px;   max-height: 1100px; 
-
-}
-
-polygonTree
-{
-    min-width: 500px;    min-height: 250px;
-    max-width: 500px;   max-height: 1100px; 
-}
-
-polygonPalette 
-{
-    min-height: 100px;
-    max-height: 100px;
-
-}

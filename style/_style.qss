@@ -1,0 +1,273 @@
+QMainWindow
+{
+    min-width: 1280px;
+    min-height: 720px;
+    background: #EEF0F5;
+}
+/* ......................................................................*/
+QWidget
+{
+    font-size: 14px;
+    font-family: Nunito Sans;
+}
+/* ......................................................................*/
+
+/* кнопка button_default */
+QPushButton
+{
+    background-color: #F6F8FA;
+    border: 2px solid #D5D8DA;
+    border-radius: 6px;
+    min-width: 40px;    min-height: 25px;
+    max-width: 300px;   max-height: 50px;
+}
+
+/* кнопка при наведении мыши */
+QPushButton:hover
+{
+    background-color:  #F6F8FA;
+    border: 2px solid #B4D2F3;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed
+{
+    background-color:  #EEEFF2;
+    border: 2px solid #CFD0D3;
+}
+
+/* ......................................................................*/
+
+/* button_primary */
+QPushButton#button_primary
+{
+    background-color: #2DA44E;
+    border: 2px solid #2A9147;
+    color: #FFFFFF;
+}
+
+/* кнопка при наведение мыши */
+QPushButton:hover#button_primary
+{
+    border: 2px solid #ABDBB9;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed#button_primary
+{
+    background-color:  #298E46;
+    border: 2px solid #277E41;
+}
+
+/* ......................................................................*/
+
+/* кнопка button_danger */
+QPushButton#button_danger
+{
+    background-color: #F6F8FA;
+    border: 2px solid #D5D8DA;
+    color: #D1303B;
+}
+
+/* кнопка при наведение мыши */
+QPushButton:hover#button_danger
+{
+    border: 2px solid #EAA7AD;
+    color: #D1303B;
+}
+
+/* кнопка при клике мыши */
+QPushButton:pressed#button_danger
+{
+    color: #FFFFFF;
+    background-color:  #D42A45;
+    border: 2px solid #901125;
+}
+
+/* ......................................................................*/
+
+QTabWidget::pane
+{
+    border-top: 40px solid #EEF0F5;
+    position: absolute;
+    top: -40px;
+}
+QTabWidget QGroupBox
+{
+    background: #EEF0F5;
+}
+QTabWidget QFrame
+{
+     background: #EEF0F5;
+}
+QTabWidget QScrollArea
+{
+    border: none;
+}
+QTabBar::tab
+{
+    min-width: 90px;
+    min-height: 38px;
+    background: #EEF0F5;
+    border-bottom: 1px solid #E7E7E9;
+}
+QTabBar::tab:selected, QTabBar::tab:hover
+{
+    font-weight: Bold;
+    border-bottom: 1px solid #000000;
+}
+/* ......................................................................*/
+higher_control, view_control, project_description_new, task_description
+{
+    min-width: 340px;
+    max-width: 340px;
+}
+/* ......................................................................*/
+QFrame
+{
+    background: #E7E7E9;
+}
+/* ......................................................................*/
+
+/* Внешний вид проетка*/
+QGroupBox project_widget_new
+{
+    min-width: 400px;
+    min-height: 125px;
+    min-width: 800px;
+    min-height: 125px;
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 10px;
+}
+
+project_widget_new QLabel
+{
+    background-color: #FFFFFF;
+}
+project_widget_new QPushButton
+{
+    max-width: 200px;
+    max-height: 40px;
+}
+/* ......................................................................*/
+
+/* Внешний вид списка*/
+QListWidget
+{
+    background-color: #F6F8FA;
+}
+
+QListWidget::item
+{
+    border-bottom: 1px solid #000000;
+    min-height: 3em;
+}
+
+QListWidget::item:hover
+{
+    background-color: #EEEFF2;
+}
+
+QListView::item:selected:active
+{
+     background-color: #EEEFF2;
+     color: #000000;
+}
+
+/* ......................................................................*/
+QGroupBox task_widget_new
+{
+    min-width: 450px;
+    min-height: 125px;
+    max-width: 800px;
+    max-height: 125px;
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 10px;
+}
+
+
+QGroupBox task_widget_new QLabel
+{
+    max-width: 100px;
+}
+
+QGroupBox task_widget_new QPushButton
+{
+    max-width: 120px;
+    max-height: 80px;
+}
+/* ......................................................................*/
+
+QTreeWidget
+{
+    background-color: #FFFFFF;
+}
+
+QTreeWidget QHeaderView
+{
+    background-color: #EEEEEE;
+    border: none;
+}
+
+/* ......................................................................*/
+QScrollBar:vertical
+{
+     background: #EEF0F5;
+     min-width: 8px;
+     max-width: 8px;
+}
+
+QScrollBar:horizontal
+{
+     background: #EEF0F5;
+     min-height: 8px;
+     max-height: 8px;
+}
+
+QScrollBar::handle
+{
+/*ползунок*/
+    border-radius: 4px;
+    background: #CCCBCE;
+    min-height: 20px;
+}
+QScrollBar::add-line,
+QScrollBar::sub-line,
+QScrollBar::up-arrow,
+QScrollBar::down-arrow,
+QScrollBar::add-page,
+QScrollBar::sub-page
+{
+    background: #EEF0F5;
+}
+/* ......................................................................*/
+QDialog, QDialog QLabel
+{
+    background: #EEF0F5;
+}
+/* ......................................................................*/
+QProgressBar
+{
+    border: 1px solid #aaaaaa;
+    background: white;
+    border-radius: 4px;
+    text-align:center;
+    min-height: 16px;
+    max-height: 16px;
+}
+
+QProgressBar::chunk
+{
+    background: qlineargradient(x1:0, y1:1, x2:1, y2:0,
+                                stop:0 #53B96A,
+                                stop:0.25 #53B96A,
+                                stop:0.250001 #28A745,
+                                stop:0.5 #28A745,
+                                stop:0.500001 #53B96A,
+                                stop:0.75 #53B96A,
+                                stop:0.750001 #28A745,
+                                stop:1 #28A745);
+    width: 20px;
+}

@@ -127,7 +127,8 @@ class baseView(QGraphicsView):
             points = utils.pointslist_from_str(points)
             points = utils.flist_from_pointslist(points)
             points = utils.qpoints_from_flist(points)
-            color = Qt.GlobalColor(self.main.get_color(int(item.text(1))))
+            color = QColor(Qt.GlobalColor(self.main.get_color(int(item.text(1)))))
+            color.setAlpha(200)
             self.coloredshape_frompoints(points, color)
 
     def discard(self):
@@ -206,7 +207,7 @@ class editView(baseView):
         if self.shape.type == classifier.shapes.POLYGON.value:
             point = self.mapToScene(QPoint(event.x(), event.y()))
             if event.button() == Qt.LeftButton:
-                print(event.button())
+                #print(event.button())
                 self.shape.add_point(point)
             elif event.button() == Qt.RightButton and self.point_status:
                 self.shape.delete_point(self.point_index)

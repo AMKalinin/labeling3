@@ -35,7 +35,7 @@ class taskWidget(QGroupBox):
     def adjust_window(self):
         self.layout = QHBoxLayout()
         self.setMouseTracking(True)
-        self.setMaximumHeight(130)
+        self.setMaximumHeight(140)
         self.setLayout(self.layout)
 
     def create_layouts(self):
@@ -68,6 +68,7 @@ class taskWidget(QGroupBox):
 
     def init_preview(self):
         self.preview = QLabel(self)
+        self.preview.setObjectName('gbox')
         pixmap = utils.create_preview(hdf=self.main.file, identifier = self.index)
         self.preview.setPixmap(pixmap)
 
@@ -76,9 +77,9 @@ class taskWidget(QGroupBox):
         self.edit = QPushButton("Открыть окно сегментации")
         size = self.attrs.size()
 
-        tocheck = QIcon(QPixmap(classifier.items.tocheck.value))
-        redo = QIcon(QPixmap(classifier.items.redo.value))
-        checked = QIcon(QPixmap(classifier.items.checked.value))
+        tocheck = QIcon(classifier.items.tocheck.value)
+        redo = QIcon(classifier.items.redo.value)
+        checked = QIcon(classifier.items.checked.value)
 
         todo = QPixmap(classifier.items.status_todo.value)
         inpr = QPixmap(classifier.items.status_inpr.value)
@@ -90,10 +91,16 @@ class taskWidget(QGroupBox):
         self.tocheck = QToolButton()
         self.redo = QToolButton()
         self.checked = QToolButton()
+        self.tocheck.setMinimumSize(50,50)
+        self.redo.setMinimumSize(50,50)
+        self.checked.setMinimumSize(50,50)
 
         self.todo = QLabel()
         self.inpr = QLabel()
         self.toch = QLabel()
+        self.todo.setObjectName('gbox')
+        self.inpr.setObjectName('gbox')
+        self.toch.setObjectName('gbox')
 
         self.tocheck.setIcon(tocheck)        
         self.redo.setIcon(redo)        

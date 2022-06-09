@@ -68,6 +68,7 @@ class projectWidget(QGroupBox):
         #                + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'
         #                + self.startdate + ' / ' + self.lastupdate)
         self.info = QLabel(self)
+        self.info.setObjectName('gbox')
         self.info.setText(#self.name + '\n'
                         'Описание: ' + self.description + '\n'
                         + 'Выполнено задач: ' + str(self.donetasks) + ' / ' + str(self.alltasks) + '\n'

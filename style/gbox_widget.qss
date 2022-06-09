@@ -1,14 +1,15 @@
 QGroupBox
 {
     background-color: #F6F8FA;
+    padding-top: 30px;
     /*
     min-width: 350px;    min-height: 250px;
     max-width: 450px;   max-height: 900px; */
 }
 
-QLabel
+QLabel#gbox
 {
-    background-color: #F6F8FA;
+     background-color: #F6F8FA; 
     /* text-align: top right; */
     /* text-decoration: underline; */
     /*

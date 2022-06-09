@@ -45,7 +45,7 @@ class mainWindow(QMainWindow):
     def adjust_window(self):
         self.main_frame = QFrame()
         self.setCentralWidget(self.main_frame)
-        self.setWindowTitle("Segmentation app. 1.0::MVP")
+        self.setWindowTitle("Segmentation app. 1.1::Release")
         self.screen.setHeight(self.screen.height() - 50)
         #self.screen.setWidth(self.screen.width() - 10)
         #print(self.screen)
@@ -187,7 +187,7 @@ class mainWindow(QMainWindow):
                 self.codenamecolor.append((code, name, color))
 
     def on_show_all(self):
-        print("showall")
+        #print("showall")
         self._show_all.emit(1)
 
     def previous_view(self):

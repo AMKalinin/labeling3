@@ -4,6 +4,16 @@
     font-size: 14px;
     font-family: "Nunito Sans"; 
     background-color: #E7E7E9;   }
+
+QTreeWidget {
+    background-color: #F6F8FA;
+
+}
+
+QListWidget {
+    background-color: #F6F8FA;
+}
+
 /* кнопка button_danger */
 QPushButton#button_danger
 {
@@ -100,14 +110,15 @@ QProgressBar::chunk
 QGroupBox
 {
     background-color: #F6F8FA;
+    padding-top: 30px;
     /*
-    min-width: 250px;    min-height: 250px;
+    min-width: 350px;    min-height: 250px;
     max-width: 450px;   max-height: 900px; */
 }
 
-QLabel
+QLabel#gbox
 {
-    background-color: #F6F8FA;
+     background-color: #F6F8FA; 
     /* text-align: top right; */
     /* text-decoration: underline; */
     /*
@@ -118,8 +129,8 @@ QLabel
 
 QGroupBox#project_control_box
 {
-    min-width: 350px;    min-height: 250px;
-    max-width: 450px;   max-height: 900px; 
+    min-width: 500px;    min-height: 250px;
+    max-width: 500px;   max-height: 1100px; 
 }
 
 QLabel#description_label
@@ -132,7 +143,25 @@ QLabel#description_label
     max-width: 450px;   max-height: 300px; 
 }
 
+taskDescription
+{
+    min-width: 500px;    min-height: 250px;
+    max-width: 500px;   max-height: 1100px; 
 
+}
+
+polygonTree
+{
+    min-width: 500px;    min-height: 250px;
+    max-width: 500px;   max-height: 1100px; 
+}
+
+polygonPalette 
+{
+    min-height: 100px;
+    max-height: 100px;
+
+}
 QLabel#aerial_attr {
     min-width: 250px;    min-height: 20px;
     max-width: 250px;   max-height: 20px; 
