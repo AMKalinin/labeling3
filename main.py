@@ -269,31 +269,40 @@ class mainWindow(QMainWindow):
         self._show_all.emit(1)
 
     def previous_view_10(self):
-        self.tab.change_view(index=-10)
+        if self.file:
+            self.tab.change_view(index=-10)
 
     def previous_view(self):
-        self.tab.change_view(index=-1)
+        if self.file:
+            self.tab.change_view(index=-1)
 
     def next_view(self):
-        self.tab.change_view(index=+1)
+        if self.file:
+            self.tab.change_view(index=+1)
 
     def next_view_10(self):
-        self.tab.change_view(index=+10)
+        if self.file:
+            self.tab.change_view(index=+10)
 
     def previous_polygons(self):
-        self.viewTree.update(index=-1)
+        if self.file:
+            self.viewTree.update(index=-1)
 
     def previous_polygons_10(self):
-        self.viewTree.update(index=-10)
+        if self.file:
+            self.viewTree.update(index=-10)
 
     def next_polygons(self):
-        self.viewTree.update(index=+1)
+        if self.file:
+            self.viewTree.update(index=+1)
 
     def next_polygons_10(self):
-        self.viewTree.update(index=+10)
+        if self.file:
+            self.viewTree.update(index=+10)
 
     def hideall(self):
-        self.tab.view_w.discard()
+        if self.file:
+            self.tab.view_w.discard()
 
     def get_name(self, code):
         for triple in self.codenamecolor:
