@@ -8,5 +8,7 @@
 @import "gbox_control.qss";
 @import "label_aerial.qss";
 @import "label_solo.qss";
+@import "tab.qss";
+@import "scroll.qss";
 
 @import "lineedit.qss";

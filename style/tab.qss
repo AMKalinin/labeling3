@@ -1,0 +1,23 @@
+QTabWidget::pane
+{
+    border-top: 40px solid #E7E7E9;
+    position: absolute;
+    top: -40px;
+}
+
+QTabWidget QScrollArea
+{
+    border: none;
+}
+QTabBar::tab
+{
+    min-width: 90px;
+    min-height: 38px;
+    /*background: #EEF0F5; */
+    border-bottom: 1px solid #E7E7E9;
+}
+QTabBar::tab:selected, QTabBar::tab:hover
+{
+    font-weight: Bold;
+    border-bottom: 1px solid #000000;
+}

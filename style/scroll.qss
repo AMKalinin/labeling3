@@ -1,0 +1,30 @@
+QScrollBar:vertical
+{
+     background: #EEF0F5;
+     min-width: 8px;
+     max-width: 8px;
+}
+
+QScrollBar:horizontal
+{
+     background: #EEF0F5;
+     min-height: 8px;
+     max-height: 8px;
+}
+
+QScrollBar::handle
+{
+/*ползунок*/
+    border-radius: 4px;
+    background: #CCCBCE;
+    min-height: 20px;
+}
+QScrollBar::add-line,
+QScrollBar::sub-line,
+QScrollBar::up-arrow,
+QScrollBar::down-arrow,
+QScrollBar::add-page,
+QScrollBar::sub-page
+{
+    background: #EEF0F5;
+}

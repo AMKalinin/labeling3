@@ -169,5 +169,58 @@ QLabel#aerial_attr {
 }
 QLabel#solo {
     background-color: #E7E7E9;   }
+QTabWidget::pane
+{
+    border-top: 40px solid #E7E7E9;
+    position: absolute;
+    top: -40px;
+}
+
+QTabWidget QScrollArea
+{
+    border: none;
+}
+QTabBar::tab
+{
+    min-width: 90px;
+    min-height: 38px;
+    /*background: #EEF0F5; */
+    border-bottom: 1px solid #E7E7E9;
+}
+QTabBar::tab:selected, QTabBar::tab:hover
+{
+    font-weight: Bold;
+    border-bottom: 1px solid #000000;
+}
+QScrollBar:vertical
+{
+     background: #EEF0F5;
+     min-width: 8px;
+     max-width: 8px;
+}
+
+QScrollBar:horizontal
+{
+     background: #EEF0F5;
+     min-height: 8px;
+     max-height: 8px;
+}
+
+QScrollBar::handle
+{
+/*ползунок*/
+    border-radius: 4px;
+    background: #CCCBCE;
+    min-height: 20px;
+}
+QScrollBar::add-line,
+QScrollBar::sub-line,
+QScrollBar::up-arrow,
+QScrollBar::down-arrow,
+QScrollBar::add-page,
+QScrollBar::sub-page
+{
+    background: #EEF0F5;
+}
 QLineEdit {
     background-color: #F6F8FA;   }
