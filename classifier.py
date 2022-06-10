@@ -121,7 +121,8 @@ class items(Enum):
 
     new         = ICONS  + 'Новый полигон_1.png'
     save        = ICONS  + 'Сохранить.png'
-    discard     = ICONS  + 'Сбросить нарисованное.png'
+    discard     = ICONS  + 'Спрятать все полигоны.png'
+    reseg       = ICONS  + 'Сбросить нарисованное.png'
     delshape    = ICONS  + 'Удалить.png'
 
 

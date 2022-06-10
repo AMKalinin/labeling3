@@ -48,9 +48,15 @@ class baseView(QGraphicsView):
             self.background = self.scene.addPixmap(image_as_pixmap)
             self.index_max = 0
         else:
-            image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
-            self.background = self.scene.addPixmap(image_as_pixmap)
-            self.index_max = self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] - 1
+            if self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] != 0:
+                image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
+                self.background = self.scene.addPixmap(image_as_pixmap)
+                self.index_max = self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] - 1
+            else:
+                image_as_pixmap = utils.pixmap_default()
+                self.background = self.scene.addPixmap(image_as_pixmap)
+                self.index_max = 0
+
 
     def change_background(self,index): 
         if self.main.file:
@@ -61,14 +67,23 @@ class baseView(QGraphicsView):
                 self.index = self.index_max
             if self.background:  
                 self.scene.removeItem(self.background)
-            image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
-            self.background = self.scene.addPixmap(image_as_pixmap)
+            if self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] != 0:
+                image_as_pixmap = utils.pixmap_at_index(self.main.file, self.index)
+                self.background = self.scene.addPixmap(image_as_pixmap)
+            else:
+                image_as_pixmap = utils.pixmap_default()
+                self.background = self.scene.addPixmap(image_as_pixmap)
+
 
     def set_background(self, index):
         if self.background:  
             self.scene.removeItem(self.background)
-        image_as_pixmap = utils.pixmap_at_index(self.main.file, index)
-        self.background = self.scene.addPixmap(image_as_pixmap)
+        if self.main.file.attrs[classifier.hdfs.TASK_COUNT.value] != 0:
+            image_as_pixmap = utils.pixmap_at_index(self.main.file, index)
+            self.background = self.scene.addPixmap(image_as_pixmap)
+        else:
+            image_as_pixmap = utils.pixmap_default()
+            self.background = self.scene.addPixmap(image_as_pixmap)
 
 
     def current_task(self):

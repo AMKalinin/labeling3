@@ -54,10 +54,10 @@ class editWidget(QDialog):
         self.add_actions()
 
     def add_actions(self):
-        self.new_polygon = self.toolbar.addAction(QIcon(classifier.items.new.value), 'go to first image in project')
-        self.save = self.toolbar.addAction(QIcon(classifier.items.save.value), 'go to last image in project')
-        self.discard = self.toolbar.addAction(QIcon(classifier.items.discard.value), 'go to previous image in project')
-        self.delete = self.toolbar.addAction(QIcon(classifier.items.delshape.value), 'go to next image in project')
+        self.new_polygon = self.toolbar.addAction(QIcon(classifier.items.new.value), 'Новая фигура')
+        self.save = self.toolbar.addAction(QIcon(classifier.items.save.value), 'Сохранить в атрибуты')
+        self.discard = self.toolbar.addAction(QIcon(classifier.items.discard.value), 'Очистить')
+        self.delete = self.toolbar.addAction(QIcon(classifier.items.delshape.value), 'Удалить выбраннный атрибут')
 
         #self.add = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'add new image to project')
         #self.delete = self.addAction(QIcon('__icons__/cancel_tbtn.png'), 'delete image from project')

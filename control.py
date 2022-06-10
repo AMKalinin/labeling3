@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QPlainTextEdit, QLineEdit, QMenu,
                             QScrollArea, QToolButton, QSizePolicy, QComboBox,
                             QFileDialog, QSplitter, QListWidget, QListWidgetItem, QGraphicsView, QGraphicsScene, QToolBar,
-                            QTreeWidget, QTreeWidgetItem, QListView, QAbstractItemView                 )
+                            QTreeWidget, QTreeWidgetItem, QListView, QAbstractItemView, QMessageBox                 )
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 import dialog
@@ -19,11 +19,12 @@ import time
 import re
 import cv2
 
+
 class requirements(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setWordWrap(True)
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/requirements.txt", 'r') as f:
+        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/requirements.txt", 'r', encoding='utf-8') as f:
             text = f.read()
         self.setText(text)
 
@@ -234,6 +235,7 @@ class projectControl(QGroupBox):
         self.description.setObjectName("description_label")
         #self.description.setStyleSheet("QLabel#description_label{text-align:top;}")
         self.requirements = requirements()
+        self.requirements.setObjectName("description_label")
 
     def connect_ui(self):
         self.new.clicked.connect(self.on_new)
@@ -368,7 +370,7 @@ class polygonTree(QTreeWidget):
         self.setSelectionMode(QAbstractItemView.ExtendedSelection)
         self.setColumnCount(4)
         self.setHeaderLabels(['Name', 'Code', 'Index', 'Points'])
-        self.setMaximumSize(200, 400)
+        #self.setMaximumSize(200, 400)
 
     def update(self, index):
         self.index += index
@@ -381,8 +383,9 @@ class polygonTree(QTreeWidget):
     def fill(self):
         self.clear()
         for code in self.main.file.attrs[classifier.hdfs.CLASSES.value]:
-            name = self.main.get_name(int(code))
-            self.addTopLevelItem(QTreeWidgetItem([name, code, '', '']))
+            if code != -1:
+                name = self.main.get_name(int(code))
+                self.addTopLevelItem(QTreeWidgetItem([name, code, '', '']))
         self.addTopLevelItem(QTreeWidgetItem(['ВЫБРАТЬ КЛАСС', '000', '', '']))
 
         for name, value in self.main.file[str(self.index)].attrs.items():
@@ -459,14 +462,15 @@ class viewToolbar(QToolBar):
 
     def add_actions(self):
         #print(classifier.items.first.value)
-        self.first = self.addAction(QIcon(classifier.items.first.value), 'go to first image in project')
-        self.previous = self.addAction(QIcon(classifier.items.previous.value), 'go to previous image in project')
-        self.next = self.addAction(QIcon(classifier.items.next.value), 'go to next image in project')
-        self.last = self.addAction(QIcon(classifier.items.last.value), 'go to last image in project')
-        self.showall = self.addAction(QIcon(classifier.items.showall.value), 'set all polygons in list as selected')
-        self.hideall = self.addAction(QIcon(classifier.items.hideall.value), 'set all polygons in list as deselected')
-        self.add = self.addAction(QIcon(classifier.items.add.value), 'add new image to project')
-        self.delete = self.addAction(QIcon(classifier.items.delete.value), 'delete image from project')
+        self.first = self.addAction(QIcon(classifier.items.first.value), 'Влево на 10')
+        self.previous = self.addAction(QIcon(classifier.items.previous.value), 'Влево на 1')
+        self.next = self.addAction(QIcon(classifier.items.next.value), 'Вправо на 1')
+        self.last = self.addAction(QIcon(classifier.items.last.value), 'Вправо на 10')
+        self.showall = self.addAction(QIcon(classifier.items.showall.value), 'Показать все фигуры')
+        self.hideall = self.addAction(QIcon(classifier.items.hideall.value), 'Спрятать все фигуры')
+        self.reseg = self.addAction(QIcon(classifier.items.reseg.value), 'Вернуть на доработку')
+        self.add = self.addAction(QIcon(classifier.items.add.value), 'Добавить задачу')
+        self.delete = self.addAction(QIcon(classifier.items.delete.value), 'Удалить задачу')
 
 
 

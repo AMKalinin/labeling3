@@ -48,7 +48,6 @@ def give_points(attrs_points):
 def pixmap_at_index(file_link, index):
 
     hdf = file_link
-    myindex = str(index)
     dataset = hdf[str(index)]
     image_as_numpy = dataset[()]
     height, width, channel = image_as_numpy.shape
