@@ -388,22 +388,25 @@ class polygonTree(QTreeWidget):
                 self.addTopLevelItem(QTreeWidgetItem([name, code, '', '']))
         self.addTopLevelItem(QTreeWidgetItem(['ВЫБРАТЬ КЛАСС', '000', '', '']))
 
-        for name, value in self.main.file[str(self.index)].attrs.items():
-            if utils.ispoints(name):
-            #if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
-                attr_class = utils.attrs_get_class(value)
-                attr_points = utils.attrs_get_points(value)
-                attr_color = self.main.get_color(int(attr_class))
-                attr_color = Qt.GlobalColor(attr_color)
-                pixmap = QPixmap(50,50)
-                pixmap.fill(attr_color)
-                attr_icon = QIcon(pixmap)
+        try:
+            for name, value in self.main.file[str(self.index)].attrs.items():
+                if utils.ispoints(name):
+                #if name != classifier.tasks.COUNT.value and name != classifier.tasks.STATUS.value:
+                    attr_class = utils.attrs_get_class(value)
+                    attr_points = utils.attrs_get_points(value)
+                    attr_color = self.main.get_color(int(attr_class))
+                    attr_color = Qt.GlobalColor(attr_color)
+                    pixmap = QPixmap(50,50)
+                    pixmap.fill(attr_color)
+                    attr_icon = QIcon(pixmap)
 
-                for index in range(self.topLevelItemCount()):
-                    if self.topLevelItem(index).text(1) == attr_class:
-                        self.topLevelItem(index).addChild(QTreeWidgetItem(['', attr_class, name, attr_points]))
-                        child_index = self.topLevelItem(index).childCount() - 1
-                        self.topLevelItem(index).child(child_index).setIcon(0, attr_icon)
+                    for index in range(self.topLevelItemCount()):
+                        if self.topLevelItem(index).text(1) == attr_class:
+                            self.topLevelItem(index).addChild(QTreeWidgetItem(['', attr_class, name, attr_points]))
+                            child_index = self.topLevelItem(index).childCount() - 1
+                            self.topLevelItem(index).child(child_index).setIcon(0, attr_icon)
+        except:
+            pass
 
 
     def delete_item(self):
