@@ -2,6 +2,7 @@
 @import "button_danger.qss";
 @import "button_primary.qss";
 @import "button_default.qss";
+@import "button_images.qss";
 @import "progressbar.qss";
 
 @import "gbox_widget.qss";

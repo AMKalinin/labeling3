@@ -1,0 +1,15 @@
+QPushButton#images
+{
+    background-color: #FFFFFF;
+    border: 2px solid #D5D8DA;
+    border-radius: 0px;
+    border-style: dashed;
+    min-width: 50px;    min-height: 50px;
+    max-width: 100000px;    max-height: 100000px;
+    text-align: center
+}
+QPushButton#images:hover
+{
+    border: 2px solid #A4D0FC;
+    border-style: dashed;
+}

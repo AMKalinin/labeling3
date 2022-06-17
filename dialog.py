@@ -104,6 +104,35 @@ class selectedClassesTree(classesTree):
         except:
             pass
 
+class selectedImagesButton(QPushButton):
+    def __init__(self,text, lbl):
+        super().__init__(text)
+        self.images = lbl
+        self.setAcceptDrops(True)
+        self.setObjectName("images")
+        self.images_list = []
+
+    def dragEnterEvent(self, event):
+        event.accept()
+
+    def dragMoveEvent(self, event):
+        event.accept()
+
+    def dropEvent(self, event):
+        img = event.mimeData().text()
+        files = img.split('\n')
+        if len(files)>1:
+            files.pop(-1)
+        for i in range(len(files)):
+            files[i] = files[i][8:]
+        for file in files:
+            if (file not in self.images_list) and (file[-5]):
+                self.images_list.append(file)
+        if len(self.images_list)<5:
+            images ="\n".join( [x.split('/')[-1] for x in self.images_list ] )
+        else:
+            images = f"Выбрано {len(self.images_list)} файлов"
+        self.images.setText(images)
 
 class newProject(QDialog):
     def __init__(self, main):
@@ -139,15 +168,18 @@ class newProject(QDialog):
 
     def init_choose_images(self):
         self.images = QLabel("Выбранные изображения: ")
-        self.images_list = []
-        self.add = QPushButton("Добавить изображение")
+        self.add = selectedImagesButton("Выберите или перетащите изображения", self.images)
 
     def on_add(self):
-        file_dialog_response = QFileDialog.getOpenFileName()[0]
-        if file_dialog_response not in self.images_list:
-            self.images_list.append(file_dialog_response)
-        images = " ".join(self.images_list)
-        self.images.setText("Выбранные изображения: " + images)
+        file_dialog_response = QFileDialog.getOpenFileNames()[0]
+        for file in file_dialog_response:
+            if file not in self.add.images_list:
+                self.add.images_list.append(file)
+        if len(self.add.images_list)<5:
+            images ="\n".join( [x.split('/')[-1] for x in self.add.images_list ] )
+        else:
+            images = f"Выбрано файлов: {len(self.add.images_list)}"
+        self.images.setText(images)
 
     def connect_ui(self):
         self.cancel.clicked.connect(self.on_cancel)
@@ -164,8 +196,8 @@ class newProject(QDialog):
         self.layout.addWidget(self.input_description, 1, 1)
         self.layout.addWidget(self.classestree, 2, 0)
         self.layout.addWidget(self.selectedclassestree, 2, 1)
-        self.layout.addWidget(self.images, 3, 0, 1, 2)
-        self.layout.addWidget(self.add, 4, 0)
+        self.layout.addWidget(self.add, 3, 0, 1, 2)
+        self.layout.addWidget(self.images, 4, 0)
         self.layout.addWidget(self.cancel, 5, 0)
         self.layout.addWidget(self.ok, 5, 1)
 
@@ -179,9 +211,9 @@ class newProject(QDialog):
                 hdf.attrs[classifier.hdfs.NAME.value] = self.input_name.text()
                 hdf.attrs[classifier.hdfs.DESCRIPTION.value] = self.input_description.text()
                 hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedclassestree.chosen
-                hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.images_list)
-                for image in self.images_list:
-                    task = hdf.create_dataset(str(self.images_list.index(image)), data=cv2.imread(image))
+                hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.add.images_list)
+                for image in self.add.images_list:
+                    task = hdf.create_dataset(str(self.add.images_list.index(image)), data=cv2.imread(image))
                     task.attrs[classifier.tasks.COUNT.value] = 0
                     task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
                     task.attrs[classifier.aerial.SOURCE.value] = 'не задано'
@@ -221,7 +253,7 @@ class basedProject(newProject):
                 hdf.attrs[classifier.hdfs.CLASSES.value] = self.selectedclassestree.chosen
                 with h5py.File(self.base, 'r') as hdf_o:
                     count = hdf_o.attrs[classifier.hdfs.TASK_COUNT.value]
-                    hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.images_list) + count
+                    hdf.attrs[classifier.hdfs.TASK_COUNT.value] = len(self.add.images_list) + count
                     for id in range(count):
                         task = hdf.create_dataset(str(id), data=hdf_o[str(id)])
                         task.attrs[classifier.tasks.COUNT.value] = hdf_o[str(id)].attrs[classifier.tasks.COUNT.value]
@@ -234,8 +266,8 @@ class basedProject(newProject):
                                 task.attrs[str(id_polygon-i)] = hdf_o[str(id)].attrs[str(id_polygon)]
                             else:
                                 i += 1
-                for image in self.images_list:
-                    task = hdf.create_dataset(str(self.images_list.index(image)+count), data=cv2.imread(image))
+                for image in self.add.images_list:
+                    task = hdf.create_dataset(str(self.add.images_list.index(image)+count), data=cv2.imread(image))
                     task.attrs[classifier.tasks.COUNT.value] = 0
                     task.attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_DO.value
         except FileExistsError:
