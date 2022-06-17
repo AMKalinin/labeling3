@@ -38,25 +38,27 @@ class classesTree(QTreeWidget):
         tree = event.source() 
         if tree == self:
             return
+        try:
+            widget = tree.currentItem()
+            base_index = tree.indexOfTopLevelItem(widget)
+            class_index = tree.indexOfTopLevelItem(widget.parent())
 
-        widget = tree.currentItem() 
-        base_index = tree.indexOfTopLevelItem(widget)
-        class_index = tree.indexOfTopLevelItem(widget.parent())
+            if base_index == -1:
+                base = widget.parent()
+                base.removeChild(widget)
+                tree.chosen.remove(widget.text(1))
+                if base.childCount() == 0:
+                    base_index = tree.indexOfTopLevelItem(base)
+                    tree.takeTopLevelItem(base_index)
 
-        if base_index == -1:
-            base = widget.parent()
-            base.removeChild(widget)
-            tree.chosen.remove(widget.text(1))
-            if base.childCount() == 0:
+            elif class_index == -1:
+                base = widget
                 base_index = tree.indexOfTopLevelItem(base)
+                for index in range(base.childCount()):
+                    tree.chosen.remove(base.child(index).text(1))
                 tree.takeTopLevelItem(base_index)
-
-        elif class_index == -1:
-            base = widget
-            base_index = tree.indexOfTopLevelItem(base)
-            for index in range(base.childCount()):
-                tree.chosen.remove(base.child(index).text(1))
-            tree.takeTopLevelItem(base_index)
+        except:
+            pass
 
 
 class selectedClassesTree(classesTree):
@@ -68,37 +70,39 @@ class selectedClassesTree(classesTree):
         tree = event.source()
         if tree == self:
             return
+        try:
+            widget = tree.currentItem()
+            base_index = tree.indexOfTopLevelItem(widget)
+            class_index = tree.indexOfTopLevelItem(widget.parent())
 
-        widget = tree.currentItem()
-        base_index = tree.indexOfTopLevelItem(widget)
-        class_index = tree.indexOfTopLevelItem(widget.parent())
+            if base_index == -1:
+                base = widget.parent()
+                if widget.text(1) not in self.chosen:
+                    self.chosen.append(widget.text(1))
+                    base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
+                    if not base_in_tree:
+                        self.addTopLevelItem(QTreeWidgetItem([base.text(0)]))
+                    base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
+                    base_in_tree[0].addChild(QTreeWidgetItem([widget.text(0), widget.text(1)]))
 
-        if base_index == -1:
-            base = widget.parent()
-            if widget.text(1) not in self.chosen:
-                self.chosen.append(widget.text(1))
+            elif class_index == -1:
+                base = widget
                 base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
                 if not base_in_tree:
                     self.addTopLevelItem(QTreeWidgetItem([base.text(0)]))
-                base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
-                base_in_tree[0].addChild(QTreeWidgetItem([widget.text(0), widget.text(1)]))
-
-        elif class_index == -1:
-            base = widget
-            base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
-            if not base_in_tree:
-                self.addTopLevelItem(QTreeWidgetItem([base.text(0)]))
-                base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
-                for index in range(base.childCount()):
-                    base_in_tree[0].addChild(QTreeWidgetItem([base.child(index).text(0), base.child(index).text(1)]))
-                    self.chosen.append(base.child(index).text(1))
-            else:
-                for index in range(base.childCount()):
-                    if base.child(index).text(1) not in self.chosen:
-                        self.chosen.append(base.child(index).text(1))
+                    base_in_tree = self.findItems(base.text(0), Qt.MatchExactly)
+                    for index in range(base.childCount()):
                         base_in_tree[0].addChild(QTreeWidgetItem([base.child(index).text(0), base.child(index).text(1)]))
-        if base_in_tree:
-            base_in_tree[0].sortChildren(1, Qt.AscendingOrder)
+                        self.chosen.append(base.child(index).text(1))
+                else:
+                    for index in range(base.childCount()):
+                        if base.child(index).text(1) not in self.chosen:
+                            self.chosen.append(base.child(index).text(1))
+                            base_in_tree[0].addChild(QTreeWidgetItem([base.child(index).text(0), base.child(index).text(1)]))
+            if base_in_tree:
+                base_in_tree[0].sortChildren(1, Qt.AscendingOrder)
+        except:
+            pass
 
 
 class newProject(QDialog):
