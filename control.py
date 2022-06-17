@@ -24,7 +24,7 @@ class requirements(QLabel):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setWordWrap(True)
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/requirements.txt", 'r', encoding='utf-8') as f:
+        with open("requirements.txt", 'r', encoding='utf-8') as f:
             text = f.read()
         self.setText(text)
 
@@ -64,13 +64,13 @@ class testDescription(QLabel):
             self.main._parse_projects.emit()
 
     def enterEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_hover.qss", 'r') as f:
+        with open("style/gbox_hover.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
 
     
     def leaveEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_widget.qss", 'r') as f:
+        with open("style/gbox_widget.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)    
 
@@ -147,13 +147,13 @@ class aerialAttr(QLabel):
             #self.main._parse_projects.emit()
 
     def enterEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/label_aerial_hover.qss", 'r') as f:
+        with open("style/label_aerial_hover.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
 
     
     def leaveEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/label_aerial.qss", 'r') as f:
+        with open("style/label_aerial.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)    
 
@@ -267,7 +267,7 @@ class taskDescription(QWidget):
         self.init_widgets()
         self.fill_layouts()
     
-        #with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/label_solo.qss", 'r') as f:
+        #with open("style/label_solo.qss", 'r') as f:
         #    stylesheet = f.read()
         #self.setStyleSheet(stylesheet)
 

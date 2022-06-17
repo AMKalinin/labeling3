@@ -115,13 +115,13 @@ class projectWidget(QGroupBox):
         self.main._open_project.emit(self.path)
     
     def enterEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_hover.qss", 'r') as f:
+        with open("style/gbox_hover.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
 
     
     def leaveEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_widget.qss", 'r') as f:
+        with open("style/gbox_widget.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
     

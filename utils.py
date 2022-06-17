@@ -240,7 +240,7 @@ def ispoints(attr):
 
 def load_style(app):
         #print(dir(stylesheet))
-        style = stylesheet.StyleSheet(base_dir='/home/iakhmetev/Документы/8.3_version_3_data_labeling/style',
+        style = stylesheet.StyleSheet(base_dir='style',
                                         import_def_file='imports.qss')
                                         #main_stylesheet='myStyle.qss')
         app.setStyleSheet(style.load_stylesheet())
