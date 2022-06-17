@@ -152,15 +152,15 @@ class taskWidget(QGroupBox):
 
     def on_edit(self):
         self.main._edit_task.emit(self.index)
-        self.main.tab.parse_tasks()
+        self.main.tab.create_task(index=self.index, task_old=self)
 
     def on_tocheck(self):
         self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_CHECK.value
-        self.main.tab.parse_tasks()
+        self.main.tab.create_task(index=self.index, task_old=self)
 
     def on_redo(self):
         self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.IN_PROGRESS.value
-        self.main.tab.parse_tasks()
+        self.main.tab.create_task(index=self.index, task_old=self)
 
     def on_checked(self):
         self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.DONE.value
@@ -168,13 +168,13 @@ class taskWidget(QGroupBox):
         self.main.tab.parse_projects()
 
     def enterEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_hover.qss", 'r') as f:
+        with open("style/gbox_hover.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
 
     
     def leaveEvent(self, event):
-        with open("/home/iakhmetev/Документы/8.3_version_3_data_labeling/style/gbox_widget.qss", 'r') as f:
+        with open("style/gbox_widget.qss", 'r') as f:
             stylesheet = f.read()
         self.setStyleSheet(stylesheet)
 

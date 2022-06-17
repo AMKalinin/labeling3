@@ -99,13 +99,18 @@ class tab(QTabWidget):
         utils.clear_layout(layout=self.tasksleft_layout)
         utils.clear_layout(layout=self.tasksright_layout)
         for index in range(self.main.task_count):
-            status = self.main.file[str(index)].attrs[classifier.tasks.STATUS.value]
-            if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
-                widget = task.taskWidget(parent=self, main=self.main, index=index, mode=classifier.tasks.LEFT.value)
-                self.tasksleft_layout.addWidget(widget)
-            elif status == classifier.tasks.TO_CHECK.value: #or status == classifier.HDF_TASK_STATUS_3:
-                widget = task.taskWidget(parent=self, main=self.main, index=index, mode=classifier.tasks.RIGHT.value)
-                self.tasksright_layout.addWidget(widget)
+            self.create_task(index)
+
+    def create_task(self, index, task_old=None):
+        if task_old != None:
+            task_old.deleteLater()
+        status = self.main.file[str(index)].attrs[classifier.tasks.STATUS.value]
+        if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
+            widget = task.taskWidget(parent=self, main=self.main, index=index, mode=classifier.tasks.LEFT.value)
+            self.tasksleft_layout.addWidget(widget)
+        elif status == classifier.tasks.TO_CHECK.value:  # or status == classifier.HDF_TASK_STATUS_3:
+            widget = task.taskWidget(parent=self, main=self.main, index=index, mode=classifier.tasks.RIGHT.value)
+            self.tasksright_layout.addWidget(widget)
 
     def parse_view(self):
         self.view_w.deleteLater()  #!!! ПРОВЕРЯТЬ УДАЛЕНИЕ ВИДЖЕТОВ ПРИ ОБЫЧНОМ ПЕРЕИМЕНОВЫВАНИИ НЕ УНИЧТОЖАЕТСЯ
