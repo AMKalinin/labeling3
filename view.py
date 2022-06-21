@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import (QApplication, QVBoxLayout, QGroupBox, QMainWindow, 
                             QScrollArea, QToolButton, QSizePolicy, QComboBox, QToolBar, 
                             QStatusBar, QGraphicsView, QGraphicsScene, QMessageBox, QListWidget, QListWidgetItem,QAbstractItemView)
 
-from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon, QPolygonF
+from PyQt5.QtGui import QImage, QPixmap, QIcon, QPainter, QColor, QFont, QBrush, QPen, QPolygon, QPolygonF, QCursor
 from PyQt5 import QtWidgets, QtGui, QtCore
 import os
 import h5py
@@ -24,6 +24,7 @@ import time
 class baseView(QGraphicsView):
     def __init__(self, parent, main):
         super().__init__(parent=parent)
+        self.mnoj = 1
         self.main = main
         self.shape = shape.shape()
         self.polygon = None
@@ -206,6 +207,11 @@ class editView(baseView):
         super().__init__(main=main, parent=parent)
         self.index = current_task
         self.set_background(self.index)
+        self.setMouseTracking(True)
+        self.point_index = None
+        self.hor_line = None
+        self.ver_line = None
+        self.list_points = []
 
     def mousePressEvent(self, event):
         point = self.mapToScene(QPoint(event.x(), event.y()))
@@ -217,6 +223,8 @@ class editView(baseView):
 
     def mouseReleaseEvent(self, event):
         point = self.mapToScene(QPoint(event.x(), event.y()))
+        if point.x()<0 or point.x()>self.background.pixmap().width() or point.y()<0 or point.y()>self.background.pixmap().height():
+            return
         if self.polygon:
             self.scene.removeItem(self.polygon)
         if self.shape.type == classifier.shapes.POLYGON.value:
@@ -227,16 +235,45 @@ class editView(baseView):
             elif event.button() == Qt.RightButton and self.point_status:
                 self.shape.delete_point(self.point_index)
             self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+            self.drawPoints(self.shape.points)
         self.point_status = None
         self.point_index = None
 
     def mouseMoveEvent(self, event):
         point = self.mapToScene(QPoint(event.x(), event.y()))
+        if point.x()<0 or point.x()>self.background.pixmap().width() or point.y()<0 or point.y()>self.background.pixmap().height():
+            return
         if self.point_index != None:
             if self.point_status:  
                 self.scene.removeItem(self.polygon)
                 self.shape.change_point(self.point_index, point)
                 self.polygon = self.scene.addPolygon(QPolygonF(self.shape.points))
+                self.drawPoints(self.shape.points)
+        self.drawCrosshair(point)
+
+    def drawPoints(self, points):
+        if self.list_points:
+            for pnt in self.list_points:
+                self.scene.removeItem(pnt)
+        for point in points:
+            color = Qt.black
+            if points.index(point) == 0:
+                color = Qt.red
+            if points.index(point)==len(points)-1:
+                color = Qt.green
+            self.list_points.append(self.scene.addEllipse(point.x()-2, point.y()-2, 4, 4, pen=QPen(color), brush=QBrush(color)) )
+
+
+    def drawCrosshair(self, point):
+        if self.hor_line:
+            self.scene.removeItem(self.hor_line)
+            self.scene.removeItem(self.ver_line)
+            self.scene.removeItem(self.widg)
+        self.hor_line = self.scene.addLine(0, point.y(), self.background.pixmap().width(), point.y(), pen=QPen(Qt.yellow))
+        self.ver_line = self.scene.addLine(point.x(), 0, point.x(), self.background.pixmap().height(), pen=QPen(Qt.yellow))
+        self.widg = self.scene.addWidget(QLabel(str(int(point.x())) + '\n' +str(int(point.y())) ))
+        self.widg.setPos(point.x()+10,point.y()+5)
+
     """
     def discard(self):
         self.shape.clear()
