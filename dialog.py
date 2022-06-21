@@ -20,6 +20,7 @@ class classesTree(QTreeWidget):
         super().__init__()
         self.chosen = []
         self.setAcceptDrops(True)
+        self.setMinimumHeight(250)
 
     def mouseMoveEvent(self, event):
         if event.buttons() == Qt.LeftButton:

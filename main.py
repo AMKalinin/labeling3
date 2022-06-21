@@ -50,8 +50,8 @@ class mainWindow(QMainWindow):
         #self.screen.setWidth(self.screen.width() - 10)
         #print(self.screen)
         #size = QSize(1366, 768)
-        self.setMaximumSize(self.screen.size())
-        self.setMinimumSize(self.screen.size())
+        #self.setMaximumSize(self.screen.size())
+        #self.setMinimumSize(self.screen.size())
         self.main_layout = QGridLayout()
         self.main_frame.setLayout(self.main_layout)
 
