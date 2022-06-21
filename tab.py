@@ -107,9 +107,13 @@ class tab(QTabWidget):
         status = self.main.file[str(index)].attrs[classifier.tasks.STATUS.value]
         if status == classifier.tasks.TO_DO.value or status == classifier.tasks.IN_PROGRESS.value:
             widget = task.taskWidget(parent=self, main=self.main, index=index, mode=classifier.tasks.LEFT.value)
+            widget.view_btn.setHidden(True)
+            widget.edit.setHidden(False)
             self.tasksleft_layout.addWidget(widget)
         elif status == classifier.tasks.TO_CHECK.value:  # or status == classifier.HDF_TASK_STATUS_3:
             widget = task.taskWidget(parent=self, main=self.main, index=index, mode=classifier.tasks.RIGHT.value)
+            widget.view_btn.setHidden(False)
+            widget.edit.setHidden(True)
             self.tasksright_layout.addWidget(widget)
 
     def parse_view(self):
@@ -122,3 +126,6 @@ class tab(QTabWidget):
     
     def change_view(self, index):
         self.view_w.change_background(index)
+
+    def open_view(self, index):
+        self.view_w.set_background(index)

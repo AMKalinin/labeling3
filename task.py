@@ -75,6 +75,7 @@ class taskWidget(QGroupBox):
     def init_actions(self):
         self.attrs = QPushButton("Редактировать параметры снимка")
         self.edit = QPushButton("Открыть окно сегментации")
+        self.view_btn = QPushButton("Открыть окно просмотра")
         size = self.attrs.size()
 
         tocheck = QIcon(classifier.items.tocheck.value)
@@ -117,6 +118,7 @@ class taskWidget(QGroupBox):
         self.layout_preview.addWidget(self.preview)
         self.layout_actions.addWidget(self.attrs)
         self.layout_actions.addWidget(self.edit)
+        self.layout_actions.addWidget(self.view_btn)
 
         if self.mode == classifier.tasks.LEFT.value:
             self.layout_forward.addWidget(self.tocheck)
@@ -134,10 +136,15 @@ class taskWidget(QGroupBox):
 
     def connect_ui(self):
         self.attrs.clicked.connect(self.on_attrs)
+        self.view_btn.clicked.connect(self.on_view)
         self.edit.clicked.connect(self.on_edit)
         self.tocheck.clicked.connect(self.on_tocheck)
         self.redo.clicked.connect(self.on_redo)
         self.checked.clicked.connect(self.on_checked)
+
+    def on_view(self):
+        self.main.tab.open_view(self.index)
+        self.main.tab.setCurrentIndex(2)
 
     def check_status(self):
         count = utils.get_task_polygons(self.main.file, self.index)
@@ -152,7 +159,7 @@ class taskWidget(QGroupBox):
 
     def on_edit(self):
         self.main._edit_task.emit(self.index)
-        self.main.tab.create_task(index=self.index, task_old=self)
+        self.main.tab.parse_tasks()
 
     def on_tocheck(self):
         self.main.file[str(self.index)].attrs[classifier.tasks.STATUS.value] = classifier.tasks.TO_CHECK.value
